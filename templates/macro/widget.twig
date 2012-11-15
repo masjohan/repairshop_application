@@ -1,0 +1,38 @@
+{#  row: string one item per line or array
+    options: id, class, styple
+#}
+{% macro scroll_text(rows, options) %}
+    {# rows could be either lines of string or array #}
+    {% if rows|php('count') == 1 %}
+        {% set rows = '/\s*\n\s*/'|php('preg_split', rows|php('trim')) %}
+    {% endif %}
+
+    {# merge given styles #}
+    {% set styles = options.style|default([])|php('array_merge', {"margin":0, "display":"inline-block", "overflow": "hidden"}) %}
+
+    <ul id="{{ options.id }}"{{ options.class ? ' class="'~options.class~'"' : '' }}
+        style="{% for nm, val in styles %}{{ nm }}:{{ val }};{% endfor %}">
+    {% for r in rows %}
+        <li>{{ r|php('trim')|raw }}</li>
+    {% endfor %}
+    </ul>
+
+    <script type="text/javascript">
+        $(function(){ $('#{{ options.id }}').rolltext() });
+    </script>
+{% endmacro %}
+
+{% macro success_msg(link, text) %}
+    <div class="successbox">
+        <p>
+            {{ text|default("系统更新完成.") }}
+            <br /><br />
+            <a href="{{ link }}">&laquo; 正在返回前一页 ... </a>
+        </p>
+        <script type="text/javascript">
+            $(function(){
+                (function(){location.assign("{{ link }}")}).later(3000);
+            });
+        </script>
+    </div>
+{% endmacro %}

@@ -1,0 +1,111 @@
+/* require yui/reset.css | yui/base.css |yui/fonts.css |yui/grids.css|zf-form.css|panel.css|theme/smoothness/jquery.ui.dialog.css */
+body {
+	background-color: #dddddd;
+    color: #666666;
+}
+
+#body-container {
+	margin-top:-10px;
+	padding-top: 10px;
+}
+
+img { border: 0; }
+
+/* Float cleaner */
+.cleaner {
+    clear: both;
+    height: 1px;
+    font-size: 1px;
+    border: none;
+    line-height: 1px;
+    background: transparent;
+}
+
+a,
+a:visited {
+    color:#0066CC;
+    text-decoration:none;
+}
+
+a:hover,
+a:visited:hover {
+    background-color:#0066CC;
+    color: #ffffff;
+    text-decoration:none;
+}
+
+a.no-hover:hover,
+a.no-hover:visited:hover {
+    background-color:transparent;
+    color:#0066CC;
+    text-decoration:none;
+}
+
+.yui-d3 {
+    background-color:#fff;
+}
+
+/* header */
+#hd.headerbar {
+    position:relative;
+}
+
+#hd.headerbar .inner{
+/*    background:#12A3EB url("/forum/styles/prosilver/theme/images/bg_header.gif") repeat-x scroll left top;
+    color: #FFFFFF;*/
+    padding: 0;
+    margin:10px 0;
+}
+
+
+#bd {
+	margin-top:-10px;
+}
+#bd #bd-container {
+	padding: 15px;
+}
+
+#ft {
+    margin-top:60px;
+    padding: 10px 0;
+    border-top: 1px solid #ccc;
+    text-align: center;
+}
+
+.yui-main h2 {
+	margin-top: 0;
+}
+
+.align-right {
+    text-align: right;
+}
+.float-right {
+    float:right;
+}
+
+.hide {
+    display:none;
+}
+
+.successbox {
+    background-color: #228822;
+}
+.errorbox {
+    background-color: #BC2A4D;
+}
+
+.successbox,
+.errorbox,
+.successbox a,
+.errorbox a {
+    color: #FFFFFF;
+}
+
+.successbox,
+.errorbox {
+    margin: 10px 0;
+    padding: 8px;
+    text-align: center;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

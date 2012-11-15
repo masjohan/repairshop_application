@@ -1,0 +1,289 @@
+/*
+    intend to work with Zend form
+*/
+.zend_form {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+input, select, textarea {
+    border: 1px solid #666;
+    padding: 2px;
+}
+
+.zend_form dt {
+    position: absolute;
+    width: 15em;
+}
+
+.zend_form .push-lable {
+    margin-bottom:1em;
+    height:1px;
+}
+
+.zend_form .two_column dt {
+    width: 16em;
+}
+
+.gradient .zend_form dt {
+    background-color: transparent;
+}
+
+.zend_form dt label {
+    font-weight: bold;
+    float: right;
+}
+
+.zend_form dt label.required {
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+
+.zend_form dd {
+    display: block;
+    padding-top: 1px;
+    position: relative;
+    margin: 1em 0 1em 15.5em;
+}
+
+.zend_form dd .description {
+    color: #888888;
+    font-size: smaller;
+    line-height: 1em;
+    margin-left: -252px;
+    width: 238px;
+}
+
+
+.zend_form dd input {
+    font-size:12px;
+    width:20em;
+}
+
+.zend_form dd input.optional:focus {
+    background: white;
+    font-weight: lighter;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.zend_form dd input.error {
+   border-color: #CC0000;
+}
+
+.zend_form dd textarea.error {
+   border-color: #CC0000;
+}
+
+
+.zend_form dd select.error {
+   border-color: #CC0000;
+}
+
+.zend_form dd input.btn {
+    width: auto;
+}
+
+.zend_form dd input.hasDatepicker,
+.zend_form dd input.calendar,
+.zend_form dd input.calendar-background {
+    background: url(/static/images/icons/Calendar.png) no-repeat scroll right 1px;
+    background-color: white;
+    cursor: pointer
+}
+
+.zend_form dd input.calendar.small {
+    width: 95px;
+}
+
+.zend_form .two_column dd input {
+    width: 16em;
+    margin-left: -100px;
+}
+
+.zend_form dd textarea {
+    background-color: white;
+    font-size:12px;
+    width:20em;
+}
+
+.zend_form .two_column dd textarea {
+    width: 16em;
+    margin-left: -100px;
+}
+
+.zend_form dd select {
+    font-size:12px;
+    width:20.5em;
+}
+
+
+.zend_form .two_column dd select {
+    width: 16.5em;
+    margin-left: -100px;
+}
+
+.zend_form dd input.radio,
+.zend_form dd input.checkbox {
+    border: medium none;
+    margin-right: 0.33em;
+    vertical-align: middle;
+    width: auto;
+}
+
+.zend_form dt#submit-label{
+    background-color: transparent;
+}
+
+.zend_form dd#submit-element {
+    display: inline-block;
+    float: none;
+    margin: 1em 0.5em 1em 21.5em;
+}
+
+.zend_form dt#cancel-label,
+.zend_form dd#cancel-element {
+    display: inline-block;
+    float: none;
+    margin: 1em 0.5em;
+}
+
+textarea:hover,
+input:hover,
+select:hover,
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.zend_form dt#cancel-label {
+    display: none;
+}
+
+.zend_form dd .errors {
+    color: #CC0000;
+    left: 22em;
+    position: absolute;
+    top: 0;
+}
+
+/* Lightbox */
+.zend_form.lightbox dt {
+    position: absolute;
+    width: 10em;
+    clear: left;
+    padding: 1px;
+}
+
+.zend_form.lightbox dd {
+    display: block;
+    margin: 1em 0 1em 5.5em;
+    padding-top: 1px;
+    position: relative;
+}
+
+.zend_form.lightbox dt label {
+    font-weight: bold;
+    float: left;
+}
+
+.zend_form dd .help-bk {
+    position: absolute;
+    left: 19em;
+    padding: 0 0 0 1em;
+    top: 0;
+    display: none;
+}
+
+.zend_form dd.focus .help-bk {
+    display: block;
+}
+
+.zend_form dd.focus.has-error .help-bk {
+    display: none;
+}
+
+.zend_form dd .help-bk .help {
+    background-color: #FFFFFF;
+    border: 1px dotted #AAAAAA;
+    color: #888888;
+    display: block;
+    font-size: small;
+    padding: 2px 0 2px 4px;
+    width: 140px;
+}
+
+.zend_form dd .error-bk {
+    position: absolute;
+    left: 19em;
+    top: 0px;
+    padding: 0 0 0 1em;
+    display:none;
+    background-color: #fff;
+}
+
+.zend_form dd .error-bk .error{
+    color: #cc0000;
+    font-size: small;
+    border: 1px dotted #cc0000;
+    padding: 2px 0 2px 4px;
+    width: 140px;
+}
+
+.zend_form dd .error-bk .pointer{
+    background: url("/static/images/jqueryui/ui-icons_cd0a0a_256x240.png") no-repeat scroll -98px -15px transparent;
+    height: 15px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 15px;
+}
+
+.zend_form dd .help-bk .pointer{
+    background: url("/static/images/jqueryui/ui-icons_454545_256x240.png") no-repeat scroll -98px -15px transparent;
+    height: 15px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 15px;
+}
+
+.zend_form dd.has-error.focus .error-bk {
+    display:block;
+}
+
+.zend_form dd.has-error input,
+.zend_form dd.has-error textarea,
+.zend_form dd.has-error select {
+    border: 1px dotted #cc0000;
+}
+
+.zend_form .zf-form-set {
+    width: 20em;
+}
+.zend_form .zf-form-set td {
+    border: none;
+    padding: 0 0.5em;
+}
+
+.zend_form .all-in-out {
+    float: right;
+    top: -1em;
+    position: relative;
+}
+
+.zend_form dd input::-webkit-input-placeholder,
+input::-webkit-input-placeholder {
+   color: #999;
+}
+
+.zend_form dd input:-moz-placeholder,
+input:-moz-placeholder {
+   color: #999;
+}

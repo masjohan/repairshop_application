@@ -1,0 +1,118 @@
+{# begin, section, end are all you need to build a text box #}
+
+{% macro begin(label, class, id) %}
+    {% set id = id ? ('id="' ~ id ~ '"') : "" %}
+    {% set label = label ? ('<div class="panel-head"><h3>' ~ label ~ '</h3></div>') : "" %}
+    <div class="panel {{ class|default("light-grey") }}" {{ id|raw }}>
+        {{- _self.expander(class) -}}
+        {{ label|raw }}
+        <div class="panel-body">
+{% endmacro %}
+
+{% macro section(label) %}
+    </div>
+    {% if label %}
+        <div class="panel-section"><h3>{{ label|default('Info') }}</h3></div>
+    {% else %}
+        <div class="panel-section-only"></div>
+    {% endif %}
+    <div class="panel-body">
+{% endmacro %}
+
+{% macro end(label, class) %}
+    {% set class = class |default('') %}
+    {% set label = label ? ('<div class="panel-foot ' ~ class ~ '">' ~ (label|raw) ~ '</div>') : "" %}
+        </div>
+        {{ label|raw }}
+    </div>
+{% endmacro %}
+
+{# display a list of items in equal width columns, vertical sequence always
+    - items: array of items
+    - cols: the number of columns, practically 1 - 6
+    - col_cls: optional, array of class name applying to each column
+    - id: optional, id for this columnar
+    - class: optional, class for this columnar
+#}
+{% macro columnar(items, cols, col_cls, id, class) %}
+
+    {% set id = id ? (' id="' ~ id ~ '"') : "" %}
+    {% set rows = items|length // cols + (items|length % cols ? 1 : 0) %}
+
+    <ul class="columnar cols-{{ cols }}{{ class ? ' '~class : ''}}"{{ id }}>
+        {% for row in 0..(rows-1) %}
+            {% for col in 0..(cols-1) %}
+                {% set bgn_end = col==0 ? ' bgn' : ( col == (cols-1) ? ' end' : '') %}
+                {% set cus = col_cls and col_cls[col] ? ' '~col_cls[col] : '' %}
+
+                <li class="{{ row % 2 ? 'odd' : 'even' }} col-{{ (col % 2 ? 'odd' : 'even')~bgn_end~cus }}">
+                    <div class="in-cell">
+                        {% set idx = (row + col*rows)~'' %} {# twig convert math to double, we convert it back to string #}
+                        {{ items[idx] | raw }}
+                    </div>
+                </li>
+
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+{% endmacro %}
+
+
+{# display tabular of items in table - items: array of items
+    - data: 2-D array
+    - col_cls: optional, array of class name applying to each column
+    - id: optional, id for this columnar
+    - class: optional, class for this columnar
+#}
+{% macro tabular(data, col_cls, id, class) %}
+    {% set id = id ? (' id="' ~ id ~ '"') : "" %}
+
+    <table class="tabular {{ class ? ' '~class : ''}}"{{ id }}>
+    {% for row in data %}
+        {% set odd = loop.index0 % 2 ? 'odd' : 'even' %}
+        <tr class="{{ odd }}">
+        {% for cell in row %}
+
+            {% set cus = col_cls and col_cls[loop.index0] ? ' '~col_cls[loop.index0] : '' %}
+
+            <td class="column{{loop.index0}}{{ (loop.index0 % 2 ? ' odd' : ' even')~cus }}">{{ cell|raw }}</td>
+
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+{% endmacro %}
+
+
+
+
+
+{# make jquery tab friendly tab, working with jquery.ui.tabs.js
+    - data: [[title, content], ...]
+    - id: id for this tab
+    - class: optional, class for this tab
+#}
+{% macro mktab(data, id, class) %}
+    <div id="{{ id }}" class="panel {{ class|default('light-blue') }}">
+        {{- _self.expander(class) -}}
+        <ul class="panel-head">
+            {% for tab in data %}
+                <li><a href="#tabs-{{ loop.index }}">{{ tab[0]|raw }}</a></li>
+            {% endfor %}
+        </ul>
+        {% for tab in data %}
+            <div id="tabs-{{ loop.index }}">{{ tab[1]|raw }}</div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{#  HOW-it-work
+    - include "expandable" in the panel class
+    - and include "collapsed" for initially collapsed
+#}
+{% macro expander(panel_class) %}
+    {% if 'expandable' in panel_class %}
+    <div class="expander" title="expand here"></div>
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,22 @@
+{{ C.loadCSS('common.css') -}}
+{% include "sections/header.twig" %}
+	<div class="yui-b">
+        {% include "sections/side_nav.twig"  with {'module': 'repair'} %}
+    </div>
+    <div class="yui-main">
+        <div class="yui-b">
+            <h3>go through whole procedure</h3>
+            <pre>
+            appointment/dropin,
+            promised time job assign,
+            future work, no show,
+            unassignment work,
+            inpection progress / done,
+            estimatin
+            authorization, done,
+            work on hold, done,
+            archive invoice
+            </pre>
+        </div>
+    </div>
+{% include "sections/footer.twig" %}

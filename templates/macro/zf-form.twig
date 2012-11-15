@@ -1,0 +1,240 @@
+{% macro begin(options) %}
+    {% set options = options|default({}) %}
+    <form method="{{ options.method|default('post') }}"
+          action="{{ options.action|default('#') }}"
+          {% if options.upload %}enctype="multipart/form-data"{% endif %}
+          id="{{ options.id }}">
+        <dl class="zend_form">
+{% endmacro %}
+
+{% macro end() %}
+        </dl>
+    </form>
+{% endmacro %}
+
+{% macro _begin (options) %}
+    {% if not options.input_only %}
+        {% if options.label %}
+        {% if options.push_label %}<div class="push-lable"></div>{% endif %}
+        <dt id="{{options.name}}-label"><label {{ _self._attr(options, def, 'class') }}>{{ options.label|raw }}</label></dt>
+        {% endif %}
+        <dd id="{{options.name}}-element" class="{{options.error?'has-error':''}}">
+    {% endif %}
+{% endmacro %}
+{% macro _end (options) %}
+    {% if not options.input_only%}
+        {% if options.help %}
+            <span class="help-bk">
+                <span class="pointer"></span>
+                <span class="help">{{ options.help|raw }}</span>
+            </span>
+        {% endif %}
+            <span class="error-bk">
+                <span class="pointer"></span>
+                <span class="error">{{ options.error }}</span>
+            </span>
+        </dd>
+    {% endif %}
+{% endmacro %}
+
+{% macro text(options) %}
+    {{- _self._begin(options) }}
+    <input type="text"
+       class="text {{options.class}}"
+       name="{{ options.name }}"
+       id="{{ options.id|default(options.name) }}"
+       tabindex="{{ options.tabindex }}"
+       {% if options.value %}value="{{ options.value|e }}"{% endif -%}
+       {% if options.disabled %}disabled="disabled"{% endif -%}
+       {% if options.placeholder %}placeholder="{{ options.placeholder|e }}"{% endif -%} />
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro radio(options) %}
+    {{- _self._begin(options) }}
+    {% for val,txt in options.options %}
+        {% set cell %}
+        <label for="{{ options.name }}-{{ val }}">
+            <input type="radio" class="radio {{options.class}}"
+               name="{{ options.name }}"
+               id="{{ options.name }}-{{ val }}"
+               value="{{ val }}"
+               {% if val==options.value %}checked="checked"{% endif %}
+               {% if options.disabled %}disabled="disabled"{% endif %}
+            />{{ txt|raw -}}
+        </label>
+        {% endset %}
+
+        {% if options.cols %}
+            {% if loop.first %}<table class="zf-form-set">{% endif %}
+            {% if loop.index0 is divisibleby(options.cols) %}<tr>{% endif %}
+                <td>{{ cell|raw }}</td>
+            {% if (loop.index0 + 1) is divisibleby(options.cols) %}</tr>{% endif %}
+            {% if loop.last -%}</table>{% endif %}
+        {% else %}
+            {{ cell|raw }}
+        {% endif %}
+
+    {% endfor %}
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro select(options) %}
+    {{- _self._begin(options) }}
+    <select name="{{ options.name }}" class="select {{options.class}}"
+       {% if options.id %}id="{{options.id}}"{% endif -%}>
+       {% if options.disabled %}disabled="disabled"{% endif -%}>
+       {% if options.first_blank %}<option value="">-- {{options.first_blank}} --</option>{% endif -%}
+       {% for val,txt in options.options %}
+            <option value="{{ val }}"
+                {% if val==options.value %}selected="selected"{% endif %}>
+                {{- txt|raw -}}
+            </opsion>
+       {% endfor %}
+    </select>
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro button(options) %}
+    {{- _self._begin(options) }}
+    <input type="button"
+       {% if options.id %}id="{{options.id}}"{% endif -%}
+       {% if options.name %}name="{{options.name}}"{% endif -%}
+       class="button btn small {{ options.class is defined ? options.class : 'primary'}}"
+       value="{{options.value|raw}}" />
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro info(options) %}
+    {{- _self._begin(options) }}
+        {{options.value|raw}}
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro password(options) %}
+    {{- _self._begin(options) }}
+    <input type="password"
+       class="password {{options.class}}"
+       name="{{ options.name }}"
+       id="{{ options.id|default(options.name) }}"
+       tabindex="{{ options.tabindex }}"
+       {% if options.value %}value="{{ options.value|e }}"{% endif -%}
+       {% if options.disabled %}disabled="disabled"{% endif -%}
+       {% if options.placeholder %}placeholder="{{ options.placeholder|e }}"{% endif -%} />
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro textarea(options) %}
+    {{- _self._begin(options) }}
+       <textarea
+           class="textarea {{options.class}}"
+           name="{{ options.name }}"
+           id="{{ options.id|default(options.name) }}"
+           tabindex="{{ options.tabindex }}"
+           {% if options.readonly %}readonly="readonly"{% endif -%}
+           {% if options.disabled %}disabled="disabled"{% endif -%}
+           {% if options.placeholder %}placeholder="{{ options.placeholder|e }}"{% endif -%}
+        >{{- options.value|e -}}
+        </textarea>
+    {{- _self._end(options) }}
+{% endmacro %}
+
+
+{% macro checkbox(options) %}
+    {{- _self._begin(options) }}
+
+    {% for val,txt in options.options %}
+        {% set cell %}
+        <label for="{{ options.name }}-{{ val }}">
+            <input type="checkbox" class="checkbox {{options.class}}"
+               name="{{ options.name }}"
+               id="{{ options.name }}-{{ val }}"
+               value="{{ val }}"
+               {% if val==options.value or (val in options.value)  %}checked="checked"{% endif %}
+               {% if options.disabled %}disabled="disabled"{% endif %}
+            />{{- txt|raw -}}
+        </label>
+        {% endset %}
+
+        {% if options.cols %}
+            {% if loop.first %}<table class="zf-form-set">{% endif %}
+            {% if loop.index0 is divisibleby(options.cols) %}<tr>{% endif %}
+                <td>{{ cell|raw }}</td>
+            {% if (loop.index0 + 1) is divisibleby(options.cols) %}</tr>{% endif %}
+            {% if loop.last -%}
+                </table>
+                {% if options.check_all -%}
+                    <label class="all-in-out" for="{{ options.name }}-all" title="(un)check all options">
+                        <input class="checkbox all" type="checkbox" id="{{ options.name }}-all">All
+                    </label>
+                {% endif -%}
+            {% endif %}
+        {% else %}
+            {{ cell|raw }}
+        {% endif %}
+    {% endfor %}
+
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro submit(options) %}
+    {{- _self._begin(options) }}
+    <input type="submit"
+       {% if options.id %}id="{{options.id}}"{% endif -%}
+       {% if options.name %}name="{{options.name}}"{% endif -%}
+       class="button btn small primary{{ options.class ? ' '~options.class : ''}}"
+       value="{{options.value|raw}}" />
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro cancel(options) %}
+    {{- _self._begin(options) }}
+    <input type="button"
+       {% if options.id %}id="{{options.id}}"{% endif -%}
+       {% if options.name %}name="{{options.name}}"{% endif -%}
+       class="button btn small {{ options.class ? ' '~options.class : ''}}"
+       value="{{options.value|raw}}" />
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro set(options) %}
+    {{- _self._begin(options) }}
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro file(options) %}
+    {{- _self._begin(options) }}
+    <input type="file"
+        class="file {{options.class}}"
+        name="{{ options.name }}"
+        id="{{ options.id|default(options.name) }}"
+        tabindex="{{ options.tabindex }}"
+        {% if options.accept %}accept="{{ options.accept }}"{% endif -%}
+        {% if options.disabled %}disabled="disabled"{% endif -%}
+        {% if options.placeholder %}placeholder="{{ options.placeholder|e }}"{% endif -%} />
+        {% if options.value -%}
+            {{- options.value|e -}}
+            <input type="checkbox" name="delete_{{ options.name }}" value="1" /> delete
+        {%- endif -%}
+    {{- _self._end(options) }}
+{% endmacro %}
+
+{% macro select_country(options) %}
+    {% set country_code %}{% include 'include/country-code.json' %}{% endset %}
+    {{ _self.select({
+        "name":options.name|default('country_code'),
+        "label": options.label|default('Country'),
+        "options": country_code|php('json_decode', true),
+        "first_blank": "select country"
+    }) }}
+{% endmacro %}
+
+{% macro select_region(options) %}
+    {% include 'include/country-region.js.twig' %}
+    {{ _self.select({
+        "name":options.name|default('region_code'),
+        "label": options.label|default('State/Province'),
+        "options": [],
+        "first_blank": "select region"
+    }) }}
+{% endmacro %}

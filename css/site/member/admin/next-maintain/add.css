@@ -1,0 +1,5 @@
+/* require common.css|zf-form.css|theme/base/jquery.ui.core.css|theme/base/jquery.ui.theme.css|theme/base/jquery.ui.datepicker.css */
+
+.zend_form dd textarea#content {
+	height: 15em;
+}

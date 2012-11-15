@@ -1,0 +1,61 @@
+{{ C.loadCSS('sections/header.css') -}}
+{{ C.loadJS('sections/menu.js') -}}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="zh-cn" xml:lang="zh-cn">
+<head>
+    <title>Repair Shop Management</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div id="body-container">
+<div class="yui-d3">
+    <div class="headerbar" id="hd">
+        <div class="inner">
+            <div id="site-description">
+                <div id="shop-title">
+                    {% include "sections/login-form.twig" %}
+                </div>
+                <a id="logo" title="Repair Shop" href="/">
+                    <img src="/static/images/logo.png" alt="Repair Shop Logo" title="Repair Shop Logo">
+                </a>
+                <h1>Repair Shop Management</h1>
+                <br />
+                <h2>Repair, Parts, Technician, Supplier, Customer, Report, Bookkeeping, Payroll</h2>
+            </div>
+            <div id="nav">
+                <ul>
+                    <li><a href="/report" class="menu">Part</a>
+                        <ul class="hide sub-menu">
+                            <li><a href="#">Add</a></li>
+                            <li><a href="#">Return</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/report" class="menu">Payment</a>
+                        <ul class="hide sub-menu">
+                            <li><a href="#">Submenu 1</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/track" class="menu">Daily OP</a>
+                        <ul class="hide sub-menu">
+                            <li><a href="#">Payroll</a></li>
+                            <li><a href="#">Invoice In</a></li>
+                            <li><a href="#">Invoice out</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/repair" class="menu">Repair</a>
+                        <ul class="hide sub-menu">
+                            <li><a href="#">New</a></li>
+                            <li><a href="#">Search</a></li>
+                            <li><a href="#">Estimate</a></li>
+                        </ul>
+                    </li>
+                    <li class="quick">Quick</li>
+                    <li class="vip-info">Status highlighter: Cus Name, Car, Status</li>
+                </ul>
+                <div class="cleaner"></div>
+            </div>
+        </div>
+    </div>
+    <div id="bd" class="{{ bd_cls|default("yui-t2") }}">
+    	<div id="bd-container">
+

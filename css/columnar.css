@@ -1,0 +1,53 @@
+ul.columnar {
+  list-style-type: none;
+}
+
+ul.columnar li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.columnar li.new {
+  clear: left;
+}
+
+ul.cols1 li {
+  float: none;
+  width: 100%;
+}
+
+ul.cols2 li {
+  width: 48%;
+  margin-left:4%;
+}
+
+ul.cols3 li {
+  width: 32%;
+  margin-left:2%;
+}
+
+ul.cols4 li {
+  width: 24%;
+  margin-left:1.3%;
+}
+
+ul.cols5 li {
+  width: 19%;
+  margin-left:1.2%;
+}
+
+ul.cols6 li {
+  width: 16%;
+  margin-left:0.8%;
+}
+
+ul.columnar li.end,
+ul.columnar li.new {
+  margin-left: 0;
+}
+
+ul.columnar li.end {
+  float: right;
+}
