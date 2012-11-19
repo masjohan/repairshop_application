@@ -1,12 +1,13 @@
 {{ C.loadCSS('side_nav.css') }}
 {% import 'macro/panel.twig' as panel -%}
+{% import 'macro/widget.twig' as widget -%}
 
 {% if C.hasLogin() %}
     {{ panel.begin('Customer', 'light-grey', 'side-nav-menu') }}
         <ul class="side-nav">
-            <li><a href="/customer/new">New</a></li>
-            <li><a href="/customer/search">Search</a></li>
-            <li><a href="/customer/history">History</a></li>
+            <li>{{ widget.menu_link("/customer/new", "New", server) }}</li>
+            <li>{{ widget.menu_link("/customer/search", "Search", server) }}</li>
+            <li>{{ widget.menu_link("/customer/history", "History", server) }}</li>
         </ul>
         {{ panel.section('Report') }}
         <ul class="side-nav">

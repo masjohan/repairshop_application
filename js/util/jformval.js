@@ -465,7 +465,7 @@
         } else {
             RW.blockUI && RW.blockUI(true);
             $.ajax({
-                url: '/json/util/signurl',
+                url: '/json/common/signurl',
                 data: {
                     "url": this._jForm.attr('action') || (window.location.pathname + window.location.search),
                     "json": '__s_h'
@@ -544,6 +544,7 @@
 	    );
 	}
 
+    // take a jquery namespace
 	$.fn.formval = function(options){
         // deal with one form only
 		if ( this.length != 1 || !this.is('form')) return this;
@@ -552,19 +553,12 @@
             inst = this.data('formval'),
             ret;
 
-        if (typeof options == 'object' && inst) {
-            inst.enable();                          // wont make second instance
+        if (typeof options == 'object') {
+            inst ? inst.enable() : this.data('formval', new FormVal(this, options));
 
-        } else if (typeof options == 'object' && !inst) {
-            this.data('formval', new FormVal(this, options));
-
-        } else if (inst  && inst[options]) {
+        } else if (inst && inst[options]) {
             ret = inst[options].apply(inst, args);
-            if (/^is/.test(options)) return ret;    // return early if query
-
-        } else if (inst && options === 'destroy') {
-            inst.disable();                         // destroy not work properly
-
+            if (ret !== inst) return ret;    // return the result if not instance itself
         }
 
         return this;

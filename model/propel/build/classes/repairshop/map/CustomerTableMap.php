@@ -38,20 +38,11 @@ class CustomerTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-		$this->addColumn('TITLE', 'Title', 'CHAR', false, null, null);
-		$this->addColumn('FIRST_NAME', 'FirstName', 'VARCHAR', false, 45, null);
-		$this->addColumn('LAST_NAME', 'LastName', 'VARCHAR', false, 45, null);
-		$this->addColumn('PHONE', 'Phone', 'VARCHAR', false, 25, null);
-		$this->addColumn('CELL', 'Cell', 'VARCHAR', false, 25, null);
-		$this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 45, null);
-		$this->addColumn('ADDRESS', 'Address', 'VARCHAR', false, 100, null);
-		$this->addColumn('CITY', 'City', 'VARCHAR', false, 25, null);
-		$this->addColumn('PROVINCE', 'Province', 'VARCHAR', false, 25, null);
-		$this->addColumn('COUNTRY', 'Country', 'VARCHAR', false, 25, null);
-		$this->addColumn('POSTAL', 'Postal', 'VARCHAR', false, 12, null);
-		$this->addColumn('COMPANY', 'Company', 'VARCHAR', false, 45, null);
+		$this->addColumn('REWARD_POINT', 'RewardPoint', 'INTEGER', true, null, 0);
+		$this->addColumn('REFERER_ID', 'RefererId', 'INTEGER', false, 10, null);
 		$this->addColumn('NOTES', 'Notes', 'LONGVARCHAR', false, null, null);
-		$this->addColumn('VIP_SCORE', 'VipScore', 'INTEGER', false, null, null);
+		$this->addColumn('FAMILY_ID', 'FamilyId', 'INTEGER', false, 10, null);
+		$this->addForeignKey('SHOP_ID', 'ShopId', 'INTEGER', 'Shop', 'ID', true, 10, null);
 		// validators
 	} // initialize()
 
@@ -60,6 +51,8 @@ class CustomerTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('Shop', 'Shop', RelationMap::MANY_TO_ONE, array('shop_id' => 'id', ), null, null);
+    $this->addRelation('User', 'User', RelationMap::ONE_TO_MANY, array('id' => 'customer_id', ), null, null);
 	} // buildRelations()
 
 } // CustomerTableMap

@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'Audit' table.
+ * This class defines the structure of the '_audit' table.
  *
  *
  *
@@ -31,7 +31,7 @@ class AuditTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('Audit');
+		$this->setName('_audit');
 		$this->setPhpName('Audit');
 		$this->setClassname('Audit');
 		$this->setPackage('repairshop');
@@ -42,7 +42,8 @@ class AuditTableMap extends TableMap {
 		$this->addColumn('ACTION', 'Action', 'CHAR', true, null, null);
 		$this->addColumn('TABLE_NAME', 'TableName', 'VARCHAR', true, 45, null);
 		$this->addColumn('TABLE_ID', 'TableId', 'INTEGER', true, 10, null);
-		$this->addColumn('NOTES', 'Notes', 'LONGVARCHAR', false, null, null);
+		$this->addColumn('USER_ID', 'UserId', 'INTEGER', false, 10, null);
+		$this->addColumn('MYSQL_UID', 'MysqlUid', 'VARCHAR', false, 45, null);
 		// validators
 	} // initialize()
 

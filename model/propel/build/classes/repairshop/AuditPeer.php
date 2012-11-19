@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'Audit' table.
+ * Skeleton subclass for performing query and update operations on the '_audit' table.
  *
  * 
  *

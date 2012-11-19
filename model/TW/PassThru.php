@@ -22,17 +22,23 @@ class TW_PassThru {
         'htc'    => "text/x-component",
         'atom'   => 'application/atom+xml',
         'ical'   => 'text/calendar',
-        'csv'    => 'text/csv'
+        'csv'    => 'text/csv',
+        'ico'    => 'image/x-icon'
     );
 
-	public static function pass_exist_thru(){
+	public static function run(){
 		// map request to a path under web root
 		$inSite = '.'.$_SERVER['SCRIPT_NAME'];
 
 		// return false if not file or not supported file type
-		if (!is_file($inSite) || !preg_match('/\.(\w+)$/', $inSite, $matches) || ! self::$mime[$matches[1]]) {
+		if (!is_file($inSite)) {
 			return FALSE;
 		}
+
+        // seems someone hacking, security feature
+        if (!preg_match('/\.(\w+)$/', $inSite, $matches) || ! self::$mime[$matches[1]]) {
+            return TRUE;
+        }
 
 		$mtime = filemtime($inSite);
 		if(self::sendNoModify($mtime)) return TRUE;

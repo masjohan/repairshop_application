@@ -2,7 +2,7 @@
 
 
 /**
- * Base class that represents a query for the 'Audit' table.
+ * Base class that represents a query for the '_audit' table.
  *
  * 
  *
@@ -11,14 +11,16 @@
  * @method     AuditQuery orderByAction($order = Criteria::ASC) Order by the action column
  * @method     AuditQuery orderByTableName($order = Criteria::ASC) Order by the table_name column
  * @method     AuditQuery orderByTableId($order = Criteria::ASC) Order by the table_id column
- * @method     AuditQuery orderByNotes($order = Criteria::ASC) Order by the notes column
+ * @method     AuditQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     AuditQuery orderByMysqlUid($order = Criteria::ASC) Order by the mysql_uid column
  *
  * @method     AuditQuery groupById() Group by the id column
  * @method     AuditQuery groupByWhen() Group by the when column
  * @method     AuditQuery groupByAction() Group by the action column
  * @method     AuditQuery groupByTableName() Group by the table_name column
  * @method     AuditQuery groupByTableId() Group by the table_id column
- * @method     AuditQuery groupByNotes() Group by the notes column
+ * @method     AuditQuery groupByUserId() Group by the user_id column
+ * @method     AuditQuery groupByMysqlUid() Group by the mysql_uid column
  *
  * @method     AuditQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     AuditQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -32,14 +34,16 @@
  * @method     Audit findOneByAction(string $action) Return the first Audit filtered by the action column
  * @method     Audit findOneByTableName(string $table_name) Return the first Audit filtered by the table_name column
  * @method     Audit findOneByTableId(int $table_id) Return the first Audit filtered by the table_id column
- * @method     Audit findOneByNotes(string $notes) Return the first Audit filtered by the notes column
+ * @method     Audit findOneByUserId(int $user_id) Return the first Audit filtered by the user_id column
+ * @method     Audit findOneByMysqlUid(string $mysql_uid) Return the first Audit filtered by the mysql_uid column
  *
  * @method     array findById(int $id) Return Audit objects filtered by the id column
  * @method     array findByWhen(string $when) Return Audit objects filtered by the when column
  * @method     array findByAction(string $action) Return Audit objects filtered by the action column
  * @method     array findByTableName(string $table_name) Return Audit objects filtered by the table_name column
  * @method     array findByTableId(int $table_id) Return Audit objects filtered by the table_id column
- * @method     array findByNotes(string $notes) Return Audit objects filtered by the notes column
+ * @method     array findByUserId(int $user_id) Return Audit objects filtered by the user_id column
+ * @method     array findByMysqlUid(string $mysql_uid) Return Audit objects filtered by the mysql_uid column
  *
  * @package    propel.generator.repairshop.om
  */
@@ -314,31 +318,71 @@ abstract class BaseAuditQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the notes column
+	 * Filter the query on the user_id column
 	 * 
 	 * Example usage:
 	 * <code>
-	 * $query->filterByNotes('fooValue');   // WHERE notes = 'fooValue'
-	 * $query->filterByNotes('%fooValue%'); // WHERE notes LIKE '%fooValue%'
+	 * $query->filterByUserId(1234); // WHERE user_id = 1234
+	 * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
+	 * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
 	 * </code>
 	 *
-	 * @param     string $notes The value to use as filter.
+	 * @param     mixed $userId The value to use as filter.
+	 *              Use scalar values for equality.
+	 *              Use array values for in_array() equivalent.
+	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    AuditQuery The current query, for fluid interface
+	 */
+	public function filterByUserId($userId = null, $comparison = null)
+	{
+		if (is_array($userId)) {
+			$useMinMax = false;
+			if (isset($userId['min'])) {
+				$this->addUsingAlias(AuditPeer::USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($userId['max'])) {
+				$this->addUsingAlias(AuditPeer::USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(AuditPeer::USER_ID, $userId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the mysql_uid column
+	 * 
+	 * Example usage:
+	 * <code>
+	 * $query->filterByMysqlUid('fooValue');   // WHERE mysql_uid = 'fooValue'
+	 * $query->filterByMysqlUid('%fooValue%'); // WHERE mysql_uid LIKE '%fooValue%'
+	 * </code>
+	 *
+	 * @param     string $mysqlUid The value to use as filter.
 	 *              Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    AuditQuery The current query, for fluid interface
 	 */
-	public function filterByNotes($notes = null, $comparison = null)
+	public function filterByMysqlUid($mysqlUid = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($notes)) {
+			if (is_array($mysqlUid)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $notes)) {
-				$notes = str_replace('*', '%', $notes);
+			} elseif (preg_match('/[\%\*]/', $mysqlUid)) {
+				$mysqlUid = str_replace('*', '%', $mysqlUid);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(AuditPeer::NOTES, $notes, $comparison);
+		return $this->addUsingAlias(AuditPeer::MYSQL_UID, $mysqlUid, $comparison);
 	}
 
 	/**

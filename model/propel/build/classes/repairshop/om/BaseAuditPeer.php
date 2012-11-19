@@ -2,7 +2,7 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'Audit' table.
+ * Base static class for performing query and update operations on the '_audit' table.
  *
  * 
  *
@@ -14,7 +14,7 @@ abstract class BaseAuditPeer {
 	const DATABASE_NAME = 'repairshop';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'Audit';
+	const TABLE_NAME = '_audit';
 
 	/** the related Propel class for this table */
 	const OM_CLASS = 'Audit';
@@ -26,31 +26,34 @@ abstract class BaseAuditPeer {
 	const TM_CLASS = 'AuditTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 6;
+	const NUM_COLUMNS = 7;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-	const NUM_HYDRATE_COLUMNS = 6;
+	const NUM_HYDRATE_COLUMNS = 7;
 
 	/** the column name for the ID field */
-	const ID = 'Audit.ID';
+	const ID = '_audit.ID';
 
 	/** the column name for the WHEN field */
-	const WHEN = 'Audit.WHEN';
+	const WHEN = '_audit.WHEN';
 
 	/** the column name for the ACTION field */
-	const ACTION = 'Audit.ACTION';
+	const ACTION = '_audit.ACTION';
 
 	/** the column name for the TABLE_NAME field */
-	const TABLE_NAME = 'Audit.TABLE_NAME';
+	const TABLE_NAME = '_audit.TABLE_NAME';
 
 	/** the column name for the TABLE_ID field */
-	const TABLE_ID = 'Audit.TABLE_ID';
+	const TABLE_ID = '_audit.TABLE_ID';
 
-	/** the column name for the NOTES field */
-	const NOTES = 'Audit.NOTES';
+	/** the column name for the USER_ID field */
+	const USER_ID = '_audit.USER_ID';
+
+	/** the column name for the MYSQL_UID field */
+	const MYSQL_UID = '_audit.MYSQL_UID';
 
 	/** The default string format for model objects of the related table **/
 	const DEFAULT_STRING_FORMAT = 'YAML';
@@ -71,12 +74,12 @@ abstract class BaseAuditPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	protected static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'When', 'Action', 'TableName', 'TableId', 'Notes', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'when', 'action', 'tableName', 'tableId', 'notes', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::WHEN, self::ACTION, self::TABLE_NAME, self::TABLE_ID, self::NOTES, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'WHEN', 'ACTION', 'TABLE_NAME', 'TABLE_ID', 'NOTES', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'when', 'action', 'table_name', 'table_id', 'notes', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'When', 'Action', 'TableName', 'TableId', 'UserId', 'MysqlUid', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'when', 'action', 'tableName', 'tableId', 'userId', 'mysqlUid', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::WHEN, self::ACTION, self::TABLE_NAME, self::TABLE_ID, self::USER_ID, self::MYSQL_UID, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'WHEN', 'ACTION', 'TABLE_NAME', 'TABLE_ID', 'USER_ID', 'MYSQL_UID', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'when', 'action', 'table_name', 'table_id', 'user_id', 'mysql_uid', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
 	/**
@@ -86,12 +89,12 @@ abstract class BaseAuditPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	protected static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'When' => 1, 'Action' => 2, 'TableName' => 3, 'TableId' => 4, 'Notes' => 5, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'when' => 1, 'action' => 2, 'tableName' => 3, 'tableId' => 4, 'notes' => 5, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::WHEN => 1, self::ACTION => 2, self::TABLE_NAME => 3, self::TABLE_ID => 4, self::NOTES => 5, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'WHEN' => 1, 'ACTION' => 2, 'TABLE_NAME' => 3, 'TABLE_ID' => 4, 'NOTES' => 5, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'when' => 1, 'action' => 2, 'table_name' => 3, 'table_id' => 4, 'notes' => 5, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'When' => 1, 'Action' => 2, 'TableName' => 3, 'TableId' => 4, 'UserId' => 5, 'MysqlUid' => 6, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'when' => 1, 'action' => 2, 'tableName' => 3, 'tableId' => 4, 'userId' => 5, 'mysqlUid' => 6, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::WHEN => 1, self::ACTION => 2, self::TABLE_NAME => 3, self::TABLE_ID => 4, self::USER_ID => 5, self::MYSQL_UID => 6, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'WHEN' => 1, 'ACTION' => 2, 'TABLE_NAME' => 3, 'TABLE_ID' => 4, 'USER_ID' => 5, 'MYSQL_UID' => 6, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'when' => 1, 'action' => 2, 'table_name' => 3, 'table_id' => 4, 'user_id' => 5, 'mysql_uid' => 6, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
 	/**
@@ -168,14 +171,16 @@ abstract class BaseAuditPeer {
 			$criteria->addSelectColumn(AuditPeer::ACTION);
 			$criteria->addSelectColumn(AuditPeer::TABLE_NAME);
 			$criteria->addSelectColumn(AuditPeer::TABLE_ID);
-			$criteria->addSelectColumn(AuditPeer::NOTES);
+			$criteria->addSelectColumn(AuditPeer::USER_ID);
+			$criteria->addSelectColumn(AuditPeer::MYSQL_UID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.WHEN');
 			$criteria->addSelectColumn($alias . '.ACTION');
 			$criteria->addSelectColumn($alias . '.TABLE_NAME');
 			$criteria->addSelectColumn($alias . '.TABLE_ID');
-			$criteria->addSelectColumn($alias . '.NOTES');
+			$criteria->addSelectColumn($alias . '.USER_ID');
+			$criteria->addSelectColumn($alias . '.MYSQL_UID');
 		}
 	}
 
@@ -364,7 +369,7 @@ abstract class BaseAuditPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to Audit
+	 * Method to invalidate the instance pool of all tables related to _audit
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
@@ -583,7 +588,7 @@ abstract class BaseAuditPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the Audit table.
+	 * Method to DELETE all rows from the _audit table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */

@@ -10,58 +10,25 @@ class Asset_Loader {
     private $cachedir = 'static/cache';
     private $mode; // either script (js) or style (css)
 
+    // jquery and jqueryui been loaded from CDN, see header.twig
     static private $alias = array(
         'jquery'            => 'jquery/jquery-1.7.2.js',
         'rw'                => 'util/rw.js',
         'string'            => 'util/string.js',
         'array'             => 'util/array.js',
         'function'          => 'util/function.js',
-        'formval'           => 'util/formval.js',
-        'jformval'         	=> 'util/jformval.js',
-        'popover'           => 'util/popover.js',
+        'jformval'         	=> 'util/jformval.add-method.js',   // tricky uh
     	'jpopover'          => 'util/jpopover.js',
     	'messager'          => 'util/messager.js',
-        'juicore'           => 'jquery/ui/jquery.ui.core.js',
-        'juiwidget'         => 'jquery/ui/jquery.ui.widget.js',
-        'juimouse'       	=> 'jquery/ui/jquery.ui.mouse.js',
-        'juiposition'       => 'jquery/ui/jquery.ui.position.js',
-        'juidraggable'      => 'jquery/ui/jquery.ui.draggable.js',
-        'juidroppable'      => 'jquery/ui/jquery.ui.droppable.js',
-        'juiresizable'      => 'jquery/ui/jquery.ui.resizable.js',
-        'juiselectable'     => 'jquery/ui/jquery.ui.selectable.js',
-        'juisortable'       => 'jquery/ui/jquery.ui.sortable.js',
-        'juiaccordion'      => 'jquery/ui/jquery.ui.accordion.js',
-        'juiautocomplete'   => 'jquery/ui/jquery.ui.autocomplete.js',
-        'juibutton'       	=> 'jquery/ui/jquery.ui.button.js',
-    	'juidatepicker'     => 'jquery/ui/jquery.ui.datepicker.js',
-    	'juidialog'         => 'jquery/ui/jquery.ui.dialog.js',
-        'juitabs'           => 'jquery/ui/jquery.ui.tabs.js',
         'jmetadata'         => 'plugins/jquery.metadata.js',
         'jtablesorter'      => 'plugins/jquery.tablesorter.js',
         'jtablesorterpager' => 'plugins/jquery.tablesorter.pager.js',
     );
 
     static private $dependon = array(
-        'rw'                => array('jquery'),
         'formval'           => array('rw','function'),
-        'jformval'         	=> array('rw','function','juidatepicker'),
-    	'popover'           => array('rw','function'),
-    	'jpopover'          => array('juiposition','function'),
-    	'juicore'           => array('jquery'),
-        'juiwidget'         => array('juicore'),
-        'juimouse'          => array('juicore'),
-    	'juiposition'       => array('juicore'),
-        'juidraggable'      => array('juiwidget', 'juimouse'),
-        'juidroppable'      => array('juidraggable'),
-        'juiresizable'      => array('juiwidget', 'juimouse'),
-        'juiselectable'     => array('juiwidget', 'juimouse'),
-        'juisortable'       => array('juiwidget', 'juimouse'),
-        'juibutton'			=> array('juiwidget'),
-        'juidatepicker'     => array('juicore'),
-        'juidialog'         => array('juiposition', 'juiresizable', 'juidraggable'),
-        'juitabs'           => array('juiwidget'),
-        'juiaccordion'      => array('juiwidget'),
-        'juiautocomplete'   => array('juiwidget','juiposition'),
+        'jformval'         	=> array('rw','function', 'util/jformval.js'),
+    	'jpopover'          => array('function'),
         'jmetadata'         => array('jquery'),
         'jtablesorter'      => array('jmetadata'),
         'jtablesorterpager' => array('jtablesorter'),
@@ -79,9 +46,9 @@ class Asset_Loader {
     	));
 
     	// try after title
-    	$html = str_replace('</title>', '</title>'.$stype_script, $html, $count);
-    	// otherwise before the end of head
-    	if (!$count) $html = str_replace('</head>', $stype_script.'</head>', $html);
+    	$html = str_replace('<!--LOADER_PLACE_HOLDER-->', $stype_script, $html, $count);
+
+    	if (!$count) trigger_error("Can NOT find LOADER_PLACE_HOLDER");
 
     	return $html;
     }

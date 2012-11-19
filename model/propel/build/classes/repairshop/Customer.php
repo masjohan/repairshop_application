@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for representing a row from the 'customer' table.
+ * Skeleton subclass for representing a row from the 'Customer' table.
  *
  * 
  *

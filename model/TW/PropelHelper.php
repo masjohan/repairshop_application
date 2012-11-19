@@ -59,6 +59,27 @@ class TW_PropelHelper {
             return $args[0];
         }
     }
-}
 
-?>
+
+    // clean up (user's) vars recursively, designed for GET POST COOKIE
+    public static function safeVars(&$data, $allowLimitedHtml = NULL) {
+    	// safe html guard
+    	static $reg_check = '/(javascript|vbscript)\s*:|<\s*(script|embed|object)|\bon(click|dblclick|mousedown|mouseup|mousemove|mouseout|keydown|keypress|keyup|load|unload|abort|error|resize|scroll|select|change|submit|reset|focus|blur|domfocusin|domfocusout|domactivate|subtreemodified|nodeinserted|noderemoved|domnoderemovedfromdocument|domnodeinsertedintodocument|attrmodified|characterdatamodified|cut|copy|paste|beforecut|beforecopy|beforepaste|afterupdate|beforeupdate|cellchange|dataavailable|datasetchanged|datasetcomplete|errorupdate|rowenter|rowexit|rowsdelete|rowinserted|contextmenu|drag|dragstart|dragenter|dragover|dragleave|dragend|drop|selectstart|help|beforeunload|stop|beforeeditfocus|start|finish|bounce|beforeprint|afterprint|propertychange|filterchange|readystatechange|losecapture)\s*=/i';
+    	static $allowedTags = '<h1><h2><h3><h4><h5><h6><img><ul><ol><li><b><strong><p><br>';
+
+    	if (is_string($data)) {
+    		$data = trim($data);
+
+    		if ($data === ''){
+    			$data = NULL;
+    		} else if ($allowLimitedHtml && !preg_match($reg_check, $data)) {
+    			$data = strip_tags($data, $allowedTags);
+    		} else {
+    			$data = strip_tags($data);
+    		}
+
+    	} else if (is_array($data)) foreach($data as $key => &$value) {
+    		TW_PropelHelper::safeVars($value, $allowLimitedHtml);
+    	}
+    }
+}

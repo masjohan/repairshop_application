@@ -1,0 +1,45 @@
+{% import 'macro/zf-form.twig' as form -%}
+{% import 'macro/widget.twig' as widget -%}
+{% include "sections/header.twig" with {'no_login': 1} %}
+	<div class="yui-b">
+        {% include "sections/side_nav.twig" %}
+    </div>
+    <div class="yui-main">
+        <div class="yui-b">
+            <h2>{{ action.Name }}</h2>
+            {% if reset_user %}
+                <p>Welcome back. Please pickup your password</p>
+                {{ form.begin({"method":"post", "action":"/json/common/forget", "id":"page-form-2"}) }}
+                    {{ form.password({
+                        "name" : "Passwd",
+                        "label" : "Password",
+                        "help" : "8+ chars including one CAPTIAL, 1 digit."
+                    }) }}
+                    {{ form.password({
+                        "name" : "Passwd2",
+                        "label" : "Re-type Password"
+                    }) }}
+                    <dd>
+                        {{ form.submit({"input_only":true, "value":"Reset password"}) }}
+                    </dd>
+                    <input type="hidden" name="RecoveryToken" value="{{ reset_user.RecoveryToken }}" />
+                {{ form.end() }}
+            {% elseif reset_failed %}
+                <p>It is failed to reset your password. You can try to <a href="/common/forget">reset your password</a> again</p>
+            {% else %}
+                <p>Please enter the email address been using for your account. We will send out the reset instruction there.</p>
+                {{ form.begin({"method":"post", "action":"/json/common/forget", "id":"page-form"}) }}
+                    {{ form.text({
+                        "name" : "Email",
+                        "label" : "Email",
+                        "value" : request.email,
+                        "help" : "What email are you using to login your account"
+                    }) }}
+                    <dd>
+                        {{ form.submit({"input_only":true, "value":"Submit email","id":"submit-email"}) }}
+                    </dd>
+                {{ form.end() }}
+            {% endif %}
+        </div>
+    </div>
+{% include "sections/footer.twig" %}

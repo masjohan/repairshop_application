@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'customer' table.
+ * Skeleton subclass for performing query and update operations on the 'Customer' table.
  *
  * 
  *

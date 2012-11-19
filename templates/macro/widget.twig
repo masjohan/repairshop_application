@@ -36,3 +36,7 @@
         </script>
     </div>
 {% endmacro %}
+
+{% macro menu_link(url, text, server) %}
+    <a href="{{ url }}"{% if server.SCRIPT_NAME == url %} class="current"{% endif %}>{{ text }}</a>
+{% endmacro %}

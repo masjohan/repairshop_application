@@ -1,21 +1,21 @@
 {{ C.loadCSS('sections/login.css') -}}
 {% if C.hasLogin() %}
-<div id="login-shop">
-    Shop Name
-</div>
+    <div id="login-shop">
+        Hello {{login_user.Email}}, <a href="/common/profile">Profle</a> | <a href="/common/logout">Login</a>
+    </div>
 {% else %}
-<form id="login-fm" method="post" action="/login">
-    <label for="username">Email:</label>
-    <input type="text" name="username" id="username" />
-    <div class="cleaner"></div>
-    <a class="forget" href="#">forget</a>
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" />
-    <br />
-    <input class="submit" type="submit" value="Log-in" name="login" />
-    <!--        <hr />
-    Or 3rd party account<br>
-    <a class="openid-link google" href="#"></a>
+    <form id="login-fm" method="post" action="/common/login"{% if login_error %} class="error"{% endif %}>
+        <label for="username">Email:</label>
+        <input type="text" name="username" id="username" value="{{ request.username }}" />
+        <div class="cleaner"></div>
+        <a class="forget" href="/common/forget{% if request.username %}?email={{ request.username }}{% endif %}">reset</a>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" />
+        <br />
+        <input class="submit" type="submit" value="Log-in" name="login" />
+<!--        <hr />
+        Or 3rd party account<br>
+        <a class="openid-link google" href="#"></a>
 -->
-</form>
+    </form>
 {% endif %}

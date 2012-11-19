@@ -1,13 +1,11 @@
 <?php
-    $C->needLogin();
+    $C->checkLogin();
     if(!$_POST || !$C->session->matchUrl()) return;
 
-    TW_DataModel::safeVars($_POST);
+	$cus = new Customer();
+    $cus->fromArray($_POST);
+    $cus->save();
 
-	$v = new IcaVehicle();
-    $v->fromArray($_POST);
-    $v->setPhpbbUsers($C->user)
-            ->setCreated(new DateTime())
-            ->save();
-
-	$C->SAVED_UserVehicle = 1;
+    $C->outputType("json");
+	$C->error = 0;
+    $C->message = "";

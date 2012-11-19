@@ -2,7 +2,7 @@
 
 
 /**
- * Base class that represents a row from the 'Audit' table.
+ * Base class that represents a row from the '_audit' table.
  *
  * 
  *
@@ -55,10 +55,16 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 	protected $table_id;
 
 	/**
-	 * The value for the notes field.
+	 * The value for the user_id field.
+	 * @var        int
+	 */
+	protected $user_id;
+
+	/**
+	 * The value for the mysql_uid field.
 	 * @var        string
 	 */
-	protected $notes;
+	protected $mysql_uid;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -153,13 +159,23 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [notes] column value.
+	 * Get the [user_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getUserId()
+	{
+		return $this->user_id;
+	}
+
+	/**
+	 * Get the [mysql_uid] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getNotes()
+	public function getMysqlUid()
 	{
-		return $this->notes;
+		return $this->mysql_uid;
 	}
 
 	/**
@@ -265,24 +281,44 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 	} // setTableId()
 
 	/**
-	 * Set the value of [notes] column.
+	 * Set the value of [user_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     Audit The current object (for fluent API support)
+	 */
+	public function setUserId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->user_id !== $v) {
+			$this->user_id = $v;
+			$this->modifiedColumns[] = AuditPeer::USER_ID;
+		}
+
+		return $this;
+	} // setUserId()
+
+	/**
+	 * Set the value of [mysql_uid] column.
 	 * 
 	 * @param      string $v new value
 	 * @return     Audit The current object (for fluent API support)
 	 */
-	public function setNotes($v)
+	public function setMysqlUid($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->notes !== $v) {
-			$this->notes = $v;
-			$this->modifiedColumns[] = AuditPeer::NOTES;
+		if ($this->mysql_uid !== $v) {
+			$this->mysql_uid = $v;
+			$this->modifiedColumns[] = AuditPeer::MYSQL_UID;
 		}
 
 		return $this;
-	} // setNotes()
+	} // setMysqlUid()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -321,7 +357,8 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 			$this->action = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->table_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->table_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-			$this->notes = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->user_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+			$this->mysql_uid = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -330,7 +367,7 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 6; // 6 = AuditPeer::NUM_HYDRATE_COLUMNS.
+			return $startcol + 7; // 7 = AuditPeer::NUM_HYDRATE_COLUMNS.
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Audit object", $e);
@@ -645,7 +682,10 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 				return $this->getTableId();
 				break;
 			case 5:
-				return $this->getNotes();
+				return $this->getUserId();
+				break;
+			case 6:
+				return $this->getMysqlUid();
 				break;
 			default:
 				return null;
@@ -680,7 +720,8 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 			$keys[2] => $this->getAction(),
 			$keys[3] => $this->getTableName(),
 			$keys[4] => $this->getTableId(),
-			$keys[5] => $this->getNotes(),
+			$keys[5] => $this->getUserId(),
+			$keys[6] => $this->getMysqlUid(),
 		);
 		return $result;
 	}
@@ -728,7 +769,10 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 				$this->setTableId($value);
 				break;
 			case 5:
-				$this->setNotes($value);
+				$this->setUserId($value);
+				break;
+			case 6:
+				$this->setMysqlUid($value);
 				break;
 		} // switch()
 	}
@@ -759,7 +803,8 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 		if (array_key_exists($keys[2], $arr)) $this->setAction($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setTableName($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setTableId($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setNotes($arr[$keys[5]]);
+		if (array_key_exists($keys[5], $arr)) $this->setUserId($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setMysqlUid($arr[$keys[6]]);
 	}
 
 	/**
@@ -776,7 +821,8 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 		if ($this->isColumnModified(AuditPeer::ACTION)) $criteria->add(AuditPeer::ACTION, $this->action);
 		if ($this->isColumnModified(AuditPeer::TABLE_NAME)) $criteria->add(AuditPeer::TABLE_NAME, $this->table_name);
 		if ($this->isColumnModified(AuditPeer::TABLE_ID)) $criteria->add(AuditPeer::TABLE_ID, $this->table_id);
-		if ($this->isColumnModified(AuditPeer::NOTES)) $criteria->add(AuditPeer::NOTES, $this->notes);
+		if ($this->isColumnModified(AuditPeer::USER_ID)) $criteria->add(AuditPeer::USER_ID, $this->user_id);
+		if ($this->isColumnModified(AuditPeer::MYSQL_UID)) $criteria->add(AuditPeer::MYSQL_UID, $this->mysql_uid);
 
 		return $criteria;
 	}
@@ -843,7 +889,8 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 		$copyObj->setAction($this->getAction());
 		$copyObj->setTableName($this->getTableName());
 		$copyObj->setTableId($this->getTableId());
-		$copyObj->setNotes($this->getNotes());
+		$copyObj->setUserId($this->getUserId());
+		$copyObj->setMysqlUid($this->getMysqlUid());
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -898,7 +945,8 @@ abstract class BaseAudit extends BaseObject  implements Persistent
 		$this->action = null;
 		$this->table_name = null;
 		$this->table_id = null;
-		$this->notes = null;
+		$this->user_id = null;
+		$this->mysql_uid = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

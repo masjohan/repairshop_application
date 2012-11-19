@@ -21,6 +21,12 @@ class Controller {
 
     private function __construct(){
     	spl_autoload_register(array($this, 'loader'));
+
+        // sanitize the world
+        TW_PropelHelper::safeVars($_POST);
+        TW_PropelHelper::safeVars($_GET);
+        TW_PropelHelper::safeVars($_REQUEST);
+        TW_PropelHelper::safeVars($_COOKIE);
     }
 
 	private function loader($class_name) {
@@ -34,23 +40,21 @@ class Controller {
         }
     }
 
-    public function start($ini_tpl_vars = NULL) {
+    public function start() {
     	// time is important
         date_default_timezone_set('America/Vancouver');
         // setup propel
         require_once APP_DIR . 'model/propel/lib/Propel.php';
         Propel::init(APP_DIR . 'model/propel/build/conf/repairshop-conf.php');
         set_include_path(APP_DIR . 'model/propel/build/classes' . PATH_SEPARATOR . get_include_path());
-
-        /* passed in tpl vars, something has to be run at index router */
-        if ($ini_tpl_vars) $this->_tplVars = array_merge($this->_tplVars, $ini_tpl_vars);
-        $this->hasLogin();  // build user
+        // the first thing, start profilling
+        $this->param('dbh', Propel::getConnection());
 
         // the first thing, start profilling
         $this->param('profile',new TW_Profile());
 
         $this->profile->mark('start session');
-        $this->param('session',new TW_Session());
+        $this->param('session', TW_Session::getInstance());
 
         $this->dispatch($_SERVER['REQUEST_URI']);
 
@@ -60,6 +64,10 @@ class Controller {
         }
     }
 
+    /**
+     * It is possible for handler call this, like rewrite
+     * @param type $url
+     */
     public function dispatch($url) {
         if (!isset($this->_top_url)) {
             $this->_top_url = $url;
@@ -92,14 +100,36 @@ class Controller {
             );
     }
 
-    public function param ($name, $value=NULL, $to_unset = FALSE) {
-        if ($to_unset) {
+    /**
+     * run params is for C running, NOT for tpl. Can NOT be modified from outside
+     * @param type $name
+     * @param type $value
+     * @param type $to_unset
+     * @return type
+     */
+    public function param ($name, $value = NULL, $to_unset = NULL) {
+        if ($to_unset === TRUE) {
             unset($this->_runParams[$name]);
-        } else if( $value===NULL ) {
-            return $this->_runParams[$name];
+        } else if( $value === NULL ) {
+            return isset($this->_runParams[$name]) ? $this->_runParams[$name] : NULL;
         } else {
             $this->_runParams[$name] = $value;
         }
+    }
+
+    // output type can be resolve from path or override by handler
+    public function outputType($pathType) {
+        // set type directly
+        if (preg_match('/^(jsonp?|yaml|session|cookie|cache)$/', $pathType)) {
+            $this->_output_type = $pathType;
+        // path imply the output type request
+        } else if(preg_match('/^\/(jsonp?|yaml|session|cookie|cache)\b/', $pathType, $match)) {
+            $this->_output_type = $match[1];
+            $pathType = str_replace("/{$match[1]}", '', $pathType);
+        } else {
+            $this->_output_type = 'html';
+        }
+        return $pathType;
     }
 
     /* map url to a specific handler and template */
@@ -119,20 +149,16 @@ class Controller {
             exit;
         }
 
-        if(preg_match('/^\/(jsonp?|yaml|atom|storable|session|cache|parts)\b/', $path, $match)) {
-            $this->_output_type = $match[1];
-            $path = str_replace("/{$match[1]}", '', $path);
-        } else {
-            $this->_output_type = 'html';
-        }
-
+        $path = $this->outputType($path);
         if ($path === '/') $path = '';
 
-        // handler and tpl are pair; tpl is mandatory, hdl is optional
-        $hdl_dir = APP_DIR.'templates';
-        while(!is_file($hdl_dir.$path.'.twig')) {
+        // handler and tpl are pair; it is fine either tpl or hdl exists
+        // if tpl not exists, hdl need to take care it, redirect or json
+        $tpl_dir = APP_DIR.'templates';
+        $hdl_dir = APP_DIR.'handler';
+        while(!is_file($tpl_dir.$path.'.twig') && !is_file($hdl_dir.$path.'.php')) {
             // if dir, serve index file
-            if(is_dir($hdl_dir.$path)) {
+            if(is_dir($tpl_dir.$path)) {
                 $path .= '/index';
 
             // a file path, not exist
@@ -163,10 +189,14 @@ class Controller {
         // remove leading '/'; no why, just do it
         $path = preg_replace('/^\//', '', $path);
 
+        // ACL check
+        Biz_ACL::check($path);
+
         $this->_resolve_path = $path;
 	}
 
-    private function run($hdl_path = null, array $params = null) {
+    // handle can another handler, use $C->run, instead or include()
+    public function run($hdl_path = null, array $params = null) {
         // get valid function name
         if ($hdl_path === NULL) $hdl_path = $this->_resolve_path.".php";
         $full_hdl_path = APP_DIR.'handler/'.$hdl_path;
@@ -206,13 +236,19 @@ class Controller {
 
         if ($this->_output_type == 'json') {
             header('Content-type: application/json');
-            foreach(array('phpbb_user') as $p) unset($this->_tplVars[$p]);
             print json_encode($this->_tplVars);
-
         } else if ($this->_output_type == 'jsonp' && $_REQUEST['callback']){
             header('Content-type: text/javascript');
             print $_REQUEST['callback'].'('.json_encode($this->_tplVars).')';
-
+        } else if ($this->_output_type == 'yaml') {
+            header('Content-type: text/x-yaml');
+            print yaml_emit($this->_tplVars);
+        } else if ($this->_output_type == 'session') {
+            header('Content-type: text/x-yaml');
+            print yaml_emit($_SESSION);
+        } else if ($this->_output_type == 'cookie') {
+            header('Content-type: text/x-yaml');
+            print yaml_emit($_COOKIE);
         } else {
         	$html = TW_PropelHelper::create()->render($tpl, array_merge(
         		$this->_tplVars,
@@ -220,7 +256,8 @@ class Controller {
         			'C' => $this,
         			'request' => $_REQUEST,
         			'server' => $_SERVER,
-        		)
+        		),
+                $this->param('session')->throwNext()
         	));
 
         	/* typically return a section of page */
@@ -245,6 +282,12 @@ class Controller {
     }
 
     public function hasLogin() {
-        return $this->_resolve_path !== 'index';
+        return $this->param('session')->is_login();
     }
+
+    public function checkLogin() {
+        // if false redirect /redirect=currenturl
+        return TRUE;
+    }
+
  }

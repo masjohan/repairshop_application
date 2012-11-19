@@ -1,10 +1,11 @@
 {% macro begin(options) %}
     {% set options = options|default({}) %}
     <form method="{{ options.method|default('post') }}"
-          action="{{ options.action|default('#') }}"
-          {% if options.upload %}enctype="multipart/form-data"{% endif %}
-          id="{{ options.id }}">
-        <dl class="zend_form">
+        action="{{ options.action|default('#') }}"
+        {%- if options.upload %} enctype="multipart/form-data"{% endif %}
+        {%- if options.id %} id="{{ options.id }}"{% endif %}
+        {%- if options.class %} class="{{ options.class }}"{% endif %}>
+        <dl class="def-input-list">
 {% endmacro %}
 
 {% macro end() %}

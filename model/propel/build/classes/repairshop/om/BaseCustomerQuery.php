@@ -7,75 +7,47 @@
  * 
  *
  * @method     CustomerQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     CustomerQuery orderByTitle($order = Criteria::ASC) Order by the title column
- * @method     CustomerQuery orderByFirstName($order = Criteria::ASC) Order by the first_name column
- * @method     CustomerQuery orderByLastName($order = Criteria::ASC) Order by the last_name column
- * @method     CustomerQuery orderByPhone($order = Criteria::ASC) Order by the phone column
- * @method     CustomerQuery orderByCell($order = Criteria::ASC) Order by the cell column
- * @method     CustomerQuery orderByEmail($order = Criteria::ASC) Order by the email column
- * @method     CustomerQuery orderByAddress($order = Criteria::ASC) Order by the address column
- * @method     CustomerQuery orderByCity($order = Criteria::ASC) Order by the city column
- * @method     CustomerQuery orderByProvince($order = Criteria::ASC) Order by the province column
- * @method     CustomerQuery orderByCountry($order = Criteria::ASC) Order by the country column
- * @method     CustomerQuery orderByPostal($order = Criteria::ASC) Order by the postal column
- * @method     CustomerQuery orderByCompany($order = Criteria::ASC) Order by the company column
+ * @method     CustomerQuery orderByRewardPoint($order = Criteria::ASC) Order by the reward_point column
+ * @method     CustomerQuery orderByRefererId($order = Criteria::ASC) Order by the referer_id column
  * @method     CustomerQuery orderByNotes($order = Criteria::ASC) Order by the notes column
- * @method     CustomerQuery orderByVipScore($order = Criteria::ASC) Order by the vip_score column
+ * @method     CustomerQuery orderByFamilyId($order = Criteria::ASC) Order by the family_id column
+ * @method     CustomerQuery orderByShopId($order = Criteria::ASC) Order by the shop_id column
  *
  * @method     CustomerQuery groupById() Group by the id column
- * @method     CustomerQuery groupByTitle() Group by the title column
- * @method     CustomerQuery groupByFirstName() Group by the first_name column
- * @method     CustomerQuery groupByLastName() Group by the last_name column
- * @method     CustomerQuery groupByPhone() Group by the phone column
- * @method     CustomerQuery groupByCell() Group by the cell column
- * @method     CustomerQuery groupByEmail() Group by the email column
- * @method     CustomerQuery groupByAddress() Group by the address column
- * @method     CustomerQuery groupByCity() Group by the city column
- * @method     CustomerQuery groupByProvince() Group by the province column
- * @method     CustomerQuery groupByCountry() Group by the country column
- * @method     CustomerQuery groupByPostal() Group by the postal column
- * @method     CustomerQuery groupByCompany() Group by the company column
+ * @method     CustomerQuery groupByRewardPoint() Group by the reward_point column
+ * @method     CustomerQuery groupByRefererId() Group by the referer_id column
  * @method     CustomerQuery groupByNotes() Group by the notes column
- * @method     CustomerQuery groupByVipScore() Group by the vip_score column
+ * @method     CustomerQuery groupByFamilyId() Group by the family_id column
+ * @method     CustomerQuery groupByShopId() Group by the shop_id column
  *
  * @method     CustomerQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CustomerQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CustomerQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     CustomerQuery leftJoinShop($relationAlias = null) Adds a LEFT JOIN clause to the query using the Shop relation
+ * @method     CustomerQuery rightJoinShop($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Shop relation
+ * @method     CustomerQuery innerJoinShop($relationAlias = null) Adds a INNER JOIN clause to the query using the Shop relation
+ *
+ * @method     CustomerQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
+ * @method     CustomerQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
+ * @method     CustomerQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ *
  * @method     Customer findOne(PropelPDO $con = null) Return the first Customer matching the query
  * @method     Customer findOneOrCreate(PropelPDO $con = null) Return the first Customer matching the query, or a new Customer object populated from the query conditions when no match is found
  *
  * @method     Customer findOneById(int $id) Return the first Customer filtered by the id column
- * @method     Customer findOneByTitle(string $title) Return the first Customer filtered by the title column
- * @method     Customer findOneByFirstName(string $first_name) Return the first Customer filtered by the first_name column
- * @method     Customer findOneByLastName(string $last_name) Return the first Customer filtered by the last_name column
- * @method     Customer findOneByPhone(string $phone) Return the first Customer filtered by the phone column
- * @method     Customer findOneByCell(string $cell) Return the first Customer filtered by the cell column
- * @method     Customer findOneByEmail(string $email) Return the first Customer filtered by the email column
- * @method     Customer findOneByAddress(string $address) Return the first Customer filtered by the address column
- * @method     Customer findOneByCity(string $city) Return the first Customer filtered by the city column
- * @method     Customer findOneByProvince(string $province) Return the first Customer filtered by the province column
- * @method     Customer findOneByCountry(string $country) Return the first Customer filtered by the country column
- * @method     Customer findOneByPostal(string $postal) Return the first Customer filtered by the postal column
- * @method     Customer findOneByCompany(string $company) Return the first Customer filtered by the company column
+ * @method     Customer findOneByRewardPoint(int $reward_point) Return the first Customer filtered by the reward_point column
+ * @method     Customer findOneByRefererId(int $referer_id) Return the first Customer filtered by the referer_id column
  * @method     Customer findOneByNotes(string $notes) Return the first Customer filtered by the notes column
- * @method     Customer findOneByVipScore(int $vip_score) Return the first Customer filtered by the vip_score column
+ * @method     Customer findOneByFamilyId(int $family_id) Return the first Customer filtered by the family_id column
+ * @method     Customer findOneByShopId(int $shop_id) Return the first Customer filtered by the shop_id column
  *
  * @method     array findById(int $id) Return Customer objects filtered by the id column
- * @method     array findByTitle(string $title) Return Customer objects filtered by the title column
- * @method     array findByFirstName(string $first_name) Return Customer objects filtered by the first_name column
- * @method     array findByLastName(string $last_name) Return Customer objects filtered by the last_name column
- * @method     array findByPhone(string $phone) Return Customer objects filtered by the phone column
- * @method     array findByCell(string $cell) Return Customer objects filtered by the cell column
- * @method     array findByEmail(string $email) Return Customer objects filtered by the email column
- * @method     array findByAddress(string $address) Return Customer objects filtered by the address column
- * @method     array findByCity(string $city) Return Customer objects filtered by the city column
- * @method     array findByProvince(string $province) Return Customer objects filtered by the province column
- * @method     array findByCountry(string $country) Return Customer objects filtered by the country column
- * @method     array findByPostal(string $postal) Return Customer objects filtered by the postal column
- * @method     array findByCompany(string $company) Return Customer objects filtered by the company column
+ * @method     array findByRewardPoint(int $reward_point) Return Customer objects filtered by the reward_point column
+ * @method     array findByRefererId(int $referer_id) Return Customer objects filtered by the referer_id column
  * @method     array findByNotes(string $notes) Return Customer objects filtered by the notes column
- * @method     array findByVipScore(int $vip_score) Return Customer objects filtered by the vip_score column
+ * @method     array findByFamilyId(int $family_id) Return Customer objects filtered by the family_id column
+ * @method     array findByShopId(int $shop_id) Return Customer objects filtered by the shop_id column
  *
  * @package    propel.generator.repairshop.om
  */
@@ -212,339 +184,83 @@ abstract class BaseCustomerQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the title column
+	 * Filter the query on the reward_point column
 	 * 
 	 * Example usage:
 	 * <code>
-	 * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
-	 * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
+	 * $query->filterByRewardPoint(1234); // WHERE reward_point = 1234
+	 * $query->filterByRewardPoint(array(12, 34)); // WHERE reward_point IN (12, 34)
+	 * $query->filterByRewardPoint(array('min' => 12)); // WHERE reward_point > 12
 	 * </code>
 	 *
-	 * @param     string $title The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
+	 * @param     mixed $rewardPoint The value to use as filter.
+	 *              Use scalar values for equality.
+	 *              Use array values for in_array() equivalent.
+	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CustomerQuery The current query, for fluid interface
 	 */
-	public function filterByTitle($title = null, $comparison = null)
+	public function filterByRewardPoint($rewardPoint = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($title)) {
+		if (is_array($rewardPoint)) {
+			$useMinMax = false;
+			if (isset($rewardPoint['min'])) {
+				$this->addUsingAlias(CustomerPeer::REWARD_POINT, $rewardPoint['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($rewardPoint['max'])) {
+				$this->addUsingAlias(CustomerPeer::REWARD_POINT, $rewardPoint['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $title)) {
-				$title = str_replace('*', '%', $title);
-				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CustomerPeer::TITLE, $title, $comparison);
+		return $this->addUsingAlias(CustomerPeer::REWARD_POINT, $rewardPoint, $comparison);
 	}
 
 	/**
-	 * Filter the query on the first_name column
+	 * Filter the query on the referer_id column
 	 * 
 	 * Example usage:
 	 * <code>
-	 * $query->filterByFirstName('fooValue');   // WHERE first_name = 'fooValue'
-	 * $query->filterByFirstName('%fooValue%'); // WHERE first_name LIKE '%fooValue%'
+	 * $query->filterByRefererId(1234); // WHERE referer_id = 1234
+	 * $query->filterByRefererId(array(12, 34)); // WHERE referer_id IN (12, 34)
+	 * $query->filterByRefererId(array('min' => 12)); // WHERE referer_id > 12
 	 * </code>
 	 *
-	 * @param     string $firstName The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
+	 * @param     mixed $refererId The value to use as filter.
+	 *              Use scalar values for equality.
+	 *              Use array values for in_array() equivalent.
+	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CustomerQuery The current query, for fluid interface
 	 */
-	public function filterByFirstName($firstName = null, $comparison = null)
+	public function filterByRefererId($refererId = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($firstName)) {
+		if (is_array($refererId)) {
+			$useMinMax = false;
+			if (isset($refererId['min'])) {
+				$this->addUsingAlias(CustomerPeer::REFERER_ID, $refererId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($refererId['max'])) {
+				$this->addUsingAlias(CustomerPeer::REFERER_ID, $refererId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $firstName)) {
-				$firstName = str_replace('*', '%', $firstName);
-				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CustomerPeer::FIRST_NAME, $firstName, $comparison);
-	}
-
-	/**
-	 * Filter the query on the last_name column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByLastName('fooValue');   // WHERE last_name = 'fooValue'
-	 * $query->filterByLastName('%fooValue%'); // WHERE last_name LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $lastName The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByLastName($lastName = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($lastName)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $lastName)) {
-				$lastName = str_replace('*', '%', $lastName);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::LAST_NAME, $lastName, $comparison);
-	}
-
-	/**
-	 * Filter the query on the phone column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByPhone('fooValue');   // WHERE phone = 'fooValue'
-	 * $query->filterByPhone('%fooValue%'); // WHERE phone LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $phone The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByPhone($phone = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($phone)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $phone)) {
-				$phone = str_replace('*', '%', $phone);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::PHONE, $phone, $comparison);
-	}
-
-	/**
-	 * Filter the query on the cell column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByCell('fooValue');   // WHERE cell = 'fooValue'
-	 * $query->filterByCell('%fooValue%'); // WHERE cell LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $cell The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByCell($cell = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($cell)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $cell)) {
-				$cell = str_replace('*', '%', $cell);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::CELL, $cell, $comparison);
-	}
-
-	/**
-	 * Filter the query on the email column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByEmail('fooValue');   // WHERE email = 'fooValue'
-	 * $query->filterByEmail('%fooValue%'); // WHERE email LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $email The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByEmail($email = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($email)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $email)) {
-				$email = str_replace('*', '%', $email);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::EMAIL, $email, $comparison);
-	}
-
-	/**
-	 * Filter the query on the address column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByAddress('fooValue');   // WHERE address = 'fooValue'
-	 * $query->filterByAddress('%fooValue%'); // WHERE address LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $address The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByAddress($address = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($address)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $address)) {
-				$address = str_replace('*', '%', $address);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::ADDRESS, $address, $comparison);
-	}
-
-	/**
-	 * Filter the query on the city column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByCity('fooValue');   // WHERE city = 'fooValue'
-	 * $query->filterByCity('%fooValue%'); // WHERE city LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $city The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByCity($city = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($city)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $city)) {
-				$city = str_replace('*', '%', $city);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::CITY, $city, $comparison);
-	}
-
-	/**
-	 * Filter the query on the province column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByProvince('fooValue');   // WHERE province = 'fooValue'
-	 * $query->filterByProvince('%fooValue%'); // WHERE province LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $province The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByProvince($province = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($province)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $province)) {
-				$province = str_replace('*', '%', $province);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::PROVINCE, $province, $comparison);
-	}
-
-	/**
-	 * Filter the query on the country column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByCountry('fooValue');   // WHERE country = 'fooValue'
-	 * $query->filterByCountry('%fooValue%'); // WHERE country LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $country The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByCountry($country = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($country)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $country)) {
-				$country = str_replace('*', '%', $country);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::COUNTRY, $country, $comparison);
-	}
-
-	/**
-	 * Filter the query on the postal column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByPostal('fooValue');   // WHERE postal = 'fooValue'
-	 * $query->filterByPostal('%fooValue%'); // WHERE postal LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $postal The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByPostal($postal = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($postal)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $postal)) {
-				$postal = str_replace('*', '%', $postal);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::POSTAL, $postal, $comparison);
-	}
-
-	/**
-	 * Filter the query on the company column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByCompany('fooValue');   // WHERE company = 'fooValue'
-	 * $query->filterByCompany('%fooValue%'); // WHERE company LIKE '%fooValue%'
-	 * </code>
-	 *
-	 * @param     string $company The value to use as filter.
-	 *              Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CustomerQuery The current query, for fluid interface
-	 */
-	public function filterByCompany($company = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($company)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $company)) {
-				$company = str_replace('*', '%', $company);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CustomerPeer::COMPANY, $company, $comparison);
+		return $this->addUsingAlias(CustomerPeer::REFERER_ID, $refererId, $comparison);
 	}
 
 	/**
@@ -576,16 +292,16 @@ abstract class BaseCustomerQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the vip_score column
+	 * Filter the query on the family_id column
 	 * 
 	 * Example usage:
 	 * <code>
-	 * $query->filterByVipScore(1234); // WHERE vip_score = 1234
-	 * $query->filterByVipScore(array(12, 34)); // WHERE vip_score IN (12, 34)
-	 * $query->filterByVipScore(array('min' => 12)); // WHERE vip_score > 12
+	 * $query->filterByFamilyId(1234); // WHERE family_id = 1234
+	 * $query->filterByFamilyId(array(12, 34)); // WHERE family_id IN (12, 34)
+	 * $query->filterByFamilyId(array('min' => 12)); // WHERE family_id > 12
 	 * </code>
 	 *
-	 * @param     mixed $vipScore The value to use as filter.
+	 * @param     mixed $familyId The value to use as filter.
 	 *              Use scalar values for equality.
 	 *              Use array values for in_array() equivalent.
 	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -593,16 +309,16 @@ abstract class BaseCustomerQuery extends ModelCriteria
 	 *
 	 * @return    CustomerQuery The current query, for fluid interface
 	 */
-	public function filterByVipScore($vipScore = null, $comparison = null)
+	public function filterByFamilyId($familyId = null, $comparison = null)
 	{
-		if (is_array($vipScore)) {
+		if (is_array($familyId)) {
 			$useMinMax = false;
-			if (isset($vipScore['min'])) {
-				$this->addUsingAlias(CustomerPeer::VIP_SCORE, $vipScore['min'], Criteria::GREATER_EQUAL);
+			if (isset($familyId['min'])) {
+				$this->addUsingAlias(CustomerPeer::FAMILY_ID, $familyId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($vipScore['max'])) {
-				$this->addUsingAlias(CustomerPeer::VIP_SCORE, $vipScore['max'], Criteria::LESS_EQUAL);
+			if (isset($familyId['max'])) {
+				$this->addUsingAlias(CustomerPeer::FAMILY_ID, $familyId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -612,7 +328,196 @@ abstract class BaseCustomerQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CustomerPeer::VIP_SCORE, $vipScore, $comparison);
+		return $this->addUsingAlias(CustomerPeer::FAMILY_ID, $familyId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the shop_id column
+	 * 
+	 * Example usage:
+	 * <code>
+	 * $query->filterByShopId(1234); // WHERE shop_id = 1234
+	 * $query->filterByShopId(array(12, 34)); // WHERE shop_id IN (12, 34)
+	 * $query->filterByShopId(array('min' => 12)); // WHERE shop_id > 12
+	 * </code>
+	 *
+	 * @see       filterByShop()
+	 *
+	 * @param     mixed $shopId The value to use as filter.
+	 *              Use scalar values for equality.
+	 *              Use array values for in_array() equivalent.
+	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function filterByShopId($shopId = null, $comparison = null)
+	{
+		if (is_array($shopId)) {
+			$useMinMax = false;
+			if (isset($shopId['min'])) {
+				$this->addUsingAlias(CustomerPeer::SHOP_ID, $shopId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($shopId['max'])) {
+				$this->addUsingAlias(CustomerPeer::SHOP_ID, $shopId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CustomerPeer::SHOP_ID, $shopId, $comparison);
+	}
+
+	/**
+	 * Filter the query by a related Shop object
+	 *
+	 * @param     Shop|PropelCollection $shop The related object(s) to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function filterByShop($shop, $comparison = null)
+	{
+		if ($shop instanceof Shop) {
+			return $this
+				->addUsingAlias(CustomerPeer::SHOP_ID, $shop->getId(), $comparison);
+		} elseif ($shop instanceof PropelCollection) {
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+			return $this
+				->addUsingAlias(CustomerPeer::SHOP_ID, $shop->toKeyValue('PrimaryKey', 'Id'), $comparison);
+		} else {
+			throw new PropelException('filterByShop() only accepts arguments of type Shop or PropelCollection');
+		}
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Shop relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function joinShop($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Shop');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Shop');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Shop relation Shop object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    ShopQuery A secondary query class using the current class as primary query
+	 */
+	public function useShopQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinShop($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Shop', 'ShopQuery');
+	}
+
+	/**
+	 * Filter the query by a related User object
+	 *
+	 * @param     User $user  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function filterByUser($user, $comparison = null)
+	{
+		if ($user instanceof User) {
+			return $this
+				->addUsingAlias(CustomerPeer::ID, $user->getCustomerId(), $comparison);
+		} elseif ($user instanceof PropelCollection) {
+			return $this
+				->useUserQuery()
+					->filterByPrimaryKeys($user->getPrimaryKeys())
+				->endUse();
+		} else {
+			throw new PropelException('filterByUser() only accepts arguments of type User or PropelCollection');
+		}
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the User relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('User');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'User');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the User relation User object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery A secondary query class using the current class as primary query
+	 */
+	public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinUser($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'User', 'UserQuery');
 	}
 
 	/**

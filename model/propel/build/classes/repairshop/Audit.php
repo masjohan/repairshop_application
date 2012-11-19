@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for representing a row from the 'Audit' table.
+ * Skeleton subclass for representing a row from the '_audit' table.
  *
  * 
  *

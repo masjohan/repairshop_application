@@ -15,6 +15,11 @@
 #login-shop {
     text-align: right;
 }
+
+#login-fm.error input {
+    border-color: red;
+}
+
 #login-fm input.submit {
     width:auto;
     border:2px outset #000;
