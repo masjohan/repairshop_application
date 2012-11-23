@@ -5,24 +5,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Class for iterating over a list of Propel elements
  * The collection keys must be integers - no associative array accepted
  *
- * @method     PropelCollection fromXML(string $data) Populate the collection from an XML string
- * @method     PropelCollection fromYAML(string $data) Populate the collection from a YAML string
- * @method     PropelCollection fromJSON(string $data) Populate the collection from a JSON string
- * @method     PropelCollection fromCSV(string $data) Populate the collection from a CSV string
- * @method     string toXML() Export the collection to an XML string
- * @method     string toYAML() Export the collection to a YAML string
- * @method     string toJSON() Export the collection to a JSON string
- * @method     string toCSV() Export the collection to a CSV string
+ * @method   PropelCollection fromXML(string $data) Populate the collection from an XML string
+ * @method   PropelCollection fromYAML(string $data) Populate the collection from a YAML string
+ * @method   PropelCollection fromJSON(string $data) Populate the collection from a JSON string
+ * @method   PropelCollection fromCSV(string $data) Populate the collection from a CSV string
+ * @method   string toXML() Export the collection to an XML string
+ * @method   string toYAML() Export the collection to a YAML string
+ * @method   string toJSON() Export the collection to a JSON string
+ * @method   string toCSV() Export the collection to a CSV string
  *
- * @author     Francois Zaninotto
- * @package    propel.runtime.collection
+ * @author   Francois Zaninotto
+ * @package  propel.runtime.collection
  */
 class PropelCollection extends ArrayObject implements Serializable
 {
@@ -36,7 +36,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Get the data in the collection
 	 *
-	 * @return    array
+	 * @return  array
 	 */
 	public function getData()
 	{
@@ -46,7 +46,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Set the data in the collection
 	 *
-	 * @param     array $data
+	 * @param   array $data
 	 */
 	public function setData($data)
 	{
@@ -57,7 +57,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Gets the position of the internal pointer
 	 * This position can be later used in seek()
 	 *
-	 * @return    int
+	 * @return  int
 	 */
 	public function getPosition()
 	{
@@ -68,7 +68,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Move the internal pointer to the beginning of the list
 	 * And get the first element in the collection
 	 *
-	 * @return    mixed
+	 * @return  mixed
 	 */
 	public function getFirst()
 	{
@@ -90,7 +90,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Move the internal pointer backward
 	 * And get the previous element in the collection
 	 *
-	 * @return    mixed
+	 * @return  mixed
 	 */
 	public function getPrevious()
 	{
@@ -106,7 +106,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Get the current element in the collection
 	 *
-	 * @return    mixed
+	 * @return  mixed
 	 */
 	public function getCurrent()
 	{
@@ -117,7 +117,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Move the internal pointer forward
 	 * And get the next element in the collection
 	 *
-	 * @return    mixed
+	 * @return  mixed
 	 */
 	public function getNext()
 	{
@@ -129,7 +129,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Move the internal pointer to the end of the list
 	 * And get the last element in the collection
 	 *
-	 * @return    mixed
+	 * @return  mixed
 	 */
 	public function getLast()
 	{
@@ -145,7 +145,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Check whether the internal pointer is at the end of the list
 	 *
-	 * @return    boolean
+	 * @return  boolean
 	 */
 	public function isLast()
 	{
@@ -161,7 +161,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Check if the collection is empty
 	 * 
-	 * @return    boolean
+	 * @return  boolean
 	 */
 	public function isEmpty()
 	{
@@ -171,7 +171,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Check if the current index is an odd integer
 	 *
-	 * @return    boolean
+	 * @return  boolean
 	 */
 	public function isOdd()
 	{
@@ -181,7 +181,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Check if the current index is an even integer
 	 *
-	 * @return    boolean
+	 * @return  boolean
 	 */
 	public function isEven()
 	{
@@ -192,9 +192,9 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Get an element from its key
 	 * Alias for ArrayObject::offsetGet()
 	 *
-	 * @param     mixed $key
+	 * @param   mixed $key
 	 *
-	 * @return    mixed The element
+	 * @return  mixed The element
 	 */
 	public function get($key)
 	{
@@ -207,12 +207,12 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Pops an element off the end of the collection
 	 *
-	 * @return    mixed The popped element
+	 * @return  mixed The popped element
 	 */
 	public function pop()
 	{
 	  if ($this->count() == 0) {
-	    return null;
+	  return null;
 	  }
 		$ret = $this->getLast();
 		$lastKey = $this->getInternalIterator()->key();
@@ -223,7 +223,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Pops an element off the beginning of the collection
 	 *
-	 * @return    mixed The popped element
+	 * @return  mixed The popped element
 	 */
 	public function shift()
 	{
@@ -239,9 +239,9 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Prepend one or more elements to the beginning of the collection
 	 *
-	 * @param     mixed $value the element to prepend
+	 * @param   mixed $value the element to prepend
 	 *
-	 * @return    int The number of new elements in the array
+	 * @return  int The number of new elements in the array
 	 */
 	public function prepend($value)
 	{
@@ -258,8 +258,8 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Add an element to the collection with the given key
 	 * Alias for ArrayObject::offsetSet()
 	 *
-	 * @param     mixed $key
-	 * @param     mixed $value
+	 * @param   mixed $key
+	 * @param   mixed $value
 	 */
 	public function set($key, $value)
 	{
@@ -270,9 +270,9 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * Removes a specified collection element
 	 * Alias for ArrayObject::offsetUnset()
 	 *
-	 * @param     mixed $key
+	 * @param   mixed $key
 	 *
-	 * @return    mixed The removed element
+	 * @return  mixed The removed element
 	 */
 	public function remove($key)
 	{
@@ -285,7 +285,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Clears the collection
 	 * 
-	 * @return    array The previous collection
+	 * @return  array The previous collection
 	 */
 	public function clear()
 	{
@@ -295,9 +295,9 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Whether or not this collection contains a specified element
 	 *
-	 * @param      mixed $element the element
+	 * @param    mixed $element the element
 	 *
-	 * @return     boolean
+	 * @return   boolean
 	 */
 	public function contains($element)
 	{
@@ -307,9 +307,9 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Search an element in the collection
 	 *
-	 * @param     mixed $element 
+	 * @param   mixed $element 
 	 *
-	 * @return    mixed Returns the key for the element if it is found in the collection, FALSE otherwise
+	 * @return  mixed Returns the key for the element if it is found in the collection, FALSE otherwise
 	 */
 	public function search($element)
 	{
@@ -370,7 +370,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Set the model of the elements in the collection
 	 *
-	 * @param     string $model Name of the Propel object classes stored in the collection
+	 * @param   string $model Name of the Propel object classes stored in the collection
 	 */
 	public function setModel($model)
 	{
@@ -380,7 +380,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Get the model of the elements in the collection
 	 *
-	 * @return    string Name of the Propel object class stored in the collection
+	 * @return  string Name of the Propel object class stored in the collection
 	 */
 	public function getModel()
 	{
@@ -390,7 +390,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Get the peer class of the elements in the collection
 	 *
-	 * @return    string Name of the Propel peer class stored in the collection
+	 * @return  string Name of the Propel peer class stored in the collection
 	 */
 	public function getPeerClass()
 	{
@@ -413,9 +413,9 @@ class PropelCollection extends ArrayObject implements Serializable
 	/**
 	 * Get a connection object for the database containing the elements of the collection
 	 *
-	 * @param     string $type The connection type (Propel::CONNECTION_READ by default; can be Propel::connection_WRITE)
+	 * @param   string $type The connection type (Propel::CONNECTION_READ by default; can be Propel::connection_WRITE)
 	 *
-	 * @return    PropelPDO a connection object
+	 * @return  PropelPDO a connection object
 	 */
 	public function getConnection($type =  Propel::CONNECTION_READ)
 	{
@@ -433,10 +433,10 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * </code>
 	 *
 	 * @param mixed  $parser A PropelParser instance,
-	 *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
+	 *             or a format name ('XML', 'YAML', 'JSON', 'CSV')
 	 * @param string $data   The source data to import from
 	 *
-	 * @return BaseObject    The current object, for fluid interface
+	 * @return BaseObject  The current object, for fluid interface
 	 */
 	public function importFrom($parser, $data)
 	{
@@ -455,7 +455,7 @@ class PropelCollection extends ArrayObject implements Serializable
 	 * </code>
 	 *
 	 * @param  mixed  $parser A PropelParser instance,
-	 *                        or a format name ('XML', 'YAML', 'JSON', 'CSV')
+	 *            or a format name ('XML', 'YAML', 'JSON', 'CSV')
 	 * @return string The exported data
 	 */
 	public function exportTo($parser)

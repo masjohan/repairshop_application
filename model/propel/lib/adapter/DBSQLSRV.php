@@ -5,20 +5,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * This is used to connect to a MSSQL database using pdo_sqlsrv driver.
  *
- * @author     Benjamin Runnels
- * @version    $Revision$
- * @package    propel.runtime.adapter
+ * @author   Benjamin Runnels
+ * @version  $Revision$
+ * @package  propel.runtime.adapter
  */
 class DBSQLSRV extends DBMSSQL
 {
 	/**
-	 * @see        parent::initConnection()
+	 * @see    parent::initConnection()
 	 */
 	public function initConnection(PDO $con, array $settings)
 	{
@@ -28,7 +28,7 @@ class DBSQLSRV extends DBMSSQL
 	}
 
 	/**
-	 * @see        parent::setCharset()
+	 * @see    parent::setCharset()
 	 */
 	public function setCharset(PDO $con, $charset)
 	{
@@ -45,7 +45,7 @@ class DBSQLSRV extends DBMSSQL
 	}
 
 	/**
-	 * @see        parent::cleanupSQL()
+	 * @see    parent::cleanupSQL()
 	 */
 	public function cleanupSQL(&$sql, array &$params, Criteria $values, DatabaseMap $dbMap)
 	{
@@ -68,7 +68,7 @@ class DBSQLSRV extends DBMSSQL
 	}
 	
 	/**
-	 * @see        DBAdapter::bindValue()
+	 * @see    DBAdapter::bindValue()
 	 */
 	public function bindValue(PDOStatement $stmt, $parameter, $value, ColumnMap $cMap)
 	{

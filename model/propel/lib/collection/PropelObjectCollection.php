@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Class for iterating over a list of Propel objects
  *
- * @author     Francois Zaninotto
- * @package    propel.runtime.collection
+ * @author   Francois Zaninotto
+ * @package  propel.runtime.collection
  */
 class PropelObjectCollection extends PropelCollection
 {
@@ -60,7 +60,7 @@ class PropelObjectCollection extends PropelCollection
 	/**
 	 * Get an array of the primary keys of all the objects in the collection
 	 *
-	 * @return    array The list of the primary keys of the collection
+	 * @return  array The list of the primary keys of the collection
 	 */
 	public function getPrimaryKeys($usePrefix = true)
 	{
@@ -78,7 +78,7 @@ class PropelObjectCollection extends PropelCollection
 	 * Each object is populated from an array and the result is stored
 	 * Does not empty the collection before adding the data from the array
 	 *
-	 * @param    array $arr
+	 * @param  array $arr
 	 */
 	public function fromArray($arr)
 	{
@@ -94,16 +94,16 @@ class PropelObjectCollection extends PropelCollection
 	 * Get an array representation of the collection
 	 * Each object is turned into an array and the result is returned
 	 *
-	 * @param     string  $keyColumn If null, the returned array uses an incremental index.
-	 *                    Otherwise, the array is indexed using the specified column
-	 * @param     boolean $usePrefix If true, the returned array prefixes keys 
-	 *                    with the model class name ('Article_0', 'Article_1', etc).
-	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, 
-	 *                    BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME,
-	 *                    BasePeer::TYPE_NUM. Defaults to BasePeer::TYPE_PHPNAME.
-	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns.
-	 *                    Defaults to TRUE.
-	 * @param     array   $alreadyDumpedObjects List of objects to skip to avoid recursion
+	 * @param   string  $keyColumn If null, the returned array uses an incremental index.
+	 *          Otherwise, the array is indexed using the specified column
+	 * @param   boolean $usePrefix If true, the returned array prefixes keys 
+	 *          with the model class name ('Article_0', 'Article_1', etc).
+	 * @param   string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, 
+	 *          BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME,
+	 *          BasePeer::TYPE_NUM. Defaults to BasePeer::TYPE_PHPNAME.
+	 * @param   boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns.
+	 *          Defaults to TRUE.
+	 * @param   array   $alreadyDumpedObjects List of objects to skip to avoid recursion
 	 *
 	 * <code>
 	 * $bookCollection->toArray();
@@ -122,7 +122,7 @@ class PropelObjectCollection extends PropelCollection
 	 *  'Book_1' => array('Id' => 456, 'Title' => 'Don Juan'),
 	 * )
 	 * </code>
-	 * @return    array
+	 * @return  array
 	 */
 	public function toArray($keyColumn = null, $usePrefix = false, $keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
 	{
@@ -140,10 +140,10 @@ class PropelObjectCollection extends PropelCollection
 	/**
 	 * Get an array representation of the collection
 	 *
-	 * @param     string $keyColumn If null, the returned array uses an incremental index.
-	 *              Otherwise, the array is indexed using the specified column
-	 * @param     boolean $usePrefix If true, the returned array prefixes keys 
-	 *              with the model class name ('Article_0', 'Article_1', etc).
+	 * @param   string $keyColumn If null, the returned array uses an incremental index.
+	 *        Otherwise, the array is indexed using the specified column
+	 * @param   boolean $usePrefix If true, the returned array prefixes keys 
+	 *        with the model class name ('Article_0', 'Article_1', etc).
 	 *
 	 * <code>
 	 * $bookCollection->getArrayCopy();
@@ -162,7 +162,7 @@ class PropelObjectCollection extends PropelCollection
 	 *  'Book_1' => $book1,
 	 * )
 	 * </code>
-	 * @return    array
+	 * @return  array
 	 */
 	public function getArrayCopy($keyColumn = null, $usePrefix = false)
 	{
@@ -188,7 +188,7 @@ class PropelObjectCollection extends PropelCollection
 	 * $res = $coll->toKeyValue('Id', 'Name');
 	 * </code>
 	 *
-	 * @return    array
+	 * @return  array
 	 */
 	public function toKeyValue($keyColumn = 'PrimaryKey', $valueColumn = null)
 	{
@@ -206,11 +206,11 @@ class PropelObjectCollection extends PropelCollection
 	 * Makes an additional query to populate the objects related to the collection objects
 	 * by a certain relation
 	 *
-	 * @param     string    $relation Relation name (e.g. 'Book')
-	 * @param     Criteria  $criteria Optional Criteria object to filter the related object collection
-	 * @param     PropelPDO $con      Optional connection object
+	 * @param   string  $relation Relation name (e.g. 'Book')
+	 * @param   Criteria  $criteria Optional Criteria object to filter the related object collection
+	 * @param   PropelPDO $con    Optional connection object
 	 *
-	 * @return    PropelObjectCollection the list of related objects
+	 * @return  PropelObjectCollection the list of related objects
 	 */
 	public function populateRelation($relation, $criteria = null, $con = null)
 	{

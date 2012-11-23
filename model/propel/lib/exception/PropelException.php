@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * The base class of all exceptions thrown by Propel.
- * @author     Hans Lellelid <hans@xmpl.org>
- * @version    $Revision: 2085 $
- * @package    propel.runtime.exception
+ * @author   Hans Lellelid <hans@xmpl.org>
+ * @version  $Revision: 2085 $
+ * @package  propel.runtime.exception
  */
 class PropelException extends Exception
 {

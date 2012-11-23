@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
@@ -91,19 +91,19 @@
  * The order in which the logging details are enabled is significant, since it determines the order in
  * which they will appear in the log file.
  * 
- * @example    // Enable simple query profiling, flagging calls taking over 1.5 seconds as slow:
- *             $config = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
- *             $config->setParameter('debugpdo.logging.details.slow.enabled', true);
- *             $config->setParameter('debugpdo.logging.details.slow.threshold', 1.5);
- *             $config->setParameter('debugpdo.logging.details.time.enabled', true);
+ * @example  // Enable simple query profiling, flagging calls taking over 1.5 seconds as slow:
+ *       $config = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
+ *       $config->setParameter('debugpdo.logging.details.slow.enabled', true);
+ *       $config->setParameter('debugpdo.logging.details.slow.threshold', 1.5);
+ *       $config->setParameter('debugpdo.logging.details.time.enabled', true);
  * 
- * @author     Francois Zaninotto
- * @author     Cameron Brunner <cameron.brunner@gmail.com>
- * @author     Hans Lellelid <hans@xmpl.org>
- * @author     Christian Abegg <abegg.ch@gmail.com>
- * @author     Jarno Rantanen <jarno.rantanen@tkk.fi>
- * @since      2006-09-22
- * @package    propel.runtime.connection
+ * @author   Francois Zaninotto
+ * @author   Cameron Brunner <cameron.brunner@gmail.com>
+ * @author   Hans Lellelid <hans@xmpl.org>
+ * @author   Christian Abegg <abegg.ch@gmail.com>
+ * @author   Jarno Rantanen <jarno.rantanen@tkk.fi>
+ * @since    2006-09-22
+ * @package  propel.runtime.connection
  */
 class DebugPDO extends PropelPDO
 {

@@ -18,10 +18,6 @@
  * @method     RoleactionQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     RoleactionQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     RoleactionQuery leftJoinRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the Role relation
- * @method     RoleactionQuery rightJoinRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Role relation
- * @method     RoleactionQuery innerJoinRole($relationAlias = null) Adds a INNER JOIN clause to the query using the Role relation
- *
  * @method     RoleactionQuery leftJoinAction($relationAlias = null) Adds a LEFT JOIN clause to the query using the Action relation
  * @method     RoleactionQuery rightJoinAction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Action relation
  * @method     RoleactionQuery innerJoinAction($relationAlias = null) Adds a INNER JOIN clause to the query using the Action relation
@@ -181,8 +177,6 @@ abstract class BaseRoleactionQuery extends ModelCriteria
 	 * $query->filterByRoleId(array('min' => 12)); // WHERE role_id > 12
 	 * </code>
 	 *
-	 * @see       filterByRole()
-	 *
 	 * @param     mixed $roleId The value to use as filter.
 	 *              Use scalar values for equality.
 	 *              Use array values for in_array() equivalent.
@@ -253,80 +247,6 @@ abstract class BaseRoleactionQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(RoleactionPeer::ACTION_ID, $actionId, $comparison);
-	}
-
-	/**
-	 * Filter the query by a related Role object
-	 *
-	 * @param     Role|PropelCollection $role The related object(s) to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    RoleactionQuery The current query, for fluid interface
-	 */
-	public function filterByRole($role, $comparison = null)
-	{
-		if ($role instanceof Role) {
-			return $this
-				->addUsingAlias(RoleactionPeer::ROLE_ID, $role->getId(), $comparison);
-		} elseif ($role instanceof PropelCollection) {
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-			return $this
-				->addUsingAlias(RoleactionPeer::ROLE_ID, $role->toKeyValue('PrimaryKey', 'Id'), $comparison);
-		} else {
-			throw new PropelException('filterByRole() only accepts arguments of type Role or PropelCollection');
-		}
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the Role relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    RoleactionQuery The current query, for fluid interface
-	 */
-	public function joinRole($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Role');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'Role');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the Role relation Role object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    RoleQuery A secondary query class using the current class as primary query
-	 */
-	public function useRoleQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		return $this
-			->joinRole($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Role', 'RoleQuery');
 	}
 
 	/**

@@ -35,9 +35,10 @@ class SessionTableMap extends TableMap {
 		$this->setPhpName('Session');
 		$this->setClassname('Session');
 		$this->setPackage('repairshop');
-		$this->setUseIdGenerator(false);
+		$this->setUseIdGenerator(true);
 		// columns
-		$this->addPrimaryKey('SESSION_ID', 'SessionId', 'VARCHAR', true, 32, null);
+		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
+		$this->addColumn('SESSION_ID', 'SessionId', 'VARCHAR', true, 32, null);
 		$this->addColumn('DEVICE_KEY', 'DeviceKey', 'VARCHAR', true, 32, null);
 		$this->addColumn('VALUE', 'Value', 'LONGVARCHAR', true, null, null);
 		$this->addColumn('UPDATED_ON', 'UpdatedOn', 'TIMESTAMP', true, null, null);

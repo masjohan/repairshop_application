@@ -49,7 +49,6 @@ class RoleTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('Roleaction', 'Roleaction', RelationMap::ONE_TO_MANY, array('id' => 'role_id', ), 'CASCADE', 'CASCADE');
     $this->addRelation('User', 'User', RelationMap::ONE_TO_MANY, array('id' => 'role_id', ), null, null);
 	} // buildRelations()
 

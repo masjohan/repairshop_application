@@ -11,31 +11,31 @@ RW.CarGas = function() {
 }
 
 RW.CarGas.prototype.initForm = function() {
-    $('form#mycar-gas-form').formval({
-    	rules: {
-            "volume_added": {
-                'required': true,
-                'number': true
-            },
-            'mileage' : {
-                'required': true,
-                'number': true
-            },
-            "date" : {
-                'required': true
-            },
-            'cost' : {
-                'required': false,
-                'number': true
-            }
-        },
-        'datepicker' : {
-            "date" : {
-                "maxDate": '0d',
-                "minDate": '-1y'
-            }
-        }
-    });
+  $('form#mycar-gas-form').formval({
+  	rules: {
+  "volume_added": {
+  'required': true,
+  'number': true
+  },
+  'mileage' : {
+  'required': true,
+  'number': true
+  },
+  "date" : {
+  'required': true
+  },
+  'cost' : {
+  'required': false,
+  'number': true
+  }
+  },
+  'datepicker' : {
+  "date" : {
+  "maxDate": '0d',
+  "minDate": '-1y'
+  }
+  }
+  });
 }
 
 $(function(){new RW.CarGas()});

@@ -26,19 +26,52 @@ abstract class BaseShopPeer {
 	const TM_CLASS = 'ShopTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 2;
+	const NUM_COLUMNS = 13;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-	const NUM_HYDRATE_COLUMNS = 2;
+	const NUM_HYDRATE_COLUMNS = 13;
 
 	/** the column name for the ID field */
 	const ID = 'Shop.ID';
 
 	/** the column name for the CHAIN_ID field */
 	const CHAIN_ID = 'Shop.CHAIN_ID';
+
+	/** the column name for the NAME field */
+	const NAME = 'Shop.NAME';
+
+	/** the column name for the ADDRESS field */
+	const ADDRESS = 'Shop.ADDRESS';
+
+	/** the column name for the CITY field */
+	const CITY = 'Shop.CITY';
+
+	/** the column name for the PROVINCE field */
+	const PROVINCE = 'Shop.PROVINCE';
+
+	/** the column name for the COUNTRY field */
+	const COUNTRY = 'Shop.COUNTRY';
+
+	/** the column name for the POSTAL field */
+	const POSTAL = 'Shop.POSTAL';
+
+	/** the column name for the PHONE field */
+	const PHONE = 'Shop.PHONE';
+
+	/** the column name for the FAX field */
+	const FAX = 'Shop.FAX';
+
+	/** the column name for the EMAIL field */
+	const EMAIL = 'Shop.EMAIL';
+
+	/** the column name for the OWNER_ID field */
+	const OWNER_ID = 'Shop.OWNER_ID';
+
+	/** the column name for the NOTES field */
+	const NOTES = 'Shop.NOTES';
 
 	/** The default string format for model objects of the related table **/
 	const DEFAULT_STRING_FORMAT = 'YAML';
@@ -59,12 +92,12 @@ abstract class BaseShopPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	protected static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'ChainId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'chainId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::CHAIN_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CHAIN_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'chain_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'ChainId', 'Name', 'Address', 'City', 'Province', 'Country', 'Postal', 'Phone', 'Fax', 'Email', 'OwnerId', 'Notes', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'chainId', 'name', 'address', 'city', 'province', 'country', 'postal', 'phone', 'fax', 'email', 'ownerId', 'notes', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::CHAIN_ID, self::NAME, self::ADDRESS, self::CITY, self::PROVINCE, self::COUNTRY, self::POSTAL, self::PHONE, self::FAX, self::EMAIL, self::OWNER_ID, self::NOTES, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CHAIN_ID', 'NAME', 'ADDRESS', 'CITY', 'PROVINCE', 'COUNTRY', 'POSTAL', 'PHONE', 'FAX', 'EMAIL', 'OWNER_ID', 'NOTES', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'chain_id', 'name', 'address', 'city', 'province', 'country', 'postal', 'phone', 'fax', 'email', 'owner_id', 'notes', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
 	);
 
 	/**
@@ -74,12 +107,12 @@ abstract class BaseShopPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	protected static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'ChainId' => 1, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'chainId' => 1, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::CHAIN_ID => 1, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CHAIN_ID' => 1, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'chain_id' => 1, ),
-		BasePeer::TYPE_NUM => array (0, 1, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'ChainId' => 1, 'Name' => 2, 'Address' => 3, 'City' => 4, 'Province' => 5, 'Country' => 6, 'Postal' => 7, 'Phone' => 8, 'Fax' => 9, 'Email' => 10, 'OwnerId' => 11, 'Notes' => 12, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'chainId' => 1, 'name' => 2, 'address' => 3, 'city' => 4, 'province' => 5, 'country' => 6, 'postal' => 7, 'phone' => 8, 'fax' => 9, 'email' => 10, 'ownerId' => 11, 'notes' => 12, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::CHAIN_ID => 1, self::NAME => 2, self::ADDRESS => 3, self::CITY => 4, self::PROVINCE => 5, self::COUNTRY => 6, self::POSTAL => 7, self::PHONE => 8, self::FAX => 9, self::EMAIL => 10, self::OWNER_ID => 11, self::NOTES => 12, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CHAIN_ID' => 1, 'NAME' => 2, 'ADDRESS' => 3, 'CITY' => 4, 'PROVINCE' => 5, 'COUNTRY' => 6, 'POSTAL' => 7, 'PHONE' => 8, 'FAX' => 9, 'EMAIL' => 10, 'OWNER_ID' => 11, 'NOTES' => 12, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'chain_id' => 1, 'name' => 2, 'address' => 3, 'city' => 4, 'province' => 5, 'country' => 6, 'postal' => 7, 'phone' => 8, 'fax' => 9, 'email' => 10, 'owner_id' => 11, 'notes' => 12, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
 	);
 
 	/**
@@ -153,9 +186,31 @@ abstract class BaseShopPeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(ShopPeer::ID);
 			$criteria->addSelectColumn(ShopPeer::CHAIN_ID);
+			$criteria->addSelectColumn(ShopPeer::NAME);
+			$criteria->addSelectColumn(ShopPeer::ADDRESS);
+			$criteria->addSelectColumn(ShopPeer::CITY);
+			$criteria->addSelectColumn(ShopPeer::PROVINCE);
+			$criteria->addSelectColumn(ShopPeer::COUNTRY);
+			$criteria->addSelectColumn(ShopPeer::POSTAL);
+			$criteria->addSelectColumn(ShopPeer::PHONE);
+			$criteria->addSelectColumn(ShopPeer::FAX);
+			$criteria->addSelectColumn(ShopPeer::EMAIL);
+			$criteria->addSelectColumn(ShopPeer::OWNER_ID);
+			$criteria->addSelectColumn(ShopPeer::NOTES);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.CHAIN_ID');
+			$criteria->addSelectColumn($alias . '.NAME');
+			$criteria->addSelectColumn($alias . '.ADDRESS');
+			$criteria->addSelectColumn($alias . '.CITY');
+			$criteria->addSelectColumn($alias . '.PROVINCE');
+			$criteria->addSelectColumn($alias . '.COUNTRY');
+			$criteria->addSelectColumn($alias . '.POSTAL');
+			$criteria->addSelectColumn($alias . '.PHONE');
+			$criteria->addSelectColumn($alias . '.FAX');
+			$criteria->addSelectColumn($alias . '.EMAIL');
+			$criteria->addSelectColumn($alias . '.OWNER_ID');
+			$criteria->addSelectColumn($alias . '.NOTES');
 		}
 	}
 
@@ -440,6 +495,240 @@ abstract class BaseShopPeer {
 		}
 		return array($obj, $col);
 	}
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related User table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinUser(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(ShopPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			ShopPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(ShopPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(ShopPeer::OWNER_ID, UserPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of Shop objects pre-filled with their User objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of Shop objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinUser(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		ShopPeer::addSelectColumns($criteria);
+		$startcol = ShopPeer::NUM_HYDRATE_COLUMNS;
+		UserPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(ShopPeer::OWNER_ID, UserPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = ShopPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = ShopPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = ShopPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				ShopPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = UserPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = UserPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					UserPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (Shop) to $obj2 (User)
+				$obj2->addShop($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining all related tables
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(ShopPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			ShopPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(ShopPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(ShopPeer::OWNER_ID, UserPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+	/**
+	 * Selects a collection of Shop objects pre-filled with all related objects.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of Shop objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAll(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		ShopPeer::addSelectColumns($criteria);
+		$startcol2 = ShopPeer::NUM_HYDRATE_COLUMNS;
+
+		UserPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + UserPeer::NUM_HYDRATE_COLUMNS;
+
+		$criteria->addJoin(ShopPeer::OWNER_ID, UserPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = ShopPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = ShopPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = ShopPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				ShopPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+			// Add objects for joined User rows
+
+			$key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+			if ($key2 !== null) {
+				$obj2 = UserPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = UserPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					UserPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 loaded
+
+				// Add the $obj1 (Shop) to the collection in $obj2 (User)
+				$obj2->addShop($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
 	/**
 	 * Returns the TableMap related to this peer.
 	 * This method is not needed for general use but a specific application could have a need.

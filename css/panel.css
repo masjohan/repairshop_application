@@ -1,197 +1,197 @@
 /* panel box is */
 .panel {
-    display: block;
-    border: 1px solid #ddd;
-    margin: 0 0 15px 0;
-    padding: 0;
+  display: block;
+  border: 1px solid #ddd;
+  margin: 0 0 15px 0;
+  padding: 0;
 }
 
 .expander {
-    background: url(/media/images/layout/icon-up.gif) no-repeat scroll -2px -3px transparent;
-    cursor: pointer;
-    display: none;
-    height: 16px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 16px;
+  background: url(/media/images/layout/icon-up.gif) no-repeat scroll -2px -3px transparent;
+  cursor: pointer;
+  display: none;
+  height: 16px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 16px;
 }
 .expandable .expander {
-    display: block;
+  display: block;
 }
 
 .panel.collapsed {
-    height: 34px;
-    overflow: hidden;
+  height: 34px;
+  overflow: hidden;
 }
 
 .collapsed .expander {
-    background: url(/media/images/layout/icon-down.gif) no-repeat scroll -2px -3px transparent;
+  background: url(/media/images/layout/icon-down.gif) no-repeat scroll -2px -3px transparent;
 }
 
 .panel .panel-foot {
-    margin: -1px -1px 0;
-    padding: 8px 15px;
-    white-space: nowrap;
+  margin: -1px -1px 0;
+  padding: 8px 15px;
+  white-space: nowrap;
 }
 
 .panel .panel-head {
-    margin: -1px -1px 0;
-    padding: 8px 15px;
+  margin: -1px -1px 0;
+  padding: 8px 15px;
 
 }
 
 .panel .panel-section h3,
 .panel .panel-head h3 {
-    margin: 0;
+  margin: 0;
 }
 
 .panel .panel-body {
-    padding: 10px;
+  padding: 10px;
 }
 
 .panel .panel-section {
-    padding: 6px 15px;
+  padding: 6px 15px;
 }
 
 .panel .panel-section-only {
-    height: 0.5em;
+  height: 0.5em;
 }
 
 .panel .panel-section-only,
 .panel .panel-section,
 .panel.light-grey .panel-head {
-    background-color: #ddd;
-    color: #4c4c4c;
+  background-color: #ddd;
+  color: #4c4c4c;
 
 }
 
 .panel.light-blue .panel-head {
-    background-color: #12A3EB;
-    color: #FFFFFF;
+  background-color: #12A3EB;
+  color: #FFFFFF;
 }
 
 .panel.align-left {
-    text-align: left;
+  text-align: left;
 }
 
 .panel h5 {
-    margin: 6px auto;
+  margin: 6px auto;
 }
 
 .panel li {
-    margin-left: 1em;
-    list-style: none;
+  margin-left: 1em;
+  list-style: none;
 }
 
 .panel.grey-shadow{
-    box-shadow: 3px 3px 3px #DDDDDD;
+  box-shadow: 3px 3px 3px #DDDDDD;
 }
 
 /* tabs */
 .ui-tabs .ui-tabs-nav {
-    margin: -1px -1px 0;
+  margin: -1px -1px 0;
 }
 
 .ui-tabs .ui-tabs-nav li a {
-    padding: 3px 1em 4px;
-    color: #1C4E70;
+  padding: 3px 1em 4px;
+  color: #1C4E70;
 }
 .panel.ui-tabs .panel-head {
-    padding: 3px 4px 0 4px;
+  padding: 3px 4px 0 4px;
 }
 
 .light-blue .ui-tabs-nav {
-    background: none repeat scroll 0 0 #12A3EB;
-    border: 1px solid #12A3EB;
+  background: none repeat scroll 0 0 #12A3EB;
+  border: 1px solid #12A3EB;
 }
 
 .light-grey .ui-tabs-nav {
-    background: none repeat scroll 0 0 #DDDDDD;
-    border: 1px solid #DDDDDD;
+  background: none repeat scroll 0 0 #DDDDDD;
+  border: 1px solid #DDDDDD;
 }
 
 /* begin columnar */
 .columnar {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 .columnar li {
-    float: left;
-    display: inline-block;
-    margin: 0;
+  float: left;
+  display: inline-block;
+  margin: 0;
 }
 
 .columnar li.bgn {
-    clear: left;
+  clear: left;
 }
 
 ul.columnar li.end {
-    float: right;
-    margin-right: 0;
+  float: right;
+  margin-right: 0;
 }
 
 .columnar.cols-1 li {
-    width: 100%;
+  width: 100%;
 }
 
 .columnar.cols-2 li {
-    margin-right: 1%;
-    width: 49.5%;
+  margin-right: 1%;
+  width: 49.5%;
 }
 
 .columnar.cols-3 li {
-    margin-right: 1%;
-    width: 32.67%;
+  margin-right: 1%;
+  width: 32.67%;
 }
 
 .columnar.cols-4 li {
-    margin-right: 0.67%;
-    width: 24.5%;
+  margin-right: 0.67%;
+  width: 24.5%;
 }
 
 .columnar.cols-5 li {
-    margin-right: 0.6%;
-    width: 19.5%;
+  margin-right: 0.6%;
+  width: 19.5%;
 }
 
 .columnar.cols-6 li {
-    margin-right: 0.67%;
-    width: 16%;
+  margin-right: 0.67%;
+  width: 16%;
 }
 
 .columnar li .in-cell{
-    padding: 0.3em;
+  padding: 0.3em;
 }
 
 
 /* begin tabular */
 table.tabular {
-    width: 100%;
-    margin: 0;
+  width: 100%;
+  margin: 0;
 }
 
 table.tabular td{
-    border: none;
-    padding: 0.3em;
+  border: none;
+  padding: 0.3em;
 }
 
 /*.columnar li.odd,*/
 table.tabular tr.odd {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 table.tabular tr.odd td {
-    border-right: 1px solid #fff;
+  border-right: 1px solid #fff;
 }
 
 table.tabular td.align-right {
-    text-align: right;
+  text-align: right;
 }
 
 table.tabular td.label {
-    text-align: left;
-    font-weight: bold;
+  text-align: left;
+  font-weight: bold;
 }

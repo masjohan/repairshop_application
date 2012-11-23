@@ -104,7 +104,7 @@
 				$(table).trigger("applyWidgets");
 				
 				if( c.page >= c.totalPages ) {
-        			moveToLastPage(table);
+  			moveToLastPage(table);
 				}
 				
 				updatePageDisplay(c);
@@ -178,7 +178,7 @@
 	});
 	// extend plugin scope
 	$.fn.extend({
-        tablesorterPager: $.tablesorterPager.construct
+  tablesorterPager: $.tablesorterPager.construct
 	});
 	
 })(jQuery);				

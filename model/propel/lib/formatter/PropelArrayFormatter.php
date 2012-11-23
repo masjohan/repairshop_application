@@ -5,16 +5,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Array formatter for Propel query
  * format() returns a PropelArrayCollection of associative arrays
  *
- * @author     Francois Zaninotto
- * @version    $Revision: 1898 $
- * @package    propel.runtime.formatter
+ * @author   Francois Zaninotto
+ * @version  $Revision: 1898 $
+ * @package  propel.runtime.formatter
  */
 class PropelArrayFormatter extends PropelFormatter
 {
@@ -85,10 +85,10 @@ class PropelArrayFormatter extends PropelFormatter
 	 * The first object to hydrate is the model of the Criteria
 	 * The following objects (the ones added by way of ModelCriteria::with()) are linked to the first one
 	 *
-	 *  @param    array  $row associative array indexed by column number,
-	 *                   as returned by PDOStatement::fetch(PDO::FETCH_NUM)
+	 *  @param  array  $row associative array indexed by column number,
+	 *           as returned by PDOStatement::fetch(PDO::FETCH_NUM)
 	 *
-	 * @return    Array
+	 * @return  Array
 	 */
 	public function &getStructuredArrayFromRow($row)
 	{

@@ -1,16 +1,18 @@
 {{ C.loadCSS('sections/login.css') -}}
 {% if C.hasLogin() %}
     <div id="login-shop">
-        Hello {{login_user.Email}}, <a href="/common/profile">Profle</a> | <a href="/common/logout">Login</a>
+        <b>{{ C.param('login_user').Email|php('truncate',22)}}</b>
+        {% if C.param('session').isRunAs() %}| <a href="/common/exit-runas">Exit Runas</a> {% endif %}
+        | <a href="/common/logout">Logout</a>
     </div>
 {% else %}
     <form id="login-fm" method="post" action="/common/login"{% if login_error %} class="error"{% endif %}>
-        <label for="username">Email:</label>
-        <input type="text" name="username" id="username" value="{{ request.username }}" />
+        <label for="username" title="">Username:</label>
+        <input type="text" name="username" id="username" value="{{ request.username }}" placeholder="Or email" />
         <div class="cleaner"></div>
-        <a class="forget" href="/common/forget{% if request.username %}?email={{ request.username }}{% endif %}">reset</a>
         <label for="password">Password:</label>
         <input type="password" name="password" id="password" />
+        <a class="forget" href="/common/forget{% if request.username %}?email={{ request.username }}{% endif %}" title="retrieve password">forget</a>
         <br />
         <input class="submit" type="submit" value="Log-in" name="login" />
 <!--        <hr />

@@ -1,30 +1,30 @@
 <?php
 class TW_PassThru {
-    static $mime = array (
-        'ps'     => "application/postscript",
-        'gz'     => "application/x-gzip",
-        'tgz'    => "application/x-tgz",
-        'tar'    => "application/x-tar",
-        'zip'    => "application/zip",
-        'swf'    => "application/x-shockwave-flash",
-        'mp3'    => "audio/mpeg",
-        'gif'    => "image/gif",
-        'jpg'    => "image/jpeg",
-        'jpeg'   => "image/jpeg",
-        'png'    => "image/png",
-        'css'    => "text/css",
-        'html'   => "text/html",
-        'htm'    => "text/html",
-        'js'     => "text/javascript",
-        'json'   => 'text/javascript',
-        'txt'    => "text/plain",
-        'xml'    => "text/xml",
-        'htc'    => "text/x-component",
-        'atom'   => 'application/atom+xml',
-        'ical'   => 'text/calendar',
-        'csv'    => 'text/csv',
-        'ico'    => 'image/x-icon'
-    );
+  static $mime = array (
+  'ps'   => "application/postscript",
+  'gz'   => "application/x-gzip",
+  'tgz'  => "application/x-tgz",
+  'tar'  => "application/x-tar",
+  'zip'  => "application/zip",
+  'swf'  => "application/x-shockwave-flash",
+  'mp3'  => "audio/mpeg",
+  'gif'  => "image/gif",
+  'jpg'  => "image/jpeg",
+  'jpeg'   => "image/jpeg",
+  'png'  => "image/png",
+  'css'  => "text/css",
+  'html'   => "text/html",
+  'htm'  => "text/html",
+  'js'   => "text/javascript",
+  'json'   => 'text/javascript',
+  'txt'  => "text/plain",
+  'xml'  => "text/xml",
+  'htc'  => "text/x-component",
+  'atom'   => 'application/atom+xml',
+  'ical'   => 'text/calendar',
+  'csv'  => 'text/csv',
+  'ico'  => 'image/x-icon'
+  );
 
 	public static function run(){
 		// map request to a path under web root
@@ -35,10 +35,10 @@ class TW_PassThru {
 			return FALSE;
 		}
 
-        // seems someone hacking, security feature
-        if (!preg_match('/\.(\w+)$/', $inSite, $matches) || ! self::$mime[$matches[1]]) {
-            return TRUE;
-        }
+  // seems someone hacking, security feature
+  if (!preg_match('/\.(\w+)$/', $inSite, $matches) || ! self::$mime[$matches[1]]) {
+    return TRUE;
+  }
 
 		$mtime = filemtime($inSite);
 		if(self::sendNoModify($mtime)) return TRUE;
@@ -59,16 +59,16 @@ class TW_PassThru {
 		$req = apache_request_headers();
 
 		if(isset($req['If-None-Match']) && base64_decode($req['If-None-Match'])==$mtime){
-            header("HTTP/1.1 304 Not Modified");
-            return TRUE;
+    header("HTTP/1.1 304 Not Modified");
+    return TRUE;
 		}
 		if(isset($req['If-Modified-Since'])){
 			$dt = date_parse_from_format("D, j M Y H:i:s T", $req['If-Modified-Since']);
-            if($dt['error_count']==0) {
+    if($dt['error_count']==0) {
 				date_default_timezone_set($dt['tz_abbr']);
 				$since = mktime($dt['hour'],$dt['minute'],$dt['second'],$dt['month'],$dt['day'],$dt['year']);
-                if($mtime <= $since) {
-                    header("HTTP/1.1 304 Not Modified");
+    if($mtime <= $since) {
+      header("HTTP/1.1 304 Not Modified");
 					return TRUE;
 				}
 			}

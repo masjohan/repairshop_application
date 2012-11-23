@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Class for iterating over a list of Propel objects stored as arrays
  *
- * @author     Francois Zaninotto
- * @package    propel.runtime.collection
+ * @author   Francois Zaninotto
+ * @package  propel.runtime.collection
  */
 class PropelArrayCollection extends PropelCollection
 {
@@ -67,7 +67,7 @@ class PropelArrayCollection extends PropelCollection
 	/**
 	 * Get an array of the primary keys of all the objects in the collection
 	 *
-	 * @return    array The list of the primary keys of the collection
+	 * @return  array The list of the primary keys of the collection
 	 */
 	public function getPrimaryKeys($usePrefix = true)
 	{
@@ -86,7 +86,7 @@ class PropelArrayCollection extends PropelCollection
 	 * Uses the object model to force the column types
 	 * Does not empty the collection before adding the data from the array
 	 *
-	 * @param    array $arr
+	 * @param  array $arr
 	 */
 	public function fromArray($arr)
 	{
@@ -102,10 +102,10 @@ class PropelArrayCollection extends PropelCollection
 	 * Get an array representation of the collection
 	 * This is not an alias for getData(), since it returns a copy of the data
 	 *
-	 * @param     string $keyColumn If null, the returned array uses an incremental index.
-	 *              Otherwise, the array is indexed using the specified column
-	 * @param     boolean $usePrefix If true, the returned array prefixes keys 
-	 *              with the model class name ('Article_0', 'Article_1', etc).
+	 * @param   string $keyColumn If null, the returned array uses an incremental index.
+	 *        Otherwise, the array is indexed using the specified column
+	 * @param   boolean $usePrefix If true, the returned array prefixes keys 
+	 *        with the model class name ('Article_0', 'Article_1', etc).
 	 *
 	 * <code>
 	 * $bookCollection->toArray();
@@ -124,7 +124,7 @@ class PropelArrayCollection extends PropelCollection
 	 *  'Book_1' => array('Id' => 456, 'Title' => 'Don Juan'),
 	 * )
 	 * </code>
-	 * @return    array
+	 * @return  array
 	 */
 	public function toArray($keyColumn = null, $usePrefix = false)
 	{
@@ -158,7 +158,7 @@ class PropelArrayCollection extends PropelCollection
 	 * $res = $coll->toKeyValue('Id', 'Name');
 	 * </code>
 	 *
-	 * @return    array
+	 * @return  array
 	 */
 	public function toKeyValue($keyColumn, $valueColumn)
 	{

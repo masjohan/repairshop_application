@@ -52,7 +52,6 @@ class CustomerTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('Shop', 'Shop', RelationMap::MANY_TO_ONE, array('shop_id' => 'id', ), null, null);
-    $this->addRelation('User', 'User', RelationMap::ONE_TO_MANY, array('id' => 'customer_id', ), null, null);
 	} // buildRelations()
 
 } // CustomerTableMap

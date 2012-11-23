@@ -1,27 +1,27 @@
 #side-nav-menu .panel-body {
-    padding: 0;
+  padding: 0;
 }
 
 #side-nav-menu .panel-head {
-    padding: 4px 15px;
+  padding: 6px 15px;
 }
 
 ul.side-nav {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 ul.side-nav  li {
-    margin: 1px 0;
-    list-style: none outside none;
+  margin: 1px 0;
+  list-style: none outside none;
 }
 
 ul.side-nav  li  a {
-    display: block;
-    padding: 3px 10px;
+  display: block;
+  padding: 3px 10px;
 }
 
 ul.side-nav  li  a.current {
-    background-color: #99ccff;
+  background-color: #99ccff;
 }
 

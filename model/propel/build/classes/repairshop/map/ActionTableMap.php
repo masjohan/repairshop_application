@@ -40,7 +40,7 @@ class ActionTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
 		$this->addColumn('PATH', 'Path', 'VARCHAR', true, 99, null);
 		$this->addColumn('NAME', 'Name', 'VARCHAR', true, 99, null);
-		$this->addColumn('NOTES', 'Notes', 'VARCHAR', false, 255, null);
+		$this->addForeignKey('ACTION_CATEGORY_ID', 'ActionCategoryId', 'INTEGER', 'ActionCategory', 'ID', false, 10, null);
 		// validators
 	} // initialize()
 
@@ -49,6 +49,7 @@ class ActionTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('Actioncategory', 'Actioncategory', RelationMap::MANY_TO_ONE, array('action_category_id' => 'id', ), null, null);
     $this->addRelation('Roleaction', 'Roleaction', RelationMap::ONE_TO_MANY, array('id' => 'action_id', ), 'CASCADE', 'CASCADE');
 	} // buildRelations()
 

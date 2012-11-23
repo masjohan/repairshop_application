@@ -20,10 +20,6 @@
  * @method     RoleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     RoleQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     RoleQuery leftJoinRoleaction($relationAlias = null) Adds a LEFT JOIN clause to the query using the Roleaction relation
- * @method     RoleQuery rightJoinRoleaction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Roleaction relation
- * @method     RoleQuery innerJoinRoleaction($relationAlias = null) Adds a INNER JOIN clause to the query using the Roleaction relation
- *
  * @method     RoleQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
  * @method     RoleQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
  * @method     RoleQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
@@ -257,79 +253,6 @@ abstract class BaseRoleQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(RolePeer::TYPE, $type, $comparison);
-	}
-
-	/**
-	 * Filter the query by a related Roleaction object
-	 *
-	 * @param     Roleaction $roleaction  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    RoleQuery The current query, for fluid interface
-	 */
-	public function filterByRoleaction($roleaction, $comparison = null)
-	{
-		if ($roleaction instanceof Roleaction) {
-			return $this
-				->addUsingAlias(RolePeer::ID, $roleaction->getRoleId(), $comparison);
-		} elseif ($roleaction instanceof PropelCollection) {
-			return $this
-				->useRoleactionQuery()
-					->filterByPrimaryKeys($roleaction->getPrimaryKeys())
-				->endUse();
-		} else {
-			throw new PropelException('filterByRoleaction() only accepts arguments of type Roleaction or PropelCollection');
-		}
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the Roleaction relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    RoleQuery The current query, for fluid interface
-	 */
-	public function joinRoleaction($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Roleaction');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'Roleaction');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the Roleaction relation Roleaction object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    RoleactionQuery A secondary query class using the current class as primary query
-	 */
-	public function useRoleactionQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		return $this
-			->joinRoleaction($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Roleaction', 'RoleactionQuery');
 	}
 
 	/**

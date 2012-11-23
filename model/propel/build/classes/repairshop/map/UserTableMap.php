@@ -52,9 +52,7 @@ class UserTableMap extends TableMap {
 		$this->addColumn('COUNTRY', 'Country', 'VARCHAR', false, 25, null);
 		$this->addColumn('POSTAL', 'Postal', 'VARCHAR', false, 12, null);
 		$this->addForeignKey('ROLE_ID', 'RoleId', 'INTEGER', 'Role', 'ID', true, 10, null);
-		$this->addForeignKey('CUSTOMER_ID', 'CustomerId', 'INTEGER', 'Customer', 'ID', false, 10, null);
-		$this->addForeignKey('SHOP_ID', 'ShopId', 'INTEGER', 'Shop', 'ID', false, 10, null);
-		$this->addForeignKey('MARKET_ID', 'MarketId', 'INTEGER', 'Market', 'ID', false, 10, null);
+		$this->addColumn('ROLE_TYPE_ID', 'RoleTypeId', 'INTEGER', false, 10, null);
 		$this->addColumn('RECOVERY_TOKEN', 'RecoveryToken', 'VARCHAR', false, 45, null);
 		$this->addColumn('RECOVERY_SENT', 'RecoverySent', 'TIMESTAMP', false, null, null);
 		// validators
@@ -65,10 +63,8 @@ class UserTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('Customer', 'Customer', RelationMap::MANY_TO_ONE, array('customer_id' => 'id', ), null, null);
-    $this->addRelation('Shop', 'Shop', RelationMap::MANY_TO_ONE, array('shop_id' => 'id', ), null, null);
-    $this->addRelation('Market', 'Market', RelationMap::MANY_TO_ONE, array('market_id' => 'id', ), null, null);
     $this->addRelation('Role', 'Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), null, null);
+    $this->addRelation('Shop', 'Shop', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null);
 	} // buildRelations()
 
 } // UserTableMap

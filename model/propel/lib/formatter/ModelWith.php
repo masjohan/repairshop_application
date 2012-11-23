@@ -5,15 +5,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Data object to describe a joined hydration in a Model Query
  * ModelWith objects are used by formatters to hydrate related objects
  *
- * @author     Francois Zaninotto (Propel)
- * @package    propel.runtime.query
+ * @author   Francois Zaninotto (Propel)
+ * @package  propel.runtime.query
  */
 class ModelWith
 {

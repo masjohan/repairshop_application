@@ -26,13 +26,16 @@ abstract class BaseSessionPeer {
 	const TM_CLASS = 'SessionTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 4;
+	const NUM_COLUMNS = 5;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-	const NUM_HYDRATE_COLUMNS = 4;
+	const NUM_HYDRATE_COLUMNS = 5;
+
+	/** the column name for the ID field */
+	const ID = '_session.ID';
 
 	/** the column name for the SESSION_ID field */
 	const SESSION_ID = '_session.SESSION_ID';
@@ -65,12 +68,12 @@ abstract class BaseSessionPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	protected static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('SessionId', 'DeviceKey', 'Value', 'UpdatedOn', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('sessionId', 'deviceKey', 'value', 'updatedOn', ),
-		BasePeer::TYPE_COLNAME => array (self::SESSION_ID, self::DEVICE_KEY, self::VALUE, self::UPDATED_ON, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('SESSION_ID', 'DEVICE_KEY', 'VALUE', 'UPDATED_ON', ),
-		BasePeer::TYPE_FIELDNAME => array ('session_id', 'device_key', 'value', 'updated_on', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'SessionId', 'DeviceKey', 'Value', 'UpdatedOn', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'sessionId', 'deviceKey', 'value', 'updatedOn', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::SESSION_ID, self::DEVICE_KEY, self::VALUE, self::UPDATED_ON, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SESSION_ID', 'DEVICE_KEY', 'VALUE', 'UPDATED_ON', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'session_id', 'device_key', 'value', 'updated_on', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
 	/**
@@ -80,12 +83,12 @@ abstract class BaseSessionPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	protected static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('SessionId' => 0, 'DeviceKey' => 1, 'Value' => 2, 'UpdatedOn' => 3, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('sessionId' => 0, 'deviceKey' => 1, 'value' => 2, 'updatedOn' => 3, ),
-		BasePeer::TYPE_COLNAME => array (self::SESSION_ID => 0, self::DEVICE_KEY => 1, self::VALUE => 2, self::UPDATED_ON => 3, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('SESSION_ID' => 0, 'DEVICE_KEY' => 1, 'VALUE' => 2, 'UPDATED_ON' => 3, ),
-		BasePeer::TYPE_FIELDNAME => array ('session_id' => 0, 'device_key' => 1, 'value' => 2, 'updated_on' => 3, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'SessionId' => 1, 'DeviceKey' => 2, 'Value' => 3, 'UpdatedOn' => 4, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'sessionId' => 1, 'deviceKey' => 2, 'value' => 3, 'updatedOn' => 4, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::SESSION_ID => 1, self::DEVICE_KEY => 2, self::VALUE => 3, self::UPDATED_ON => 4, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SESSION_ID' => 1, 'DEVICE_KEY' => 2, 'VALUE' => 3, 'UPDATED_ON' => 4, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'session_id' => 1, 'device_key' => 2, 'value' => 3, 'updated_on' => 4, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
 	/**
@@ -157,11 +160,13 @@ abstract class BaseSessionPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
+			$criteria->addSelectColumn(SessionPeer::ID);
 			$criteria->addSelectColumn(SessionPeer::SESSION_ID);
 			$criteria->addSelectColumn(SessionPeer::DEVICE_KEY);
 			$criteria->addSelectColumn(SessionPeer::VALUE);
 			$criteria->addSelectColumn(SessionPeer::UPDATED_ON);
 		} else {
+			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.SESSION_ID');
 			$criteria->addSelectColumn($alias . '.DEVICE_KEY');
 			$criteria->addSelectColumn($alias . '.VALUE');
@@ -290,7 +295,7 @@ abstract class BaseSessionPeer {
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = (string) $obj->getSessionId();
+				$key = (string) $obj->getId();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -310,7 +315,7 @@ abstract class BaseSessionPeer {
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
 			if (is_object($value) && $value instanceof Session) {
-				$key = (string) $value->getSessionId();
+				$key = (string) $value->getId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
@@ -391,7 +396,7 @@ abstract class BaseSessionPeer {
 	 */
 	public static function getPrimaryKeyFromRow($row, $startcol = 0)
 	{
-		return (string) $row[$startcol];
+		return (int) $row[$startcol];
 	}
 	
 	/**
@@ -511,6 +516,10 @@ abstract class BaseSessionPeer {
 			$criteria = $values->buildCriteria(); // build Criteria from Session object
 		}
 
+		if ($criteria->containsKey(SessionPeer::ID) && $criteria->keyContainsValue(SessionPeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.SessionPeer::ID.')');
+		}
+
 
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
@@ -549,10 +558,10 @@ abstract class BaseSessionPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(SessionPeer::SESSION_ID);
-			$value = $criteria->remove(SessionPeer::SESSION_ID);
+			$comparison = $criteria->getComparison(SessionPeer::ID);
+			$value = $criteria->remove(SessionPeer::ID);
 			if ($value) {
-				$selectCriteria->add(SessionPeer::SESSION_ID, $value, $comparison);
+				$selectCriteria->add(SessionPeer::ID, $value, $comparison);
 			} else {
 				$selectCriteria->setPrimaryTableName(SessionPeer::TABLE_NAME);
 			}
@@ -628,7 +637,7 @@ abstract class BaseSessionPeer {
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(SessionPeer::SESSION_ID, (array) $values, Criteria::IN);
+			$criteria->add(SessionPeer::ID, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
 				SessionPeer::removeInstanceFromPool($singleval);
@@ -695,7 +704,7 @@ abstract class BaseSessionPeer {
 	/**
 	 * Retrieve a single object by pkey.
 	 *
-	 * @param      string $pk the primary key.
+	 * @param      int $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
 	 * @return     Session
 	 */
@@ -711,7 +720,7 @@ abstract class BaseSessionPeer {
 		}
 
 		$criteria = new Criteria(SessionPeer::DATABASE_NAME);
-		$criteria->add(SessionPeer::SESSION_ID, $pk);
+		$criteria->add(SessionPeer::ID, $pk);
 
 		$v = SessionPeer::doSelect($criteria, $con);
 
@@ -737,7 +746,7 @@ abstract class BaseSessionPeer {
 			$objs = array();
 		} else {
 			$criteria = new Criteria(SessionPeer::DATABASE_NAME);
-			$criteria->add(SessionPeer::SESSION_ID, $pks, Criteria::IN);
+			$criteria->add(SessionPeer::ID, $pks, Criteria::IN);
 			$objs = SessionPeer::doSelect($criteria, $con);
 		}
 		return $objs;

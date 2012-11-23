@@ -115,22 +115,10 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $role_id;
 
 	/**
-	 * The value for the customer_id field.
+	 * The value for the role_type_id field.
 	 * @var        int
 	 */
-	protected $customer_id;
-
-	/**
-	 * The value for the shop_id field.
-	 * @var        int
-	 */
-	protected $shop_id;
-
-	/**
-	 * The value for the market_id field.
-	 * @var        int
-	 */
-	protected $market_id;
+	protected $role_type_id;
 
 	/**
 	 * The value for the recovery_token field.
@@ -145,24 +133,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $recovery_sent;
 
 	/**
-	 * @var        Customer
-	 */
-	protected $aCustomer;
-
-	/**
-	 * @var        Shop
-	 */
-	protected $aShop;
-
-	/**
-	 * @var        Market
-	 */
-	protected $aMarket;
-
-	/**
 	 * @var        Role
 	 */
 	protected $aRole;
+
+	/**
+	 * @var        array Shop[] Collection to store aggregation of Shop objects.
+	 */
+	protected $collShops;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -329,33 +307,13 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [customer_id] column value.
+	 * Get the [role_type_id] column value.
 	 * 
 	 * @return     int
 	 */
-	public function getCustomerId()
+	public function getRoleTypeId()
 	{
-		return $this->customer_id;
-	}
-
-	/**
-	 * Get the [shop_id] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getShopId()
-	{
-		return $this->shop_id;
-	}
-
-	/**
-	 * Get the [market_id] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getMarketId()
-	{
-		return $this->market_id;
+		return $this->role_type_id;
 	}
 
 	/**
@@ -711,76 +669,24 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	} // setRoleId()
 
 	/**
-	 * Set the value of [customer_id] column.
+	 * Set the value of [role_type_id] column.
 	 * 
 	 * @param      int $v new value
 	 * @return     User The current object (for fluent API support)
 	 */
-	public function setCustomerId($v)
+	public function setRoleTypeId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
 		}
 
-		if ($this->customer_id !== $v) {
-			$this->customer_id = $v;
-			$this->modifiedColumns[] = UserPeer::CUSTOMER_ID;
-		}
-
-		if ($this->aCustomer !== null && $this->aCustomer->getId() !== $v) {
-			$this->aCustomer = null;
+		if ($this->role_type_id !== $v) {
+			$this->role_type_id = $v;
+			$this->modifiedColumns[] = UserPeer::ROLE_TYPE_ID;
 		}
 
 		return $this;
-	} // setCustomerId()
-
-	/**
-	 * Set the value of [shop_id] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     User The current object (for fluent API support)
-	 */
-	public function setShopId($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->shop_id !== $v) {
-			$this->shop_id = $v;
-			$this->modifiedColumns[] = UserPeer::SHOP_ID;
-		}
-
-		if ($this->aShop !== null && $this->aShop->getId() !== $v) {
-			$this->aShop = null;
-		}
-
-		return $this;
-	} // setShopId()
-
-	/**
-	 * Set the value of [market_id] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     User The current object (for fluent API support)
-	 */
-	public function setMarketId($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->market_id !== $v) {
-			$this->market_id = $v;
-			$this->modifiedColumns[] = UserPeer::MARKET_ID;
-		}
-
-		if ($this->aMarket !== null && $this->aMarket->getId() !== $v) {
-			$this->aMarket = null;
-		}
-
-		return $this;
-	} // setMarketId()
+	} // setRoleTypeId()
 
 	/**
 	 * Set the value of [recovery_token] column.
@@ -871,11 +777,9 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			$this->country = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
 			$this->postal = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
 			$this->role_id = ($row[$startcol + 14] !== null) ? (int) $row[$startcol + 14] : null;
-			$this->customer_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
-			$this->shop_id = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
-			$this->market_id = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
-			$this->recovery_token = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
-			$this->recovery_sent = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
+			$this->role_type_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
+			$this->recovery_token = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
+			$this->recovery_sent = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -884,7 +788,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 20; // 20 = UserPeer::NUM_HYDRATE_COLUMNS.
+			return $startcol + 18; // 18 = UserPeer::NUM_HYDRATE_COLUMNS.
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating User object", $e);
@@ -909,15 +813,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 		if ($this->aRole !== null && $this->role_id !== $this->aRole->getId()) {
 			$this->aRole = null;
-		}
-		if ($this->aCustomer !== null && $this->customer_id !== $this->aCustomer->getId()) {
-			$this->aCustomer = null;
-		}
-		if ($this->aShop !== null && $this->shop_id !== $this->aShop->getId()) {
-			$this->aShop = null;
-		}
-		if ($this->aMarket !== null && $this->market_id !== $this->aMarket->getId()) {
-			$this->aMarket = null;
 		}
 	} // ensureConsistency
 
@@ -958,10 +853,9 @@ abstract class BaseUser extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aCustomer = null;
-			$this->aShop = null;
-			$this->aMarket = null;
 			$this->aRole = null;
+			$this->collShops = null;
+
 		} // if (deep)
 	}
 
@@ -1077,27 +971,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCustomer !== null) {
-				if ($this->aCustomer->isModified() || $this->aCustomer->isNew()) {
-					$affectedRows += $this->aCustomer->save($con);
-				}
-				$this->setCustomer($this->aCustomer);
-			}
-
-			if ($this->aShop !== null) {
-				if ($this->aShop->isModified() || $this->aShop->isNew()) {
-					$affectedRows += $this->aShop->save($con);
-				}
-				$this->setShop($this->aShop);
-			}
-
-			if ($this->aMarket !== null) {
-				if ($this->aMarket->isModified() || $this->aMarket->isNew()) {
-					$affectedRows += $this->aMarket->save($con);
-				}
-				$this->setMarket($this->aMarket);
-			}
-
 			if ($this->aRole !== null) {
 				if ($this->aRole->isModified() || $this->aRole->isNew()) {
 					$affectedRows += $this->aRole->save($con);
@@ -1126,6 +999,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
+			}
+
+			if ($this->collShops !== null) {
+				foreach ($this->collShops as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
 			}
 
 			$this->alreadyInSave = false;
@@ -1199,24 +1080,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCustomer !== null) {
-				if (!$this->aCustomer->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aCustomer->getValidationFailures());
-				}
-			}
-
-			if ($this->aShop !== null) {
-				if (!$this->aShop->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aShop->getValidationFailures());
-				}
-			}
-
-			if ($this->aMarket !== null) {
-				if (!$this->aMarket->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aMarket->getValidationFailures());
-				}
-			}
-
 			if ($this->aRole !== null) {
 				if (!$this->aRole->validate($columns)) {
 					$failureMap = array_merge($failureMap, $this->aRole->getValidationFailures());
@@ -1228,6 +1091,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collShops !== null) {
+					foreach ($this->collShops as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -1308,18 +1179,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				return $this->getRoleId();
 				break;
 			case 15:
-				return $this->getCustomerId();
+				return $this->getRoleTypeId();
 				break;
 			case 16:
-				return $this->getShopId();
-				break;
-			case 17:
-				return $this->getMarketId();
-				break;
-			case 18:
 				return $this->getRecoveryToken();
 				break;
-			case 19:
+			case 17:
 				return $this->getRecoverySent();
 				break;
 			default:
@@ -1366,24 +1231,16 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			$keys[12] => $this->getCountry(),
 			$keys[13] => $this->getPostal(),
 			$keys[14] => $this->getRoleId(),
-			$keys[15] => $this->getCustomerId(),
-			$keys[16] => $this->getShopId(),
-			$keys[17] => $this->getMarketId(),
-			$keys[18] => $this->getRecoveryToken(),
-			$keys[19] => $this->getRecoverySent(),
+			$keys[15] => $this->getRoleTypeId(),
+			$keys[16] => $this->getRecoveryToken(),
+			$keys[17] => $this->getRecoverySent(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aCustomer) {
-				$result['Customer'] = $this->aCustomer->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
-			if (null !== $this->aShop) {
-				$result['Shop'] = $this->aShop->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
-			if (null !== $this->aMarket) {
-				$result['Market'] = $this->aMarket->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
 			if (null !== $this->aRole) {
 				$result['Role'] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+			}
+			if (null !== $this->collShops) {
+				$result['Shops'] = $this->collShops->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
 		}
 		return $result;
@@ -1462,18 +1319,12 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->setRoleId($value);
 				break;
 			case 15:
-				$this->setCustomerId($value);
+				$this->setRoleTypeId($value);
 				break;
 			case 16:
-				$this->setShopId($value);
-				break;
-			case 17:
-				$this->setMarketId($value);
-				break;
-			case 18:
 				$this->setRecoveryToken($value);
 				break;
-			case 19:
+			case 17:
 				$this->setRecoverySent($value);
 				break;
 		} // switch()
@@ -1515,11 +1366,9 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		if (array_key_exists($keys[12], $arr)) $this->setCountry($arr[$keys[12]]);
 		if (array_key_exists($keys[13], $arr)) $this->setPostal($arr[$keys[13]]);
 		if (array_key_exists($keys[14], $arr)) $this->setRoleId($arr[$keys[14]]);
-		if (array_key_exists($keys[15], $arr)) $this->setCustomerId($arr[$keys[15]]);
-		if (array_key_exists($keys[16], $arr)) $this->setShopId($arr[$keys[16]]);
-		if (array_key_exists($keys[17], $arr)) $this->setMarketId($arr[$keys[17]]);
-		if (array_key_exists($keys[18], $arr)) $this->setRecoveryToken($arr[$keys[18]]);
-		if (array_key_exists($keys[19], $arr)) $this->setRecoverySent($arr[$keys[19]]);
+		if (array_key_exists($keys[15], $arr)) $this->setRoleTypeId($arr[$keys[15]]);
+		if (array_key_exists($keys[16], $arr)) $this->setRecoveryToken($arr[$keys[16]]);
+		if (array_key_exists($keys[17], $arr)) $this->setRecoverySent($arr[$keys[17]]);
 	}
 
 	/**
@@ -1546,9 +1395,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		if ($this->isColumnModified(UserPeer::COUNTRY)) $criteria->add(UserPeer::COUNTRY, $this->country);
 		if ($this->isColumnModified(UserPeer::POSTAL)) $criteria->add(UserPeer::POSTAL, $this->postal);
 		if ($this->isColumnModified(UserPeer::ROLE_ID)) $criteria->add(UserPeer::ROLE_ID, $this->role_id);
-		if ($this->isColumnModified(UserPeer::CUSTOMER_ID)) $criteria->add(UserPeer::CUSTOMER_ID, $this->customer_id);
-		if ($this->isColumnModified(UserPeer::SHOP_ID)) $criteria->add(UserPeer::SHOP_ID, $this->shop_id);
-		if ($this->isColumnModified(UserPeer::MARKET_ID)) $criteria->add(UserPeer::MARKET_ID, $this->market_id);
+		if ($this->isColumnModified(UserPeer::ROLE_TYPE_ID)) $criteria->add(UserPeer::ROLE_TYPE_ID, $this->role_type_id);
 		if ($this->isColumnModified(UserPeer::RECOVERY_TOKEN)) $criteria->add(UserPeer::RECOVERY_TOKEN, $this->recovery_token);
 		if ($this->isColumnModified(UserPeer::RECOVERY_SENT)) $criteria->add(UserPeer::RECOVERY_SENT, $this->recovery_sent);
 
@@ -1627,11 +1474,23 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		$copyObj->setCountry($this->getCountry());
 		$copyObj->setPostal($this->getPostal());
 		$copyObj->setRoleId($this->getRoleId());
-		$copyObj->setCustomerId($this->getCustomerId());
-		$copyObj->setShopId($this->getShopId());
-		$copyObj->setMarketId($this->getMarketId());
+		$copyObj->setRoleTypeId($this->getRoleTypeId());
 		$copyObj->setRecoveryToken($this->getRecoveryToken());
 		$copyObj->setRecoverySent($this->getRecoverySent());
+
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getShops() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addShop($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
+
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1674,153 +1533,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 			self::$peer = new UserPeer();
 		}
 		return self::$peer;
-	}
-
-	/**
-	 * Declares an association between this object and a Customer object.
-	 *
-	 * @param      Customer $v
-	 * @return     User The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setCustomer(Customer $v = null)
-	{
-		if ($v === null) {
-			$this->setCustomerId(NULL);
-		} else {
-			$this->setCustomerId($v->getId());
-		}
-
-		$this->aCustomer = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the Customer object, it will not be re-added.
-		if ($v !== null) {
-			$v->addUser($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated Customer object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     Customer The associated Customer object.
-	 * @throws     PropelException
-	 */
-	public function getCustomer(PropelPDO $con = null)
-	{
-		if ($this->aCustomer === null && ($this->customer_id !== null)) {
-			$this->aCustomer = CustomerQuery::create()->findPk($this->customer_id, $con);
-			/* The following can be used additionally to
-				guarantee the related object contains a reference
-				to this object.  This level of coupling may, however, be
-				undesirable since it could result in an only partially populated collection
-				in the referenced object.
-				$this->aCustomer->addUsers($this);
-			 */
-		}
-		return $this->aCustomer;
-	}
-
-	/**
-	 * Declares an association between this object and a Shop object.
-	 *
-	 * @param      Shop $v
-	 * @return     User The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setShop(Shop $v = null)
-	{
-		if ($v === null) {
-			$this->setShopId(NULL);
-		} else {
-			$this->setShopId($v->getId());
-		}
-
-		$this->aShop = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the Shop object, it will not be re-added.
-		if ($v !== null) {
-			$v->addUser($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated Shop object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     Shop The associated Shop object.
-	 * @throws     PropelException
-	 */
-	public function getShop(PropelPDO $con = null)
-	{
-		if ($this->aShop === null && ($this->shop_id !== null)) {
-			$this->aShop = ShopQuery::create()->findPk($this->shop_id, $con);
-			/* The following can be used additionally to
-				guarantee the related object contains a reference
-				to this object.  This level of coupling may, however, be
-				undesirable since it could result in an only partially populated collection
-				in the referenced object.
-				$this->aShop->addUsers($this);
-			 */
-		}
-		return $this->aShop;
-	}
-
-	/**
-	 * Declares an association between this object and a Market object.
-	 *
-	 * @param      Market $v
-	 * @return     User The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setMarket(Market $v = null)
-	{
-		if ($v === null) {
-			$this->setMarketId(NULL);
-		} else {
-			$this->setMarketId($v->getId());
-		}
-
-		$this->aMarket = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the Market object, it will not be re-added.
-		if ($v !== null) {
-			$v->addUser($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated Market object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     Market The associated Market object.
-	 * @throws     PropelException
-	 */
-	public function getMarket(PropelPDO $con = null)
-	{
-		if ($this->aMarket === null && ($this->market_id !== null)) {
-			$this->aMarket = MarketQuery::create()->findPk($this->market_id, $con);
-			/* The following can be used additionally to
-				guarantee the related object contains a reference
-				to this object.  This level of coupling may, however, be
-				undesirable since it could result in an only partially populated collection
-				in the referenced object.
-				$this->aMarket->addUsers($this);
-			 */
-		}
-		return $this->aMarket;
 	}
 
 	/**
@@ -1873,6 +1585,121 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collShops collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addShops()
+	 */
+	public function clearShops()
+	{
+		$this->collShops = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collShops collection.
+	 *
+	 * By default this just sets the collShops collection to an empty array (like clearcollShops());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @param      boolean $overrideExisting If set to true, the method call initializes
+	 *                                        the collection even if it is not empty
+	 *
+	 * @return     void
+	 */
+	public function initShops($overrideExisting = true)
+	{
+		if (null !== $this->collShops && !$overrideExisting) {
+			return;
+		}
+		$this->collShops = new PropelObjectCollection();
+		$this->collShops->setModel('Shop');
+	}
+
+	/**
+	 * Gets an array of Shop objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Shop[] List of Shop objects
+	 * @throws     PropelException
+	 */
+	public function getShops($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collShops || null !== $criteria) {
+			if ($this->isNew() && null === $this->collShops) {
+				// return empty collection
+				$this->initShops();
+			} else {
+				$collShops = ShopQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collShops;
+				}
+				$this->collShops = $collShops;
+			}
+		}
+		return $this->collShops;
+	}
+
+	/**
+	 * Returns the number of related Shop objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Shop objects.
+	 * @throws     PropelException
+	 */
+	public function countShops(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collShops || null !== $criteria) {
+			if ($this->isNew() && null === $this->collShops) {
+				return 0;
+			} else {
+				$query = ShopQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collShops);
+		}
+	}
+
+	/**
+	 * Method called to associate a Shop object to this object
+	 * through the Shop foreign key attribute.
+	 *
+	 * @param      Shop $l Shop
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addShop(Shop $l)
+	{
+		if ($this->collShops === null) {
+			$this->initShops();
+		}
+		if (!$this->collShops->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collShops[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1892,9 +1719,7 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		$this->country = null;
 		$this->postal = null;
 		$this->role_id = null;
-		$this->customer_id = null;
-		$this->shop_id = null;
-		$this->market_id = null;
+		$this->role_type_id = null;
 		$this->recovery_token = null;
 		$this->recovery_sent = null;
 		$this->alreadyInSave = false;
@@ -1917,11 +1742,17 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collShops) {
+				foreach ($this->collShops as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
-		$this->aCustomer = null;
-		$this->aShop = null;
-		$this->aMarket = null;
+		if ($this->collShops instanceof PropelCollection) {
+			$this->collShops->clearIterator();
+		}
+		$this->collShops = null;
 		$this->aRole = null;
 	}
 

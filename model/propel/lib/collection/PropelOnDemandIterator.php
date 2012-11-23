@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Class for iterating over a statement and returning one Propel object at a time
  *
- * @author     Francois Zaninotto
- * @package    propel.runtime.collection
+ * @author   Francois Zaninotto
+ * @package  propel.runtime.collection
  */
 class PropelOnDemandIterator implements Iterator
 {
@@ -40,7 +40,7 @@ class PropelOnDemandIterator implements Iterator
 	 * Returns the number of rows in the resultset
 	 * Warning: this number is inaccurate for most databases. Do not rely on it for a portable application.
 	 * 
-	 * @return    int number of results
+	 * @return  int number of results
 	 */
 	public function count()
 	{
@@ -55,7 +55,7 @@ class PropelOnDemandIterator implements Iterator
 	 *
 	 * @see PropelObjectFormatter::getAllObjectsFromRow()
 	 *
-	 * @return    BaseObject
+	 * @return  BaseObject
 	 */
 	public function current()
 	{
@@ -65,7 +65,7 @@ class PropelOnDemandIterator implements Iterator
 	/**
 	 * Gets the current key in the iterator
 	 *
-	 * @return    string
+	 * @return  string
 	 */
 	public function key()
 	{

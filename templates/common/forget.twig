@@ -6,9 +6,9 @@
     </div>
     <div class="yui-main">
         <div class="yui-b">
-            <h2>{{ action.Name }}</h2>
+            <h2>{#{ C.param('action').Name }#}</h2>
             {% if reset_user %}
-                <p>Welcome back. Please pickup your password</p>
+                <p>Welcome! You are activating or re-activating your account. Please pickup your password</p>
                 {{ form.begin({"method":"post", "action":"/json/common/forget", "id":"page-form-2"}) }}
                     {{ form.password({
                         "name" : "Passwd",

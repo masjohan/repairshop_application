@@ -43,10 +43,15 @@ abstract class BaseAction extends BaseObject  implements Persistent
 	protected $name;
 
 	/**
-	 * The value for the notes field.
-	 * @var        string
+	 * The value for the action_category_id field.
+	 * @var        int
 	 */
-	protected $notes;
+	protected $action_category_id;
+
+	/**
+	 * @var        Actioncategory
+	 */
+	protected $aActioncategory;
 
 	/**
 	 * @var        array Roleaction[] Collection to store aggregation of Roleaction objects.
@@ -98,13 +103,13 @@ abstract class BaseAction extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [notes] column value.
+	 * Get the [action_category_id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
-	public function getNotes()
+	public function getActionCategoryId()
 	{
-		return $this->notes;
+		return $this->action_category_id;
 	}
 
 	/**
@@ -168,24 +173,28 @@ abstract class BaseAction extends BaseObject  implements Persistent
 	} // setName()
 
 	/**
-	 * Set the value of [notes] column.
+	 * Set the value of [action_category_id] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     Action The current object (for fluent API support)
 	 */
-	public function setNotes($v)
+	public function setActionCategoryId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
-		if ($this->notes !== $v) {
-			$this->notes = $v;
-			$this->modifiedColumns[] = ActionPeer::NOTES;
+		if ($this->action_category_id !== $v) {
+			$this->action_category_id = $v;
+			$this->modifiedColumns[] = ActionPeer::ACTION_CATEGORY_ID;
+		}
+
+		if ($this->aActioncategory !== null && $this->aActioncategory->getId() !== $v) {
+			$this->aActioncategory = null;
 		}
 
 		return $this;
-	} // setNotes()
+	} // setActionCategoryId()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -222,7 +231,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->path = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->notes = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->action_category_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -254,6 +263,9 @@ abstract class BaseAction extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
+		if ($this->aActioncategory !== null && $this->action_category_id !== $this->aActioncategory->getId()) {
+			$this->aActioncategory = null;
+		}
 	} // ensureConsistency
 
 	/**
@@ -293,6 +305,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
+			$this->aActioncategory = null;
 			$this->collRoleactions = null;
 
 		} // if (deep)
@@ -405,6 +418,18 @@ abstract class BaseAction extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			// We call the save method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aActioncategory !== null) {
+				if ($this->aActioncategory->isModified() || $this->aActioncategory->isNew()) {
+					$affectedRows += $this->aActioncategory->save($con);
+				}
+				$this->setActioncategory($this->aActioncategory);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = ActionPeer::ID;
 			}
@@ -418,11 +443,11 @@ abstract class BaseAction extends BaseObject  implements Persistent
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
-					$affectedRows = 1;
+					$affectedRows += 1;
 					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = ActionPeer::doUpdate($this, $con);
+					$affectedRows += ActionPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -502,6 +527,18 @@ abstract class BaseAction extends BaseObject  implements Persistent
 			$failureMap = array();
 
 
+			// We call the validate method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aActioncategory !== null) {
+				if (!$this->aActioncategory->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aActioncategory->getValidationFailures());
+				}
+			}
+
+
 			if (($retval = ActionPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
@@ -558,7 +595,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 				return $this->getName();
 				break;
 			case 3:
-				return $this->getNotes();
+				return $this->getActionCategoryId();
 				break;
 			default:
 				return null;
@@ -592,9 +629,12 @@ abstract class BaseAction extends BaseObject  implements Persistent
 			$keys[0] => $this->getId(),
 			$keys[1] => $this->getPath(),
 			$keys[2] => $this->getName(),
-			$keys[3] => $this->getNotes(),
+			$keys[3] => $this->getActionCategoryId(),
 		);
 		if ($includeForeignObjects) {
+			if (null !== $this->aActioncategory) {
+				$result['Actioncategory'] = $this->aActioncategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+			}
 			if (null !== $this->collRoleactions) {
 				$result['Roleactions'] = $this->collRoleactions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
@@ -639,7 +679,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 				$this->setName($value);
 				break;
 			case 3:
-				$this->setNotes($value);
+				$this->setActionCategoryId($value);
 				break;
 		} // switch()
 	}
@@ -668,7 +708,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setPath($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setNotes($arr[$keys[3]]);
+		if (array_key_exists($keys[3], $arr)) $this->setActionCategoryId($arr[$keys[3]]);
 	}
 
 	/**
@@ -683,7 +723,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 		if ($this->isColumnModified(ActionPeer::ID)) $criteria->add(ActionPeer::ID, $this->id);
 		if ($this->isColumnModified(ActionPeer::PATH)) $criteria->add(ActionPeer::PATH, $this->path);
 		if ($this->isColumnModified(ActionPeer::NAME)) $criteria->add(ActionPeer::NAME, $this->name);
-		if ($this->isColumnModified(ActionPeer::NOTES)) $criteria->add(ActionPeer::NOTES, $this->notes);
+		if ($this->isColumnModified(ActionPeer::ACTION_CATEGORY_ID)) $criteria->add(ActionPeer::ACTION_CATEGORY_ID, $this->action_category_id);
 
 		return $criteria;
 	}
@@ -748,7 +788,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 	{
 		$copyObj->setPath($this->getPath());
 		$copyObj->setName($this->getName());
-		$copyObj->setNotes($this->getNotes());
+		$copyObj->setActionCategoryId($this->getActionCategoryId());
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -805,6 +845,55 @@ abstract class BaseAction extends BaseObject  implements Persistent
 			self::$peer = new ActionPeer();
 		}
 		return self::$peer;
+	}
+
+	/**
+	 * Declares an association between this object and a Actioncategory object.
+	 *
+	 * @param      Actioncategory $v
+	 * @return     Action The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setActioncategory(Actioncategory $v = null)
+	{
+		if ($v === null) {
+			$this->setActionCategoryId(NULL);
+		} else {
+			$this->setActionCategoryId($v->getId());
+		}
+
+		$this->aActioncategory = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the Actioncategory object, it will not be re-added.
+		if ($v !== null) {
+			$v->addAction($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated Actioncategory object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     Actioncategory The associated Actioncategory object.
+	 * @throws     PropelException
+	 */
+	public function getActioncategory(PropelPDO $con = null)
+	{
+		if ($this->aActioncategory === null && ($this->action_category_id !== null)) {
+			$this->aActioncategory = ActioncategoryQuery::create()->findPk($this->action_category_id, $con);
+			/* The following can be used additionally to
+				guarantee the related object contains a reference
+				to this object.  This level of coupling may, however, be
+				undesirable since it could result in an only partially populated collection
+				in the referenced object.
+				$this->aActioncategory->addActions($this);
+			 */
+		}
+		return $this->aActioncategory;
 	}
 
 	/**
@@ -922,31 +1011,6 @@ abstract class BaseAction extends BaseObject  implements Persistent
 		}
 	}
 
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Action is new, it will return
-	 * an empty collection; or if this Action has previously
-	 * been saved, it will retrieve related Roleactions from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Action.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array Roleaction[] List of Roleaction objects
-	 */
-	public function getRoleactionsJoinRole($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = RoleactionQuery::create(null, $criteria);
-		$query->joinWith('Role', $join_behavior);
-
-		return $this->getRoleactions($query, $con);
-	}
-
 	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
@@ -955,7 +1019,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 		$this->id = null;
 		$this->path = null;
 		$this->name = null;
-		$this->notes = null;
+		$this->action_category_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -987,6 +1051,7 @@ abstract class BaseAction extends BaseObject  implements Persistent
 			$this->collRoleactions->clearIterator();
 		}
 		$this->collRoleactions = null;
+		$this->aActioncategory = null;
 	}
 
 	/**

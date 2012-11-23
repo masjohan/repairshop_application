@@ -5,15 +5,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Abstract class for query formatter
  *
- * @author     Francois Zaninotto
- * @version    $Revision: 2198 $
- * @package    propel.runtime.formatter
+ * @author   Francois Zaninotto
+ * @version  $Revision: 2198 $
+ * @package  propel.runtime.formatter
  */
 abstract class PropelFormatter
 {
@@ -162,10 +162,10 @@ abstract class PropelFormatter
 	 * The column offset in the row is used to index the array of classes
 	 * As there may be more than one object of the same class in the chain
 	 * 
-	 * @param     int    $col    Offset of the object in the list of objects to hydrate
-	 * @param     string $class  Propel model object class
+	 * @param   int  $col  Offset of the object in the list of objects to hydrate
+	 * @param   string $class  Propel model object class
 	 * 
-	 * @return    BaseObject
+	 * @return  BaseObject
 	 */
 	protected function getWorkerObject($col, $class)
 	{
@@ -180,12 +180,12 @@ abstract class PropelFormatter
 	/**
 	 * Gets a Propel object hydrated from a selection of columns in statement row
 	 *
-	 * @param     array  $row associative array indexed by column number,
-	 *                   as returned by PDOStatement::fetch(PDO::FETCH_NUM)
-	 * @param     string $class The classname of the object to create
-	 * @param     int    $col The start column for the hydration (modified)
+	 * @param   array  $row associative array indexed by column number,
+	 *           as returned by PDOStatement::fetch(PDO::FETCH_NUM)
+	 * @param   string $class The classname of the object to create
+	 * @param   int  $col The start column for the hydration (modified)
 	 *
-	 * @return    BaseObject
+	 * @return  BaseObject
 	 */
 	public function getSingleObjectFromRow($row, $class, &$col = 0)
 	{

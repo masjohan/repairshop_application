@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
@@ -13,9 +13,9 @@
  * format() returns a PropelArrayCollection of associative arrays, a string,
  * or an array
  *
- * @author     Benjamin Runnels
- * @version    $Revision$
- * @package    propel.runtime.formatter
+ * @author   Benjamin Runnels
+ * @version  $Revision$
+ * @package  propel.runtime.formatter
  */
 class PropelSimpleArrayFormatter extends PropelFormatter {
 	protected $collectionName = 'PropelArrayCollection';

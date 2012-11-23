@@ -11,15 +11,15 @@
  * @author tao
  */
 class Audit {
-    public static function addSessionUser(BaseObject $model) {
-        $sess = TW_Session::getInstance();
-        if ($sess->is_login()) {
+  public static function addSessionUser(BaseObject $model) {
+  $sess = TW_Session::getInstance();
+  if ($sess->is_login()) {
 
-        } else {
-            $role = RoleQuery::create()->findOneBy('Name', 'Guess');
-            
-        }
-    }
+  } else {
+    $role = RoleQuery::create()->findOneBy('Name', 'Guess');
+    
+  }
+  }
 }
 
 

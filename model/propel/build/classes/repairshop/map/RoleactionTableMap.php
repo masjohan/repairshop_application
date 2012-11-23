@@ -38,7 +38,7 @@ class RoleactionTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-		$this->addForeignKey('ROLE_ID', 'RoleId', 'INTEGER', 'Role', 'ID', false, 10, null);
+		$this->addColumn('ROLE_ID', 'RoleId', 'INTEGER', false, 10, null);
 		$this->addForeignKey('ACTION_ID', 'ActionId', 'INTEGER', 'Action', 'ID', true, 10, null);
 		// validators
 	} // initialize()
@@ -48,7 +48,6 @@ class RoleactionTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('Role', 'Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), 'CASCADE', 'CASCADE');
     $this->addRelation('Action', 'Action', RelationMap::MANY_TO_ONE, array('action_id' => 'id', ), 'CASCADE', 'CASCADE');
 	} // buildRelations()
 

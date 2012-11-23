@@ -21,9 +21,7 @@
  * @method     UserQuery orderByCountry($order = Criteria::ASC) Order by the country column
  * @method     UserQuery orderByPostal($order = Criteria::ASC) Order by the postal column
  * @method     UserQuery orderByRoleId($order = Criteria::ASC) Order by the role_id column
- * @method     UserQuery orderByCustomerId($order = Criteria::ASC) Order by the customer_id column
- * @method     UserQuery orderByShopId($order = Criteria::ASC) Order by the shop_id column
- * @method     UserQuery orderByMarketId($order = Criteria::ASC) Order by the market_id column
+ * @method     UserQuery orderByRoleTypeId($order = Criteria::ASC) Order by the role_type_id column
  * @method     UserQuery orderByRecoveryToken($order = Criteria::ASC) Order by the recovery_token column
  * @method     UserQuery orderByRecoverySent($order = Criteria::ASC) Order by the recovery_sent column
  *
@@ -42,9 +40,7 @@
  * @method     UserQuery groupByCountry() Group by the country column
  * @method     UserQuery groupByPostal() Group by the postal column
  * @method     UserQuery groupByRoleId() Group by the role_id column
- * @method     UserQuery groupByCustomerId() Group by the customer_id column
- * @method     UserQuery groupByShopId() Group by the shop_id column
- * @method     UserQuery groupByMarketId() Group by the market_id column
+ * @method     UserQuery groupByRoleTypeId() Group by the role_type_id column
  * @method     UserQuery groupByRecoveryToken() Group by the recovery_token column
  * @method     UserQuery groupByRecoverySent() Group by the recovery_sent column
  *
@@ -52,21 +48,13 @@
  * @method     UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     UserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     UserQuery leftJoinCustomer($relationAlias = null) Adds a LEFT JOIN clause to the query using the Customer relation
- * @method     UserQuery rightJoinCustomer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Customer relation
- * @method     UserQuery innerJoinCustomer($relationAlias = null) Adds a INNER JOIN clause to the query using the Customer relation
+ * @method     UserQuery leftJoinRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the Role relation
+ * @method     UserQuery rightJoinRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Role relation
+ * @method     UserQuery innerJoinRole($relationAlias = null) Adds a INNER JOIN clause to the query using the Role relation
  *
  * @method     UserQuery leftJoinShop($relationAlias = null) Adds a LEFT JOIN clause to the query using the Shop relation
  * @method     UserQuery rightJoinShop($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Shop relation
  * @method     UserQuery innerJoinShop($relationAlias = null) Adds a INNER JOIN clause to the query using the Shop relation
- *
- * @method     UserQuery leftJoinMarket($relationAlias = null) Adds a LEFT JOIN clause to the query using the Market relation
- * @method     UserQuery rightJoinMarket($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Market relation
- * @method     UserQuery innerJoinMarket($relationAlias = null) Adds a INNER JOIN clause to the query using the Market relation
- *
- * @method     UserQuery leftJoinRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the Role relation
- * @method     UserQuery rightJoinRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Role relation
- * @method     UserQuery innerJoinRole($relationAlias = null) Adds a INNER JOIN clause to the query using the Role relation
  *
  * @method     User findOne(PropelPDO $con = null) Return the first User matching the query
  * @method     User findOneOrCreate(PropelPDO $con = null) Return the first User matching the query, or a new User object populated from the query conditions when no match is found
@@ -86,9 +74,7 @@
  * @method     User findOneByCountry(string $country) Return the first User filtered by the country column
  * @method     User findOneByPostal(string $postal) Return the first User filtered by the postal column
  * @method     User findOneByRoleId(int $role_id) Return the first User filtered by the role_id column
- * @method     User findOneByCustomerId(int $customer_id) Return the first User filtered by the customer_id column
- * @method     User findOneByShopId(int $shop_id) Return the first User filtered by the shop_id column
- * @method     User findOneByMarketId(int $market_id) Return the first User filtered by the market_id column
+ * @method     User findOneByRoleTypeId(int $role_type_id) Return the first User filtered by the role_type_id column
  * @method     User findOneByRecoveryToken(string $recovery_token) Return the first User filtered by the recovery_token column
  * @method     User findOneByRecoverySent(string $recovery_sent) Return the first User filtered by the recovery_sent column
  *
@@ -107,9 +93,7 @@
  * @method     array findByCountry(string $country) Return User objects filtered by the country column
  * @method     array findByPostal(string $postal) Return User objects filtered by the postal column
  * @method     array findByRoleId(int $role_id) Return User objects filtered by the role_id column
- * @method     array findByCustomerId(int $customer_id) Return User objects filtered by the customer_id column
- * @method     array findByShopId(int $shop_id) Return User objects filtered by the shop_id column
- * @method     array findByMarketId(int $market_id) Return User objects filtered by the market_id column
+ * @method     array findByRoleTypeId(int $role_type_id) Return User objects filtered by the role_type_id column
  * @method     array findByRecoveryToken(string $recovery_token) Return User objects filtered by the recovery_token column
  * @method     array findByRecoverySent(string $recovery_sent) Return User objects filtered by the recovery_sent column
  *
@@ -654,18 +638,16 @@ abstract class BaseUserQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the customer_id column
+	 * Filter the query on the role_type_id column
 	 * 
 	 * Example usage:
 	 * <code>
-	 * $query->filterByCustomerId(1234); // WHERE customer_id = 1234
-	 * $query->filterByCustomerId(array(12, 34)); // WHERE customer_id IN (12, 34)
-	 * $query->filterByCustomerId(array('min' => 12)); // WHERE customer_id > 12
+	 * $query->filterByRoleTypeId(1234); // WHERE role_type_id = 1234
+	 * $query->filterByRoleTypeId(array(12, 34)); // WHERE role_type_id IN (12, 34)
+	 * $query->filterByRoleTypeId(array('min' => 12)); // WHERE role_type_id > 12
 	 * </code>
 	 *
-	 * @see       filterByCustomer()
-	 *
-	 * @param     mixed $customerId The value to use as filter.
+	 * @param     mixed $roleTypeId The value to use as filter.
 	 *              Use scalar values for equality.
 	 *              Use array values for in_array() equivalent.
 	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -673,16 +655,16 @@ abstract class BaseUserQuery extends ModelCriteria
 	 *
 	 * @return    UserQuery The current query, for fluid interface
 	 */
-	public function filterByCustomerId($customerId = null, $comparison = null)
+	public function filterByRoleTypeId($roleTypeId = null, $comparison = null)
 	{
-		if (is_array($customerId)) {
+		if (is_array($roleTypeId)) {
 			$useMinMax = false;
-			if (isset($customerId['min'])) {
-				$this->addUsingAlias(UserPeer::CUSTOMER_ID, $customerId['min'], Criteria::GREATER_EQUAL);
+			if (isset($roleTypeId['min'])) {
+				$this->addUsingAlias(UserPeer::ROLE_TYPE_ID, $roleTypeId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($customerId['max'])) {
-				$this->addUsingAlias(UserPeer::CUSTOMER_ID, $customerId['max'], Criteria::LESS_EQUAL);
+			if (isset($roleTypeId['max'])) {
+				$this->addUsingAlias(UserPeer::ROLE_TYPE_ID, $roleTypeId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -692,91 +674,7 @@ abstract class BaseUserQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(UserPeer::CUSTOMER_ID, $customerId, $comparison);
-	}
-
-	/**
-	 * Filter the query on the shop_id column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByShopId(1234); // WHERE shop_id = 1234
-	 * $query->filterByShopId(array(12, 34)); // WHERE shop_id IN (12, 34)
-	 * $query->filterByShopId(array('min' => 12)); // WHERE shop_id > 12
-	 * </code>
-	 *
-	 * @see       filterByShop()
-	 *
-	 * @param     mixed $shopId The value to use as filter.
-	 *              Use scalar values for equality.
-	 *              Use array values for in_array() equivalent.
-	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function filterByShopId($shopId = null, $comparison = null)
-	{
-		if (is_array($shopId)) {
-			$useMinMax = false;
-			if (isset($shopId['min'])) {
-				$this->addUsingAlias(UserPeer::SHOP_ID, $shopId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($shopId['max'])) {
-				$this->addUsingAlias(UserPeer::SHOP_ID, $shopId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(UserPeer::SHOP_ID, $shopId, $comparison);
-	}
-
-	/**
-	 * Filter the query on the market_id column
-	 * 
-	 * Example usage:
-	 * <code>
-	 * $query->filterByMarketId(1234); // WHERE market_id = 1234
-	 * $query->filterByMarketId(array(12, 34)); // WHERE market_id IN (12, 34)
-	 * $query->filterByMarketId(array('min' => 12)); // WHERE market_id > 12
-	 * </code>
-	 *
-	 * @see       filterByMarket()
-	 *
-	 * @param     mixed $marketId The value to use as filter.
-	 *              Use scalar values for equality.
-	 *              Use array values for in_array() equivalent.
-	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function filterByMarketId($marketId = null, $comparison = null)
-	{
-		if (is_array($marketId)) {
-			$useMinMax = false;
-			if (isset($marketId['min'])) {
-				$this->addUsingAlias(UserPeer::MARKET_ID, $marketId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($marketId['max'])) {
-				$this->addUsingAlias(UserPeer::MARKET_ID, $marketId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(UserPeer::MARKET_ID, $marketId, $comparison);
+		return $this->addUsingAlias(UserPeer::ROLE_TYPE_ID, $roleTypeId, $comparison);
 	}
 
 	/**
@@ -847,228 +745,6 @@ abstract class BaseUserQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(UserPeer::RECOVERY_SENT, $recoverySent, $comparison);
-	}
-
-	/**
-	 * Filter the query by a related Customer object
-	 *
-	 * @param     Customer|PropelCollection $customer The related object(s) to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function filterByCustomer($customer, $comparison = null)
-	{
-		if ($customer instanceof Customer) {
-			return $this
-				->addUsingAlias(UserPeer::CUSTOMER_ID, $customer->getId(), $comparison);
-		} elseif ($customer instanceof PropelCollection) {
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-			return $this
-				->addUsingAlias(UserPeer::CUSTOMER_ID, $customer->toKeyValue('PrimaryKey', 'Id'), $comparison);
-		} else {
-			throw new PropelException('filterByCustomer() only accepts arguments of type Customer or PropelCollection');
-		}
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the Customer relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function joinCustomer($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Customer');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'Customer');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the Customer relation Customer object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CustomerQuery A secondary query class using the current class as primary query
-	 */
-	public function useCustomerQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		return $this
-			->joinCustomer($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Customer', 'CustomerQuery');
-	}
-
-	/**
-	 * Filter the query by a related Shop object
-	 *
-	 * @param     Shop|PropelCollection $shop The related object(s) to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function filterByShop($shop, $comparison = null)
-	{
-		if ($shop instanceof Shop) {
-			return $this
-				->addUsingAlias(UserPeer::SHOP_ID, $shop->getId(), $comparison);
-		} elseif ($shop instanceof PropelCollection) {
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-			return $this
-				->addUsingAlias(UserPeer::SHOP_ID, $shop->toKeyValue('PrimaryKey', 'Id'), $comparison);
-		} else {
-			throw new PropelException('filterByShop() only accepts arguments of type Shop or PropelCollection');
-		}
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the Shop relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function joinShop($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Shop');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'Shop');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the Shop relation Shop object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    ShopQuery A secondary query class using the current class as primary query
-	 */
-	public function useShopQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		return $this
-			->joinShop($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Shop', 'ShopQuery');
-	}
-
-	/**
-	 * Filter the query by a related Market object
-	 *
-	 * @param     Market|PropelCollection $market The related object(s) to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function filterByMarket($market, $comparison = null)
-	{
-		if ($market instanceof Market) {
-			return $this
-				->addUsingAlias(UserPeer::MARKET_ID, $market->getId(), $comparison);
-		} elseif ($market instanceof PropelCollection) {
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-			return $this
-				->addUsingAlias(UserPeer::MARKET_ID, $market->toKeyValue('PrimaryKey', 'Id'), $comparison);
-		} else {
-			throw new PropelException('filterByMarket() only accepts arguments of type Market or PropelCollection');
-		}
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the Market relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    UserQuery The current query, for fluid interface
-	 */
-	public function joinMarket($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Market');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'Market');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the Market relation Market object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    MarketQuery A secondary query class using the current class as primary query
-	 */
-	public function useMarketQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-	{
-		return $this
-			->joinMarket($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Market', 'MarketQuery');
 	}
 
 	/**
@@ -1143,6 +819,79 @@ abstract class BaseUserQuery extends ModelCriteria
 		return $this
 			->joinRole($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'Role', 'RoleQuery');
+	}
+
+	/**
+	 * Filter the query by a related Shop object
+	 *
+	 * @param     Shop $shop  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function filterByShop($shop, $comparison = null)
+	{
+		if ($shop instanceof Shop) {
+			return $this
+				->addUsingAlias(UserPeer::ID, $shop->getOwnerId(), $comparison);
+		} elseif ($shop instanceof PropelCollection) {
+			return $this
+				->useShopQuery()
+					->filterByPrimaryKeys($shop->getPrimaryKeys())
+				->endUse();
+		} else {
+			throw new PropelException('filterByShop() only accepts arguments of type Shop or PropelCollection');
+		}
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Shop relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    UserQuery The current query, for fluid interface
+	 */
+	public function joinShop($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Shop');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Shop');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Shop relation Shop object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    ShopQuery A secondary query class using the current class as primary query
+	 */
+	public function useShopQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinShop($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Shop', 'ShopQuery');
 	}
 
 	/**

@@ -1,38 +1,38 @@
 .weather-desc img {
-    float: right;
+  float: right;
 }
 
 .gas-weather {
-    margin: 0.5em 0 1.0em;
+  margin: 0.5em 0 1.0em;
 }
 
 .gas-weather form#search {
-    display:inline-block;
-    width:26%;
-    float:right;
-    position: relative;
-    top: -0.25em;
+  display:inline-block;
+  width:26%;
+  float:right;
+  position: relative;
+  top: -0.25em;
 }
 
 .gas-weather .today-gas-price{
-    display:inline-block;
-    width: 46%;
-    position: relative;
-    overflow: hidden;
+  display:inline-block;
+  width: 46%;
+  position: relative;
+  overflow: hidden;
 }
 
 .gas-weather .today-weather {
-    float: right;
-    position: relative;
-    width:28%;
+  float: right;
+  position: relative;
+  width:28%;
 }
 
 .gas-weather .today-weather .weather-short {
-    padding: 0 30px 0 60px;
+  padding: 0 30px 0 60px;
 }
 
 .gas-weather .today-weather img {
-    left: 56px;
-    position: absolute;
-    top: -20px;
+  left: 56px;
+  position: absolute;
+  top: -20px;
 }

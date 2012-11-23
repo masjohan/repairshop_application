@@ -25,6 +25,12 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	protected static $peer;
 
 	/**
+	 * The value for the id field.
+	 * @var        int
+	 */
+	protected $id;
+
+	/**
 	 * The value for the session_id field.
 	 * @var        string
 	 */
@@ -61,6 +67,16 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	 * @var        boolean
 	 */
 	protected $alreadyInValidation = false;
+
+	/**
+	 * Get the [id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
 
 	/**
 	 * Get the [session_id] column value.
@@ -129,6 +145,26 @@ abstract class BaseSession extends BaseObject  implements Persistent
 			return $dt->format($format);
 		}
 	}
+
+	/**
+	 * Set the value of [id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     Session The current object (for fluent API support)
+	 */
+	public function setId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->id !== $v) {
+			$this->id = $v;
+			$this->modifiedColumns[] = SessionPeer::ID;
+		}
+
+		return $this;
+	} // setId()
 
 	/**
 	 * Set the value of [session_id] column.
@@ -244,10 +280,11 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	{
 		try {
 
-			$this->session_id = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
-			$this->device_key = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->value = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->updated_on = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
+			$this->session_id = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->device_key = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->value = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->updated_on = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -256,7 +293,7 @@ abstract class BaseSession extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 4; // 4 = SessionPeer::NUM_HYDRATE_COLUMNS.
+			return $startcol + 5; // 5 = SessionPeer::NUM_HYDRATE_COLUMNS.
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Session object", $e);
@@ -428,13 +465,21 @@ abstract class BaseSession extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			if ($this->isNew() ) {
+				$this->modifiedColumns[] = SessionPeer::ID;
+			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
+					if ($criteria->keyContainsValue(SessionPeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.SessionPeer::ID.')');
+					}
+
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows = 1;
+					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows = SessionPeer::doUpdate($this, $con);
@@ -548,15 +593,18 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				return $this->getSessionId();
+				return $this->getId();
 				break;
 			case 1:
-				return $this->getDeviceKey();
+				return $this->getSessionId();
 				break;
 			case 2:
-				return $this->getValue();
+				return $this->getDeviceKey();
 				break;
 			case 3:
+				return $this->getValue();
+				break;
+			case 4:
 				return $this->getUpdatedOn();
 				break;
 			default:
@@ -587,10 +635,11 @@ abstract class BaseSession extends BaseObject  implements Persistent
 		$alreadyDumpedObjects['Session'][$this->getPrimaryKey()] = true;
 		$keys = SessionPeer::getFieldNames($keyType);
 		$result = array(
-			$keys[0] => $this->getSessionId(),
-			$keys[1] => $this->getDeviceKey(),
-			$keys[2] => $this->getValue(),
-			$keys[3] => $this->getUpdatedOn(),
+			$keys[0] => $this->getId(),
+			$keys[1] => $this->getSessionId(),
+			$keys[2] => $this->getDeviceKey(),
+			$keys[3] => $this->getValue(),
+			$keys[4] => $this->getUpdatedOn(),
 		);
 		return $result;
 	}
@@ -623,15 +672,18 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				$this->setSessionId($value);
+				$this->setId($value);
 				break;
 			case 1:
-				$this->setDeviceKey($value);
+				$this->setSessionId($value);
 				break;
 			case 2:
-				$this->setValue($value);
+				$this->setDeviceKey($value);
 				break;
 			case 3:
+				$this->setValue($value);
+				break;
+			case 4:
 				$this->setUpdatedOn($value);
 				break;
 		} // switch()
@@ -658,10 +710,11 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	{
 		$keys = SessionPeer::getFieldNames($keyType);
 
-		if (array_key_exists($keys[0], $arr)) $this->setSessionId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setDeviceKey($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setValue($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setUpdatedOn($arr[$keys[3]]);
+		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
+		if (array_key_exists($keys[1], $arr)) $this->setSessionId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDeviceKey($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setValue($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setUpdatedOn($arr[$keys[4]]);
 	}
 
 	/**
@@ -673,6 +726,7 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	{
 		$criteria = new Criteria(SessionPeer::DATABASE_NAME);
 
+		if ($this->isColumnModified(SessionPeer::ID)) $criteria->add(SessionPeer::ID, $this->id);
 		if ($this->isColumnModified(SessionPeer::SESSION_ID)) $criteria->add(SessionPeer::SESSION_ID, $this->session_id);
 		if ($this->isColumnModified(SessionPeer::DEVICE_KEY)) $criteria->add(SessionPeer::DEVICE_KEY, $this->device_key);
 		if ($this->isColumnModified(SessionPeer::VALUE)) $criteria->add(SessionPeer::VALUE, $this->value);
@@ -692,29 +746,29 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	public function buildPkeyCriteria()
 	{
 		$criteria = new Criteria(SessionPeer::DATABASE_NAME);
-		$criteria->add(SessionPeer::SESSION_ID, $this->session_id);
+		$criteria->add(SessionPeer::ID, $this->id);
 
 		return $criteria;
 	}
 
 	/**
 	 * Returns the primary key for this object (row).
-	 * @return     string
+	 * @return     int
 	 */
 	public function getPrimaryKey()
 	{
-		return $this->getSessionId();
+		return $this->getId();
 	}
 
 	/**
-	 * Generic method to set the primary key (session_id column).
+	 * Generic method to set the primary key (id column).
 	 *
-	 * @param      string $key Primary key.
+	 * @param      int $key Primary key.
 	 * @return     void
 	 */
 	public function setPrimaryKey($key)
 	{
-		$this->setSessionId($key);
+		$this->setId($key);
 	}
 
 	/**
@@ -723,7 +777,7 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	 */
 	public function isPrimaryKeyNull()
 	{
-		return null === $this->getSessionId();
+		return null === $this->getId();
 	}
 
 	/**
@@ -745,6 +799,7 @@ abstract class BaseSession extends BaseObject  implements Persistent
 		$copyObj->setUpdatedOn($this->getUpdatedOn());
 		if ($makeNew) {
 			$copyObj->setNew(true);
+			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
 		}
 	}
 
@@ -791,6 +846,7 @@ abstract class BaseSession extends BaseObject  implements Persistent
 	 */
 	public function clear()
 	{
+		$this->id = null;
 		$this->session_id = null;
 		$this->device_key = null;
 		$this->value = null;

@@ -49,11 +49,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 	protected $type;
 
 	/**
-	 * @var        array Roleaction[] Collection to store aggregation of Roleaction objects.
-	 */
-	protected $collRoleactions;
-
-	/**
 	 * @var        array User[] Collection to store aggregation of User objects.
 	 */
 	protected $collUsers;
@@ -298,8 +293,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collRoleactions = null;
-
 			$this->collUsers = null;
 
 		} // if (deep)
@@ -435,14 +428,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collRoleactions !== null) {
-				foreach ($this->collRoleactions as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
 			if ($this->collUsers !== null) {
 				foreach ($this->collUsers as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -521,14 +506,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
-
-				if ($this->collRoleactions !== null) {
-					foreach ($this->collRoleactions as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
 
 				if ($this->collUsers !== null) {
 					foreach ($this->collUsers as $referrerFK) {
@@ -618,9 +595,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 			$keys[3] => $this->getType(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->collRoleactions) {
-				$result['Roleactions'] = $this->collRoleactions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-			}
 			if (null !== $this->collUsers) {
 				$result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
@@ -781,12 +755,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
-			foreach ($this->getRoleactions() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addRoleaction($relObj->copy($deepCopy));
-				}
-			}
-
 			foreach ($this->getUsers() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addUser($relObj->copy($deepCopy));
@@ -837,146 +805,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 			self::$peer = new RolePeer();
 		}
 		return self::$peer;
-	}
-
-	/**
-	 * Clears out the collRoleactions collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addRoleactions()
-	 */
-	public function clearRoleactions()
-	{
-		$this->collRoleactions = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collRoleactions collection.
-	 *
-	 * By default this just sets the collRoleactions collection to an empty array (like clearcollRoleactions());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @param      boolean $overrideExisting If set to true, the method call initializes
-	 *                                        the collection even if it is not empty
-	 *
-	 * @return     void
-	 */
-	public function initRoleactions($overrideExisting = true)
-	{
-		if (null !== $this->collRoleactions && !$overrideExisting) {
-			return;
-		}
-		$this->collRoleactions = new PropelObjectCollection();
-		$this->collRoleactions->setModel('Roleaction');
-	}
-
-	/**
-	 * Gets an array of Roleaction objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this Role is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array Roleaction[] List of Roleaction objects
-	 * @throws     PropelException
-	 */
-	public function getRoleactions($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collRoleactions || null !== $criteria) {
-			if ($this->isNew() && null === $this->collRoleactions) {
-				// return empty collection
-				$this->initRoleactions();
-			} else {
-				$collRoleactions = RoleactionQuery::create(null, $criteria)
-					->filterByRole($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collRoleactions;
-				}
-				$this->collRoleactions = $collRoleactions;
-			}
-		}
-		return $this->collRoleactions;
-	}
-
-	/**
-	 * Returns the number of related Roleaction objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related Roleaction objects.
-	 * @throws     PropelException
-	 */
-	public function countRoleactions(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collRoleactions || null !== $criteria) {
-			if ($this->isNew() && null === $this->collRoleactions) {
-				return 0;
-			} else {
-				$query = RoleactionQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByRole($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collRoleactions);
-		}
-	}
-
-	/**
-	 * Method called to associate a Roleaction object to this object
-	 * through the Roleaction foreign key attribute.
-	 *
-	 * @param      Roleaction $l Roleaction
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addRoleaction(Roleaction $l)
-	{
-		if ($this->collRoleactions === null) {
-			$this->initRoleactions();
-		}
-		if (!$this->collRoleactions->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collRoleactions[]= $l;
-			$l->setRole($this);
-		}
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Role is new, it will return
-	 * an empty collection; or if this Role has previously
-	 * been saved, it will retrieve related Roleactions from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Role.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array Roleaction[] List of Roleaction objects
-	 */
-	public function getRoleactionsJoinAction($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = RoleactionQuery::create(null, $criteria);
-		$query->joinWith('Action', $join_behavior);
-
-		return $this->getRoleactions($query, $con);
 	}
 
 	/**
@@ -1094,81 +922,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 		}
 	}
 
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Role is new, it will return
-	 * an empty collection; or if this Role has previously
-	 * been saved, it will retrieve related Users from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Role.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array User[] List of User objects
-	 */
-	public function getUsersJoinCustomer($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = UserQuery::create(null, $criteria);
-		$query->joinWith('Customer', $join_behavior);
-
-		return $this->getUsers($query, $con);
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Role is new, it will return
-	 * an empty collection; or if this Role has previously
-	 * been saved, it will retrieve related Users from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Role.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array User[] List of User objects
-	 */
-	public function getUsersJoinShop($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = UserQuery::create(null, $criteria);
-		$query->joinWith('Shop', $join_behavior);
-
-		return $this->getUsers($query, $con);
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Role is new, it will return
-	 * an empty collection; or if this Role has previously
-	 * been saved, it will retrieve related Users from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Role.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array User[] List of User objects
-	 */
-	public function getUsersJoinMarket($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = UserQuery::create(null, $criteria);
-		$query->joinWith('Market', $join_behavior);
-
-		return $this->getUsers($query, $con);
-	}
-
 	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
@@ -1198,11 +951,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collRoleactions) {
-				foreach ($this->collRoleactions as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 			if ($this->collUsers) {
 				foreach ($this->collUsers as $o) {
 					$o->clearAllReferences($deep);
@@ -1210,10 +958,6 @@ abstract class BaseRole extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
-		if ($this->collRoleactions instanceof PropelCollection) {
-			$this->collRoleactions->clearIterator();
-		}
-		$this->collRoleactions = null;
 		if ($this->collUsers instanceof PropelCollection) {
 			$this->collUsers->clearIterator();
 		}

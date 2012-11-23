@@ -2,7 +2,27 @@
 {% import 'macro/panel.twig' as panel -%}
 {% import 'macro/widget.twig' as widget -%}
 
-{% if C.hasLogin() %}
+{% for category, actions in C.param('acl').rightActions() -%}
+  {# menu , category #}
+  {% if loop.first %}
+    {{ panel.begin(category, 'light-grey', 'side-nav-menu') }}
+  {% else %}
+    {{ panel.section(category) }}
+  {% endif %}
+
+  {# sub menu action #}
+  <ul class="side-nav">
+    {% for act in actions -%}
+      <li>{{ widget.menu_link("/" ~ act.path, act.name, server) }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if loop.last %}
+    {{ panel.end() }}
+  {% endif %}
+{% endfor %}
+
+{#% if C.hasLogin() %}
     {{ panel.begin('Customer', 'light-grey', 'side-nav-menu') }}
         <ul class="side-nav">
             <li>{{ widget.menu_link("/customer/new", "New", server) }}</li>
@@ -21,7 +41,7 @@
             <li><a href="#">Message Box</a></li>
         </ul>
     {{ panel.end() }}
-{% endif %}
+{% endif %#}
 
 
 

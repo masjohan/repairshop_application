@@ -5,16 +5,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * statement formatter for Propel query
  * format() returns a PDO statement
  *
- * @author     Francois Zaninotto
- * @version    $Revision: 1796 $
- * @package    propel.runtime.formatter
+ * @author   Francois Zaninotto
+ * @version  $Revision: 1796 $
+ * @package  propel.runtime.formatter
  */
 class PropelStatementFormatter extends PropelFormatter
 {

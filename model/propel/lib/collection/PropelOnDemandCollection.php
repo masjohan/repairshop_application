@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * Class for iterating over a statement and returning one Propel object at a time
  *
- * @author     Francois Zaninotto
- * @package    propel.runtime.collection
+ * @author   Francois Zaninotto
+ * @package  propel.runtime.collection
  */
 class PropelOnDemandCollection extends PropelCollection
 {
@@ -80,7 +80,7 @@ class PropelOnDemandCollection extends PropelCollection
 	 * Returns the number of rows in the resultset
 	 * Warning: this number is inaccurate for most databases. Do not rely on it for a portable application.
 	 * 
-	 * @return    int number of results
+	 * @return  int number of results
 	 */
 	public function count()
 	{

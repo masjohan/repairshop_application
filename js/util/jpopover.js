@@ -4,44 +4,44 @@ Popover = function (jqEx, options) {
 	// overwrite those options
 	this.args = $.extend(true, {
 		'containerCss' : {
-			"width"		: '',         	// exp: '300px',
-			"height"	: '',         	// exp: "200px"
-			"zIndex"	: 2	        	// zindex of the container
+			"width"		: '',     	// exp: '300px',
+			"height"	: '',     	// exp: "200px"
+			"zIndex"	: 2	    	// zindex of the container
 		},
 		'innerCss' : {
 			"backgroundColor": "#fff",
-            "border": "1px solid #666666",
-            "padding": "10px"
+      "border": "1px solid #666666",
+      "padding": "10px"
 		},
 		'position' : {
-			"of" 		: 'mouse',    	// ["mouse"|"trigger"|element|window, http://jqueryui.com/demos/position/]
+			"of" 		: 'mouse',  	// ["mouse"|"trigger"|element|window, http://jqueryui.com/demos/position/]
 			"my" 		: 'left top',
 			"at" 		: 'left top',
 			"offset" 	: '0 0',
 			"collision"	: 'fit fit'
 		},
-       	'trigger' : {
-       		"click" 	 : "",
-       		"hover"		 : "",
-       		"hoverdelay" : ""
-       	},
-        'events' : {
-            "show": false,              // function(evt){ "this" }
-            "hide": false
-        },
-        'hideOnClick': ''               // selector
+     	'trigger' : {
+     		"click" 	 : "",
+     		"hover"		 : "",
+     		"hoverdelay" : ""
+     	},
+    'events' : {
+      "show": false,        // function(evt){ "this" }
+      "hide": false
+    },
+    'hideOnClick': ''         // selector
 	}, options);
 	
 	this._popover(jqEx);
 
-    this.args.trigger.click && this._clickShow(this.args.trigger.click);
+  this.args.trigger.click && this._clickShow(this.args.trigger.click);
 	this.args.trigger.hover && this._hoverShow(this.args.trigger.hover, {"show_over": true});
 	this.args.trigger.show && this._hoverShow(this.args.trigger.hoverdelay, {"show_over": true, "show_slow": true});
 	
 	this.args.events.show && this._bindEvent('show', this.args.events.show);
 	this.args.events.hide && this._bindEvent('hide', this.args.events.hide);
 
-    this.args.hideOnClick && $(this.args.hideOnClick).addClass('popover-close');
+  this.args.hideOnClick && $(this.args.hideOnClick).addClass('popover-close');
 }
 
 Popover.prototype.option = function(name, value) {
@@ -79,128 +79,128 @@ Popover.prototype._bindEvent = function() {
 
 // singleton, goodguy rule: do not access "this"
 Popover.prototype._container = function () {
-	var jContainer,     // only one container in the page,
+	var jContainer,   // only one container in the page,
 
-		oEvt,           // very last event trigger show happened
-		oInst,          // the instance being shown
+		oEvt,       // very last event trigger show happened
+		oInst,      // the instance being shown
 
 		fnReposition = function (evt){
 			oInst && oInst._position(evt);
-       	},
-       	fnMouseLeaveHdl =  function (){
-       		oInst && oInst._slowUIAct(!oInst.args.slowActOverPopover,true);
-       	},
-       	fnMouseEnterHdl =  function (){ // reposition only onMouseEnter container
-       		oInst && oInst._slowUIAct(!oInst.args.slowActOverPopover,false);
-       	},       	
+     	},
+     	fnMouseLeaveHdl =  function (){
+     		oInst && oInst._slowUIAct(!oInst.args.slowActOverPopover,true);
+     	},
+     	fnMouseEnterHdl =  function (){ // reposition only onMouseEnter container
+     		oInst && oInst._slowUIAct(!oInst.args.slowActOverPopover,false);
+     	},     	
 
-        // replace anthingy in container with "intc", show it and bind related event
-        fnShow = function(intc,evt){
-            if(oInst) fnClose(); // never should happen, but for safe
+    // replace anthingy in container with "intc", show it and bind related event
+    fnShow = function(intc,evt){
+      if(oInst) fnClose(); // never should happen, but for safe
 
-            oInst = intc;
-            oEvt = evt ? {'target':evt.target, 'pageX':evt.pageX, 'pageY':evt.pageY } : null; // light copy required
+      oInst = intc;
+      oEvt = evt ? {'target':evt.target, 'pageX':evt.pageX, 'pageY':evt.pageY } : null; // light copy required
 
-            jContainer
-            .prepend(oInst._popover(true))
-            .css($.extend(
-                {'height':'auto', 'width':'auto', 'zIndex':'auto'},
-                oInst.args.containerCss,
-                {"top": "-1000px", "left": "-1000px"}
-            ))
-            .show();
-            oInst._position(oEvt);
+      jContainer
+      .prepend(oInst._popover(true))
+      .css($.extend(
+        {'height':'auto', 'width':'auto', 'zIndex':'auto'},
+        oInst.args.containerCss,
+        {"top": "-1000px", "left": "-1000px"}
+      ))
+      .show();
+      oInst._position(oEvt);
 
-            // bind event handle
-            if(oInst.args.listenOverPopover) {
-                jContainer
-                .bind('mouseenter',fnMouseEnterHdl)
-                .bind('mouseleave',fnMouseLeaveHdl);
-            }
+      // bind event handle
+      if(oInst.args.listenOverPopover) {
+        jContainer
+        .bind('mouseenter',fnMouseEnterHdl)
+        .bind('mouseleave',fnMouseLeaveHdl);
+      }
 
-            if(oInst.args.position.relative === 'mouse' && oEvt) {
-                $(oEvt.target).bind('mousemove',fnReposition);
-            }
-        },
-        // reversely, unbind event, empty container and hide it
-        fnClose = function() {
-            if(oInst.args.listenOverPopover) {
-                jContainer
-                .unbind('mouseenter',fnMouseEnterHdl)
-                .unbind('mouseleave',fnMouseLeaveHdl);
-            }
+      if(oInst.args.position.relative === 'mouse' && oEvt) {
+        $(oEvt.target).bind('mousemove',fnReposition);
+      }
+    },
+    // reversely, unbind event, empty container and hide it
+    fnClose = function() {
+      if(oInst.args.listenOverPopover) {
+        jContainer
+        .unbind('mouseenter',fnMouseEnterHdl)
+        .unbind('mouseleave',fnMouseLeaveHdl);
+      }
 
-            if(oInst.args.position.relative === 'mouse' && oEvt) {
-                $(oEvt.target).unbind('mousemove',fnReposition);
-            }
+      if(oInst.args.position.relative === 'mouse' && oEvt) {
+        $(oEvt.target).unbind('mousemove',fnReposition);
+      }
 
-            jContainer.hide().children().detach();
-            oInst = oEvt = null;
-        };
+      jContainer.hide().children().detach();
+      oInst = oEvt = null;
+    };
 
    return function(doElse){
-       // create single one container
-       if (!jContainer) {
-           jContainer = $('<div id="popover-container" style="position:absolute;margin:0;border:0;padding:0"></div>')
-               .appendTo(document.body)
-               .hide()
-               // onResize container, reposition. work for IE only. not important
-               .bind('resize',function(){
-                   fnReposition(oEvt);
-               });
+     // create single one container
+     if (!jContainer) {
+       jContainer = $('<div id="popover-container" style="position:absolute;margin:0;border:0;padding:0"></div>')
+         .appendTo(document.body)
+         .hide()
+         // onResize container, reposition. work for IE only. not important
+         .bind('resize',function(){
+           fnReposition(oEvt);
+         });
 
-           // on window resize, reposition. !IMPORTANT
-           $(window).bind('resize scroll', function(){fnReposition(oEvt);} );
+       // on window resize, reposition. !IMPORTANT
+       $(window).bind('resize scroll', function(){fnReposition(oEvt);} );
 
-           $('body').click(function(evt){
-               if(!oInst) return;
-               var jClk = $(evt.target).parents().andSelf();
-               if ( jClk.is('.popover-close') || !jClk.is('#popover-container, .popover-trigger')) {
-                   oInst.hide(evt);
-               }
-           });
+       $('body').click(function(evt){
+         if(!oInst) return;
+         var jClk = $(evt.target).parents().andSelf();
+         if ( jClk.is('.popover-close') || !jClk.is('#popover-container, .popover-trigger')) {
+           oInst.hide(evt);
+         }
+       });
+     }
+
+     if (doElse) {
+       if(doElse.get && doElse.get === 'event') {
+         return oEvt;
+
+       } else if(doElse.get && doElse.get === 'instance') {
+         return oInst;
+
+       // show container with passed in instance and event
+       } else if(doElse.set && doElse.set[0]) {
+         fnShow(doElse.set[0], doElse.set[1]);
+
+       // close container
+       } else if(doElse.set && oInst){
+         fnClose();
        }
-
-       if (doElse) {
-           if(doElse.get && doElse.get === 'event') {
-               return oEvt;
-
-           } else if(doElse.get && doElse.get === 'instance') {
-               return oInst;
-
-           // show container with passed in instance and event
-           } else if(doElse.set && doElse.set[0]) {
-               fnShow(doElse.set[0], doElse.set[1]);
-
-           // close container
-           } else if(doElse.set && oInst){
-               fnClose();
-           }
-       }
-       return jContainer;
+     }
+     return jContainer;
    }
 }();
 
 Popover.prototype._popover = function (jqEx) {
    //  create popover
    if(!this._jPopover && jqEx){
-       this._jPopover = $(jqEx);
+     this._jPopover = $(jqEx);
 
-       // in DOM, later detach it
-       if(this._jPopover.parents('body').length) {
-           this._jPopover = this._jPopover.wrap('<div class="popbd" />').parent()
-                            .css(this.args.innerCss)
-                            .data('delayDetach', true).hide();
-       // not in dom, wrap it with <div>
-       } else if (typeof jqEx === 'string'){
-           this._jPopover = $('<div class="popbd">'+jqEx+'</div>');
-       }
+     // in DOM, later detach it
+     if(this._jPopover.parents('body').length) {
+       this._jPopover = this._jPopover.wrap('<div class="popbd" />').parent()
+              .css(this.args.innerCss)
+              .data('delayDetach', true).hide();
+     // not in dom, wrap it with <div>
+     } else if (typeof jqEx === 'string'){
+       this._jPopover = $('<div class="popbd">'+jqEx+'</div>');
+     }
 
    // signaled, detach from dom just before show
    } else if(this._jPopover.data('delayDetach') && jqEx === true) {
-       this._jPopover.each(function(){
-           if (this.parentNode) this.parentNode.removeChild( this );
-       }).removeClass('hidden').removeData('delayDetach').css('display','block').children().css('display','block');
+     this._jPopover.each(function(){
+       if (this.parentNode) this.parentNode.removeChild( this );
+     }).removeClass('hidden').removeData('delayDetach').css('display','block').children().css('display','block');
 
    }
 
@@ -212,7 +212,7 @@ Popover.prototype._clickShow = function (jSel) {
    $(jSel)
    .addClass('popover-trigger') // for position
    .bind("click", function (evt){
-       this.isOpen() ? this.hide(evt) : this.show(evt);
+     this.isOpen() ? this.hide(evt) : this.show(evt);
    }.bind(this).release(false));
 }
 
@@ -248,17 +248,17 @@ Popover.prototype._hoverShow = function (jSel, options) {
 Popover.prototype._slowUIAct =(function() {
 	var fn = function (evt, bClosing){
 			bClosing === true ? this.hide(evt) : this.show(evt);
-    	},
-    	fnHalfSec = fn.slow(500),
-    	fnMillSec = fn.slow(10);
+  	},
+  	fnHalfSec = fn.slow(500),
+  	fnMillSec = fn.slow(10);
 
-    return function(bQuick, bClosing, evt){
-       (bQuick ? fnMillSec : fnHalfSec)
-       .call( this,
-           evt ? {'target':evt.target, 'pageX':evt.pageX, 'pageY':evt.pageY} : null, // light copy required
-           bClosing
-       );
-    }
+  return function(bQuick, bClosing, evt){
+     (bQuick ? fnMillSec : fnHalfSec)
+     .call( this,
+       evt ? {'target':evt.target, 'pageX':evt.pageX, 'pageY':evt.pageY} : null, // light copy required
+       bClosing
+     );
+  }
 })();
 
 // if this is open; when bPopover, if any popover open
@@ -329,16 +329,16 @@ $.fn.popover = function(options){
 	
 	var args = Array.prototype.slice.call(arguments, 1),
 		fnCallInst = function(el){
-	       	var inst = $.data(el, 'popover-inst');
-	       	return inst && inst[options] && inst[options].apply(inst, args);
+	     	var inst = $.data(el, 'popover-inst');
+	     	return inst && inst[options] && inst[options].apply(inst, args);
 	   	};
 
    	return (typeof options == 'string' && $.inArray(options, ['isOpen']) != -1)  //(options == 'isDisabled' || options == 'getDate' || options == 'widget')
 		? fnCallInst(this[0])
 		: this.each(function(){
-            return typeof options == 'object'
-                ? $.data(this, 'popover-inst', new Popover(this, options))
-                : fnCallInst(this);
+      return typeof options == 'object'
+        ? $.data(this, 'popover-inst', new Popover(this, options))
+        : fnCallInst(this);
 		});
 };
 

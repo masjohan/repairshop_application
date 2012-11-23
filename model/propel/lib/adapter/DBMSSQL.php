@@ -5,21 +5,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
  * This is used to connect to a MSSQL database.
  *
- * @author     Hans Lellelid <hans@xmpl.org> (Propel)
- * @version    $Revision: 2273 $
- * @package    propel.runtime.adapter
+ * @author   Hans Lellelid <hans@xmpl.org> (Propel)
+ * @version  $Revision: 2273 $
+ * @package  propel.runtime.adapter
  */
 class DBMSSQL extends DBAdapter
 {
 	/**
 	 * MS SQL Server does not support SET NAMES
-	 * @see        DBAdapter::setCharset()
+	 * @see    DBAdapter::setCharset()
 	 */
 	public function setCharset(PDO $con, $charset)
 	{
@@ -28,8 +28,8 @@ class DBMSSQL extends DBAdapter
 	/**
 	 * This method is used to ignore case.
 	 *
-	 * @param      in The string to transform to upper case.
-	 * @return     The upper case string.
+	 * @param    in The string to transform to upper case.
+	 * @return   The upper case string.
 	 */
 	public function toUpperCase($in)
 	{
@@ -39,8 +39,8 @@ class DBMSSQL extends DBAdapter
 	/**
 	 * This method is used to ignore case.
 	 *
-	 * @param      in The string whose case to ignore.
-	 * @return     The string in a case that can be ignored.
+	 * @param    in The string whose case to ignore.
+	 * @return   The string in a case that can be ignored.
 	 */
 	public function ignoreCase($in)
 	{
@@ -50,9 +50,9 @@ class DBMSSQL extends DBAdapter
 	/**
 	 * Returns SQL which concatenates the second string to the first.
 	 *
-	 * @param      string String to concatenate.
-	 * @param      string String to append.
-	 * @return     string
+	 * @param    string String to concatenate.
+	 * @param    string String to append.
+	 * @return   string
 	 */
 	public function concatString($s1, $s2)
 	{
@@ -62,10 +62,10 @@ class DBMSSQL extends DBAdapter
 	/**
 	 * Returns SQL which extracts a substring.
 	 *
-	 * @param      string String to extract from.
-	 * @param      int Offset to start from.
-	 * @param      int Number of characters to extract.
-	 * @return     string
+	 * @param    string String to extract from.
+	 * @param    int Offset to start from.
+	 * @param    int Number of characters to extract.
+	 * @return   string
 	 */
 	public function subString($s, $pos, $len)
 	{
@@ -75,8 +75,8 @@ class DBMSSQL extends DBAdapter
 	/**
 	 * Returns SQL which calculates the length (in chars) of a string.
 	 *
-	 * @param      string String to calculate length of.
-	 * @return     string
+	 * @param    string String to calculate length of.
+	 * @return   string
 	 */
 	public function strLength($s)
 	{
@@ -84,7 +84,7 @@ class DBMSSQL extends DBAdapter
 	}
 
 	/**
-	 * @see        DBAdapter::quoteIdentifier()
+	 * @see    DBAdapter::quoteIdentifier()
 	 */
 	public function quoteIdentifier($text)
 	{
@@ -92,7 +92,7 @@ class DBMSSQL extends DBAdapter
 	}
 
 	/**
-	 * @see        DBAdapter::quoteIdentifierTable()
+	 * @see    DBAdapter::quoteIdentifierTable()
 	 */
 	public function quoteIdentifierTable($table)
 	{
@@ -101,7 +101,7 @@ class DBMSSQL extends DBAdapter
 	}
 
 	/**
-	 * @see        DBAdapter::random()
+	 * @see    DBAdapter::random()
 	 */
 	public function random($seed = null)
 	{
@@ -112,8 +112,8 @@ class DBMSSQL extends DBAdapter
 	 * Simulated Limit/Offset
 	 * This rewrites the $sql query to apply the offset and limit.
 	 * some of the ORDER BY logic borrowed from Doctrine MsSqlPlatform
-	 * @see        DBAdapter::applyLimit()
-	 * @author     Benjamin Runnels <kraven@kraven.org>
+	 * @see    DBAdapter::applyLimit()
+	 * @author   Benjamin Runnels <kraven@kraven.org>
 	 */
 	public function applyLimit(&$sql, $offset, $limit)
 	{
@@ -235,7 +235,7 @@ class DBMSSQL extends DBAdapter
 	}
 
 	/**
-	 * @see        parent::cleanupSQL()
+	 * @see    parent::cleanupSQL()
 	 */
 	public function cleanupSQL(&$sql, array &$params, Criteria $values, DatabaseMap $dbMap)
 	{

@@ -1,47 +1,43 @@
 #login-fm ul {
-    margin: 0 0 0 1em;
+  margin: 0 0 0 1em;
 }
 
 #login-fm input {
-    display: inline-block;
-    width: 55%;
+  display: inline-block;
+  width: 55%;
 }
 
 #login-fm label {
-    display: inline-block;
-    width: 25%;
+  display: inline-block;
+  width: 25%;
 }
 
 #login-shop {
-    text-align: right;
+  text-align: right;
 }
 
 #login-fm.error input {
-    border-color: red;
+  border-color: red;
 }
 
 #login-fm input.submit {
-    width:auto;
-    border:2px outset #000;
-    font-size:smaller;
-    font-weight:bold;
-    margin: 0.4em 0 0 16em;
+  width:auto;
+  border:2px outset #000;
+  font-size:smaller;
+  font-weight:bold;
+  margin: 0.4em 0 0 16em;
 }
 
 #login-fm .cleaner {
-    height: 5em;
+  height: 8em;
 }
 
-#login-fm .forget {
-    margin-top: 0.2em;
-    float: right
-}
 a.openid-link {
-    display:inline-block;
-    width: 93px;
-    height: 31px;
+  display:inline-block;
+  width: 93px;
+  height: 31px;
 }
 
 a.openid-link.google {
-    background: url(/static/images/openid_provider.png) no-repeat scroll -186px 0px;
+  background: url(/static/images/openid_provider.png) no-repeat scroll -186px 0px;
 }

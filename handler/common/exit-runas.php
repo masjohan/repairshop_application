@@ -1,0 +1,2 @@
+<?php
+  $C->session->exitRunAs();

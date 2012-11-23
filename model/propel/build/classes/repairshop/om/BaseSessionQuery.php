@@ -6,11 +6,13 @@
  *
  * 
  *
+ * @method     SessionQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     SessionQuery orderBySessionId($order = Criteria::ASC) Order by the session_id column
  * @method     SessionQuery orderByDeviceKey($order = Criteria::ASC) Order by the device_key column
  * @method     SessionQuery orderByValue($order = Criteria::ASC) Order by the value column
  * @method     SessionQuery orderByUpdatedOn($order = Criteria::ASC) Order by the updated_on column
  *
+ * @method     SessionQuery groupById() Group by the id column
  * @method     SessionQuery groupBySessionId() Group by the session_id column
  * @method     SessionQuery groupByDeviceKey() Group by the device_key column
  * @method     SessionQuery groupByValue() Group by the value column
@@ -23,11 +25,13 @@
  * @method     Session findOne(PropelPDO $con = null) Return the first Session matching the query
  * @method     Session findOneOrCreate(PropelPDO $con = null) Return the first Session matching the query, or a new Session object populated from the query conditions when no match is found
  *
+ * @method     Session findOneById(int $id) Return the first Session filtered by the id column
  * @method     Session findOneBySessionId(string $session_id) Return the first Session filtered by the session_id column
  * @method     Session findOneByDeviceKey(string $device_key) Return the first Session filtered by the device_key column
  * @method     Session findOneByValue(string $value) Return the first Session filtered by the value column
  * @method     Session findOneByUpdatedOn(string $updated_on) Return the first Session filtered by the updated_on column
  *
+ * @method     array findById(int $id) Return Session objects filtered by the id column
  * @method     array findBySessionId(string $session_id) Return Session objects filtered by the session_id column
  * @method     array findByDeviceKey(string $device_key) Return Session objects filtered by the device_key column
  * @method     array findByValue(string $value) Return Session objects filtered by the value column
@@ -126,7 +130,7 @@ abstract class BaseSessionQuery extends ModelCriteria
 	 */
 	public function filterByPrimaryKey($key)
 	{
-		return $this->addUsingAlias(SessionPeer::SESSION_ID, $key, Criteria::EQUAL);
+		return $this->addUsingAlias(SessionPeer::ID, $key, Criteria::EQUAL);
 	}
 
 	/**
@@ -138,7 +142,33 @@ abstract class BaseSessionQuery extends ModelCriteria
 	 */
 	public function filterByPrimaryKeys($keys)
 	{
-		return $this->addUsingAlias(SessionPeer::SESSION_ID, $keys, Criteria::IN);
+		return $this->addUsingAlias(SessionPeer::ID, $keys, Criteria::IN);
+	}
+
+	/**
+	 * Filter the query on the id column
+	 * 
+	 * Example usage:
+	 * <code>
+	 * $query->filterById(1234); // WHERE id = 1234
+	 * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+	 * $query->filterById(array('min' => 12)); // WHERE id > 12
+	 * </code>
+	 *
+	 * @param     mixed $id The value to use as filter.
+	 *              Use scalar values for equality.
+	 *              Use array values for in_array() equivalent.
+	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    SessionQuery The current query, for fluid interface
+	 */
+	public function filterById($id = null, $comparison = null)
+	{
+		if (is_array($id) && null === $comparison) {
+			$comparison = Criteria::IN;
+		}
+		return $this->addUsingAlias(SessionPeer::ID, $id, $comparison);
 	}
 
 	/**
@@ -277,7 +307,7 @@ abstract class BaseSessionQuery extends ModelCriteria
 	public function prune($session = null)
 	{
 		if ($session) {
-			$this->addUsingAlias(SessionPeer::SESSION_ID, $session->getSessionId(), Criteria::NOT_EQUAL);
+			$this->addUsingAlias(SessionPeer::ID, $session->getId(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;

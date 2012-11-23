@@ -43,11 +43,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 	protected $action_id;
 
 	/**
-	 * @var        Role
-	 */
-	protected $aRole;
-
-	/**
 	 * @var        Action
 	 */
 	protected $aAction;
@@ -131,10 +126,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 		if ($this->role_id !== $v) {
 			$this->role_id = $v;
 			$this->modifiedColumns[] = RoleactionPeer::ROLE_ID;
-		}
-
-		if ($this->aRole !== null && $this->aRole->getId() !== $v) {
-			$this->aRole = null;
 		}
 
 		return $this;
@@ -230,9 +221,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aRole !== null && $this->role_id !== $this->aRole->getId()) {
-			$this->aRole = null;
-		}
 		if ($this->aAction !== null && $this->action_id !== $this->aAction->getId()) {
 			$this->aAction = null;
 		}
@@ -275,7 +263,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aRole = null;
 			$this->aAction = null;
 		} // if (deep)
 	}
@@ -392,13 +379,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aRole !== null) {
-				if ($this->aRole->isModified() || $this->aRole->isNew()) {
-					$affectedRows += $this->aRole->save($con);
-				}
-				$this->setRole($this->aRole);
-			}
-
 			if ($this->aAction !== null) {
 				if ($this->aAction->isModified() || $this->aAction->isNew()) {
 					$affectedRows += $this->aAction->save($con);
@@ -500,12 +480,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aRole !== null) {
-				if (!$this->aRole->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aRole->getValidationFailures());
-				}
-			}
-
 			if ($this->aAction !== null) {
 				if (!$this->aAction->validate($columns)) {
 					$failureMap = array_merge($failureMap, $this->aAction->getValidationFailures());
@@ -594,9 +568,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 			$keys[2] => $this->getActionId(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aRole) {
-				$result['Role'] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
 			if (null !== $this->aAction) {
 				$result['Action'] = $this->aAction->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
 			}
@@ -790,55 +761,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Declares an association between this object and a Role object.
-	 *
-	 * @param      Role $v
-	 * @return     Roleaction The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setRole(Role $v = null)
-	{
-		if ($v === null) {
-			$this->setRoleId(NULL);
-		} else {
-			$this->setRoleId($v->getId());
-		}
-
-		$this->aRole = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the Role object, it will not be re-added.
-		if ($v !== null) {
-			$v->addRoleaction($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated Role object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     Role The associated Role object.
-	 * @throws     PropelException
-	 */
-	public function getRole(PropelPDO $con = null)
-	{
-		if ($this->aRole === null && ($this->role_id !== null)) {
-			$this->aRole = RoleQuery::create()->findPk($this->role_id, $con);
-			/* The following can be used additionally to
-				guarantee the related object contains a reference
-				to this object.  This level of coupling may, however, be
-				undesirable since it could result in an only partially populated collection
-				in the referenced object.
-				$this->aRole->addRoleactions($this);
-			 */
-		}
-		return $this->aRole;
-	}
-
-	/**
 	 * Declares an association between this object and a Action object.
 	 *
 	 * @param      Action $v
@@ -917,7 +839,6 @@ abstract class BaseRoleaction extends BaseObject  implements Persistent
 		if ($deep) {
 		} // if ($deep)
 
-		$this->aRole = null;
 		$this->aAction = null;
 	}
 

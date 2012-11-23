@@ -31,11 +31,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
-	 * @var        array User[] Collection to store aggregation of User objects.
-	 */
-	protected $collUsers;
-
-	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -182,8 +177,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collUsers = null;
-
 		} // if (deep)
 	}
 
@@ -317,14 +310,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collUsers !== null) {
-				foreach ($this->collUsers as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
 			$this->alreadyInSave = false;
 
 		}
@@ -396,14 +381,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 			}
 
 
-				if ($this->collUsers !== null) {
-					foreach ($this->collUsers as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
-
 
 			$this->alreadyInValidation = false;
 		}
@@ -457,11 +434,10 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
 	 *
 	 * @return    array an associative array containing the field names (as keys) and field values
 	 */
-	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
 	{
 		if (isset($alreadyDumpedObjects['Market'][$this->getPrimaryKey()])) {
 			return '*RECURSION*';
@@ -471,11 +447,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 		$result = array(
 			$keys[0] => $this->getId(),
 		);
-		if ($includeForeignObjects) {
-			if (null !== $this->collUsers) {
-				$result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-			}
-		}
 		return $result;
 	}
 
@@ -608,20 +579,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
 	{
-
-		if ($deepCopy) {
-			// important: temporarily setNew(false) because this affects the behavior of
-			// the getter/setter methods for fkey referrer objects.
-			$copyObj->setNew(false);
-
-			foreach ($this->getUsers() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addUser($relObj->copy($deepCopy));
-				}
-			}
-
-		} // if ($deepCopy)
-
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -667,196 +624,6 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Clears out the collUsers collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addUsers()
-	 */
-	public function clearUsers()
-	{
-		$this->collUsers = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collUsers collection.
-	 *
-	 * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @param      boolean $overrideExisting If set to true, the method call initializes
-	 *                                        the collection even if it is not empty
-	 *
-	 * @return     void
-	 */
-	public function initUsers($overrideExisting = true)
-	{
-		if (null !== $this->collUsers && !$overrideExisting) {
-			return;
-		}
-		$this->collUsers = new PropelObjectCollection();
-		$this->collUsers->setModel('User');
-	}
-
-	/**
-	 * Gets an array of User objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this Market is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array User[] List of User objects
-	 * @throws     PropelException
-	 */
-	public function getUsers($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collUsers || null !== $criteria) {
-			if ($this->isNew() && null === $this->collUsers) {
-				// return empty collection
-				$this->initUsers();
-			} else {
-				$collUsers = UserQuery::create(null, $criteria)
-					->filterByMarket($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collUsers;
-				}
-				$this->collUsers = $collUsers;
-			}
-		}
-		return $this->collUsers;
-	}
-
-	/**
-	 * Returns the number of related User objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related User objects.
-	 * @throws     PropelException
-	 */
-	public function countUsers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collUsers || null !== $criteria) {
-			if ($this->isNew() && null === $this->collUsers) {
-				return 0;
-			} else {
-				$query = UserQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByMarket($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collUsers);
-		}
-	}
-
-	/**
-	 * Method called to associate a User object to this object
-	 * through the User foreign key attribute.
-	 *
-	 * @param      User $l User
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addUser(User $l)
-	{
-		if ($this->collUsers === null) {
-			$this->initUsers();
-		}
-		if (!$this->collUsers->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collUsers[]= $l;
-			$l->setMarket($this);
-		}
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Market is new, it will return
-	 * an empty collection; or if this Market has previously
-	 * been saved, it will retrieve related Users from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Market.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array User[] List of User objects
-	 */
-	public function getUsersJoinCustomer($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = UserQuery::create(null, $criteria);
-		$query->joinWith('Customer', $join_behavior);
-
-		return $this->getUsers($query, $con);
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Market is new, it will return
-	 * an empty collection; or if this Market has previously
-	 * been saved, it will retrieve related Users from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Market.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array User[] List of User objects
-	 */
-	public function getUsersJoinShop($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = UserQuery::create(null, $criteria);
-		$query->joinWith('Shop', $join_behavior);
-
-		return $this->getUsers($query, $con);
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this Market is new, it will return
-	 * an empty collection; or if this Market has previously
-	 * been saved, it will retrieve related Users from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in Market.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array User[] List of User objects
-	 */
-	public function getUsersJoinRole($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = UserQuery::create(null, $criteria);
-		$query->joinWith('Role', $join_behavior);
-
-		return $this->getUsers($query, $con);
-	}
-
-	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -882,17 +649,8 @@ abstract class BaseMarket extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collUsers) {
-				foreach ($this->collUsers as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 		} // if ($deep)
 
-		if ($this->collUsers instanceof PropelCollection) {
-			$this->collUsers->clearIterator();
-		}
-		$this->collUsers = null;
 	}
 
 	/**

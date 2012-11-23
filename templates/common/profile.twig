@@ -1,87 +1,79 @@
-{% import 'macro/zf-form.twig' as form -%}
-{% import 'macro/widget.twig' as widget -%}
-{% include "sections/header.twig" -%}
+{% import 'macro/zf-form.twig' as form %}
+{% import 'macro/widget.twig' as widget %}
+{% include "sections/header.twig" %}
 	<div class="yui-b">
-        {% include "sections/side_nav.twig" %}
-    </div>
-    <div class="yui-main">
-        <div class="yui-b">
-            <h2>{{ action.Name }}</h2>
-            {{ form.begin({"method":"post", "action":"/json/customer/new", "id":"new-customer-form"}) }}
-                {{ form.radio({
-                	"name" : "Title",
-                	"label" : "Salutation",
-                	"options": {
-                			"Mr" : "Mr.",
-                			"Mrs" : "Mrs.",
-                			"Ms" : "Ms."
-						},
-                    "value": customer.OdometerUnit|default("km"),
-                    "cols"  : 3
-				}) }}
-				{{ form.text({
-                	"name" : "FirstName",
-                	"label" : "First Name",
-                    "value" : customer.FirstName
-				}) }}
+    {% include "sections/side_nav.twig" %}
+  </div>
+  <div class="yui-main">
+      <div class="yui-b">
+        <h2>{{ C.param('action').Name }}</h2>
+        {{ form.begin({"method":"post", "action":"/json/common/profile", "id":"profile-form"}) }}
+          {{ form.radio({
+              "name" : "Greeting",
+              "label" : "Greeting",
+              "options": {
+                  "Mr." : "Mr.",
+                  "Mrs." : "Mrs.",
+                  "Ms." : "Ms."
+              },
+              "value": login_user.Greeting,
+              "cols"  : 3
+          }) }}
+          {{ form.text({
+              "name" : "FirstName",
+              "label" : "First Name",
+              "value" : login_user.FirstName
+          }) }}
+          {{ form.text({
+              "name" : "LastName",
+              "label" : "Last Name",
+              "value" : login_user.LastName
+          }) }}
+          {{ form.text({
+              "name" : "Phone",
+              "label" : "Phone",
+              "value" : login_user.Phone
+          }) }}
+          {{ form.text({
+              "name" : "Cell",
+              "label" : "Cell",
+              "value" : login_user.Cell
+          }) }}
+          {{ form.text({
+              "name" : "Address",
+              "label" : "Street Address",
+              "value" : login_user.Address,
+              "help" : "say 2010 Ford Mustang <b>\"4.6\"</b>L V8"
+          }) }}
+          {{ form.text({
+              "name" : "City",
+              "label" : "City",
+              "value" : login_user.Address
+          }) }}
 
-				{{ form.text({
-                	"name" : "LastName",
-                	"label" : "Last Name",
-                    "value" : customer.LastName
-				}) }}
-				{{ form.text({
-                	"name" : "Phone",
-                	"label" : "Phone",
-                    "value" : customer.Phone
-				}) }}
-				{{ form.text({
-                	"name" : "Cell",
-                	"label" : "Cell",
-                    "value" : customer.Cell
-				}) }}
-				{{ form.text({
-                	"name" : "Email",
-                	"label" : "Email",
-                    "value" : customer.Email,
-                    "help" : "say <b>\"2010\"</b> Ford Mustang 4.6L V8"
-				}) }}
+          {{ form.select({
+              "name" : "Country",
+              "label" : "Country",
+              "options": {"0" : "-- Choose --"},
+              "help" : "Select country before province"
+          }) }}
 
-				{{ form.text({
-                	"name" : "Address",
-                	"label" : "Street Address",
-                    "value" : customer.Address,
-                    "help" : "say 2010 Ford Mustang <b>\"4.6\"</b>L V8"
-				}) }}
-				{{ form.text({
-                	"name" : "City",
-                	"label" : "City",
-                    "value" : customer.Address
-				}) }}
+          {{ form.select({
+            "name" : "Province",
+            "label" : "Province / State",
+            "options": {"0" : "-- Choose --"},
+            "help" : "Select country before province"
+          }) }}
 
-                {{ form.select({
-                    "name" : "Country",
-                    "label" : "Country",
-                    "options": {"0" : "-- Choose --"},
-                    "help" : "say 2010 Ford <b>\"Mustang\"</b> 4.6L V8"
-                }) }}
-
-                {{ form.select({
-                	"name" : "Province",
-                	"label" : "Province / State",
-                	"options": {"0" : "-- Choose --"},
-                    "help" : "say 2010 <b>\"Ford\"</b> Mustang 4.6L V8"
-				}) }}
-
-				{{ form.text({
-                	"name" : "Postal",
-                	"label" : "Postal/Zip",
-                    "value" : customer.Postal
-				}) }}
-				<dd>
-					{{ form.submit({"input_only":true, "value":"Update my profile","id":"add-new"}) }}
-				</dd>
-            {{ form.end() }}
-        </div>
-    </div>
+          {{ form.text({
+            "name" : "Postal",
+            "label" : "Postal/Zip",
+            "value" : login_user.Postal
+          }) }}
+          <dd>
+            {{ form.submit({"input_only":true, "value":"Update my profile","id":"add-new"}) }}
+          </dd>
+        {{ form.end() }}
+      </div>
+  </div>
 {% include "sections/footer.twig" %}

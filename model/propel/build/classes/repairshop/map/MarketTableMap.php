@@ -46,7 +46,6 @@ class MarketTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('User', 'User', RelationMap::ONE_TO_MANY, array('id' => 'market_id', ), null, null);
 	} // buildRelations()
 
 } // MarketTableMap

@@ -7,19 +7,19 @@ Array.prototype.grep = function(fn) {
 }
 
 Array.prototype.unique = function() {
-    var p = 0, i=1, n=this.length, r;
-    
-    if (n < 2) return;
+  var p = 0, i=1, n=this.length, r;
+  
+  if (n < 2) return;
 
-    typeof(this[0]) == "number" ? this.sort(function(a,b){return a-b}) : this.sort();
-    
-    for (r = [0, n, this[0]]; i<n; i++) if (this[p] !== this[i]) {
-        r.push(this[i]);
-        p = i;
+  typeof(this[0]) == "number" ? this.sort(function(a,b){return a-b}) : this.sort();
+  
+  for (r = [0, n, this[0]]; i<n; i++) if (this[p] !== this[i]) {
+    r.push(this[i]);
+    p = i;
 	}
 
-    Array.prototype.splice.apply(this, r);
-    return this;
+  Array.prototype.splice.apply(this, r);
+  return this;
 }
 
 Array.prototype.map = function(fn) {
@@ -32,10 +32,10 @@ Array.prototype.map = function(fn) {
 }
 
 Array.prototype.max = function(){
-    return Math.max.apply(Math, this);
+  return Math.max.apply(Math, this);
 }
-    
+  
 Array.prototype.min = function(){
-    return Math.min.apply(Math, this);
+  return Math.min.apply(Math, this);
 }
-    
+  

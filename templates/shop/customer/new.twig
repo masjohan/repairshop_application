@@ -6,7 +6,7 @@
     </div>
     <div class="yui-main">
         <div class="yui-b">
-            <h2>New Customer</h2>
+            <h2>{{ C.param('action').Name }}</h2>
             {{ form.begin({"method":"post", "action":"/json/customer/new", "id":"new-customer-form"}) }}
                 {{ form.radio({
                 	"name" : "Title",

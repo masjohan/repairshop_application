@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
@@ -13,9 +13,9 @@
  * format() returns a PropelOnDemandCollection that hydrates objects as the use iterates on the collection
  * This formatter consumes less memory than the PropelObjectFormatter, but doesn't use Instance Pool
  *
- * @author     Francois Zaninotto
- * @version    $Revision: 2146 $
- * @package    propel.runtime.formatter
+ * @author   Francois Zaninotto
+ * @version  $Revision: 2146 $
+ * @package  propel.runtime.formatter
  */
 class PropelOnDemandFormatter extends PropelObjectFormatter
 {
@@ -49,10 +49,10 @@ class PropelOnDemandFormatter extends PropelObjectFormatter
 	 * The first object to hydrate is the model of the Criteria
 	 * The following objects (the ones added by way of ModelCriteria::with()) are linked to the first one
 	 *
-	 *  @param    array  $row associative array indexed by column number,
-	 *                   as returned by PDOStatement::fetch(PDO::FETCH_NUM)
+	 *  @param  array  $row associative array indexed by column number,
+	 *           as returned by PDOStatement::fetch(PDO::FETCH_NUM)
 	 *
-	 * @return    BaseObject
+	 * @return  BaseObject
 	 */
 	public function getAllObjectsFromRow($row)
 	{

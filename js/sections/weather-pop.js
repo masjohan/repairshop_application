@@ -1,8 +1,8 @@
 // require jpopover
 $(function(){
-    $('.today-weather .weather-desc').popover({
+  $('.today-weather .weather-desc').popover({
 		'containerCss' : {
-			"width"		: 271         	// exp: "200px"
+			"width"		: 271   	// exp: "200px"
 		},
 		'position' : {
 			"of" 		: 'trigger',
@@ -11,9 +11,9 @@ $(function(){
 			"offset" 	: '0 0',
 			"collision"	: 'fit fit'
 		},
-       	'trigger' : {
-       		"hover" : '.today-weather .weather-short'
-       	}
+   	'trigger' : {
+   		"hover" : '.today-weather .weather-short'
+   	}
 	});
 });
 

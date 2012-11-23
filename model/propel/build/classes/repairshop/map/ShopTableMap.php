@@ -39,6 +39,17 @@ class ShopTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
 		$this->addColumn('CHAIN_ID', 'ChainId', 'INTEGER', true, 10, null);
+		$this->addColumn('NAME', 'Name', 'VARCHAR', true, 45, null);
+		$this->addColumn('ADDRESS', 'Address', 'VARCHAR', true, 45, null);
+		$this->addColumn('CITY', 'City', 'VARCHAR', true, 45, null);
+		$this->addColumn('PROVINCE', 'Province', 'VARCHAR', true, 45, null);
+		$this->addColumn('COUNTRY', 'Country', 'VARCHAR', true, 45, null);
+		$this->addColumn('POSTAL', 'Postal', 'VARCHAR', true, 45, null);
+		$this->addColumn('PHONE', 'Phone', 'VARCHAR', true, 45, null);
+		$this->addColumn('FAX', 'Fax', 'VARCHAR', true, 45, null);
+		$this->addColumn('EMAIL', 'Email', 'VARCHAR', true, 45, null);
+		$this->addForeignKey('OWNER_ID', 'OwnerId', 'INTEGER', 'User', 'ID', false, 10, null);
+		$this->addColumn('NOTES', 'Notes', 'LONGVARCHAR', false, null, null);
 		// validators
 	} // initialize()
 
@@ -47,8 +58,8 @@ class ShopTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('User', 'User', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
     $this->addRelation('Customer', 'Customer', RelationMap::ONE_TO_MANY, array('id' => 'shop_id', ), null, null);
-    $this->addRelation('User', 'User', RelationMap::ONE_TO_MANY, array('id' => 'shop_id', ), null, null);
 	} // buildRelations()
 
 } // ShopTableMap

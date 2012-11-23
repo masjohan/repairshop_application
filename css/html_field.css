@@ -1,18 +1,18 @@
 .field-container {
-    position:relative;
-    margin-left:140px;
-    margin-bottom:6px;
+  position:relative;
+  margin-left:140px;
+  margin-bottom:6px;
 }
 
 .field-container .field-label {
-    color:#666666;
-    font-size:12px;
-    font-weight:bold;
-    left:-125px;
-    position:absolute;
-    text-align:right;
-    top:4px;
-    width:118px;
+  color:#666666;
+  font-size:12px;
+  font-weight:bold;
+  left:-125px;
+  position:absolute;
+  text-align:right;
+  top:4px;
+  width:118px;
 }
 
 .field-container select,
@@ -20,130 +20,130 @@
 .field-container input.file,
 .field-container textarea,
 .field-container input.password {
-    padding:2px;
-    font-size:12px;
-    border: 1px solid #666666;
-    color:#333333;
+  padding:2px;
+  font-size:12px;
+  border: 1px solid #666666;
+  color:#333333;
 }
 
 .field-container select {
-    width:231px;
+  width:231px;
 }
 
 .field-container input.text,
 .field-container input.file,
 .field-container textarea,
 .field-container input.password {
-    width:225px;
+  width:225px;
 }
 
 .field-container textarea {
-    height: 100px;
+  height: 100px;
 }
 
 .field-container .field-help {
-    position:absolute;
-    left:6px;
-    top:22px;
-    font-size:10px;
-    color:#666666;
+  position:absolute;
+  left:6px;
+  top:22px;
+  font-size:10px;
+  color:#666666;
 }
 
 .field-container .field-help.right {
-    left:263px;
-    top:2px;
+  left:263px;
+  top:2px;
 }
 
 .field-container .error-icon {
-    background:transparent url(/static/images/error.png) no-repeat scroll top left;
-    cursor:pointer;
-    height:16px;
-    left:236px;
-    position:absolute;
-    top:5px;
-    width:16px;
-    display:none;
+  background:transparent url(/static/images/error.png) no-repeat scroll top left;
+  cursor:pointer;
+  height:16px;
+  left:236px;
+  position:absolute;
+  top:5px;
+  width:16px;
+  display:none;
 }
 
 .field-container.has-error.focus .field-error,
 .field-container.has-error .error-icon {
-      display:block;
+  display:block;
 }
 
 .field-container .field-error {
-    background-color:#FFEAEA;
-    border:1px solid red;
-    color:#880000;
-    left:256px;
-    padding:5px;
-    position:absolute;
-    top:0;
-    width:120px;
-    display:none;
-    font-size:0.8em;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+  background-color:#FFEAEA;
+  border:1px solid red;
+  color:#880000;
+  left:256px;
+  padding:5px;
+  position:absolute;
+  top:0;
+  width:120px;
+  display:none;
+  font-size:0.8em;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .field-container input.radio,
 .field-container input.checkbox {
-    border:none;
-    margin:0 5px 0 2px;
+  border:none;
+  margin:0 5px 0 2px;
 }
 
 .field-container .option-output {
-    color:#666666;
-    font-size:13px;
-    font-weight:bold;
+  color:#666666;
+  font-size:13px;
+  font-weight:bold;
 }
 
 .field-container input.checkbox + span.option-output,
 .field-container input.radio + span.option-output {
-    font-weight:normal;
+  font-weight:normal;
 }
 
 .field-container .field-label .required-mark {
-    position: absolute;
-    top: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .field-container .dirty-show,
 .field-container .focus-show {
-    display:none;
+  display:none;
 }
 
 .dirty .field-container .dirty-show,
 .field-container.focus .focus-show {
-    display:block;
+  display:block;
 }
 
 .alert-error .field-container .error-icon {
-    background-image: url(/static/images/alert.png);
+  background-image: url(/static/images/alert.png);
 }
 
 .alert-error .field-container .field-error {
-    border:1px solid #888888;
-    color:#333333;
-    background-color: #FFFF66;
+  border:1px solid #888888;
+  color:#333333;
+  background-color: #FFFF66;
 }
 
 .dirty .notice-dirty {
-    background-color:#F78181;
-    text-decoration:blink;
+  background-color:#F78181;
+  text-decoration:blink;
 }
 
 input.radio,
 input.checkbox {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .field-container table {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .field-container table td {
-    border: none;
-    padding: 0;
+  border: none;
+  padding: 0;
 }

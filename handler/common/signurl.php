@@ -1,3 +1,3 @@
 <?php
-    $C->salty = $C->session->signUrl($_GET['url']);
+  $C->salty = $C->acl->signUrl($_GET['url']);
 

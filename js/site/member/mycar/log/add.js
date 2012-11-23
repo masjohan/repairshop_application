@@ -11,30 +11,30 @@ RW.CarLogForm = function() {
 }
 
 RW.CarLogForm.prototype.initForm = function() {
-    $('form#mycar-log-form').formval({
-    	rules: {
-            "date" : {
-                'required': true
-            },
-            'mileage' : {
-                'required': true,
-                'number': true
-            },
-            "content": {
-                'required': true
-            },
-            'cost' : {
-                'required': false,
-                'number': true
-            }
-        },
-        'datepicker' : {
-            "date" : {
-                "maxDate": '0d',
-                "minDate": '-1y'
-            }
-        }
-    });
+  $('form#mycar-log-form').formval({
+  	rules: {
+  "date" : {
+  'required': true
+  },
+  'mileage' : {
+  'required': true,
+  'number': true
+  },
+  "content": {
+  'required': true
+  },
+  'cost' : {
+  'required': false,
+  'number': true
+  }
+  },
+  'datepicker' : {
+  "date" : {
+  "maxDate": '0d',
+  "minDate": '-1y'
+  }
+  }
+  });
 }
 
 $(function(){new RW.CarLogForm()});

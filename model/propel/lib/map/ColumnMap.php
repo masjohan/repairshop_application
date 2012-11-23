@@ -5,7 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @license    MIT License
+ * @license  MIT License
  */
 
 /**
@@ -18,10 +18,10 @@
  * propel.engine.database.model classes, which are build-time modeling classes.
  * These classes in themselves do not do any database metadata lookups.
  *
- * @author     Hans Lellelid <hans@xmpl.org> (Propel)
- * @author     John D. McNally <jmcnally@collab.net> (Torque)
- * @version    $Revision: 2253 $
- * @package    propel.runtime.map
+ * @author   Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author   John D. McNally <jmcnally@collab.net> (Torque)
+ * @version  $Revision: 2253 $
+ * @package  propel.runtime.map
  */
 class ColumnMap
 {
@@ -68,124 +68,124 @@ class ColumnMap
   /**
    * Constructor.
    *
-   * @param      string $name The name of the column.
-   * @param      TableMap containingTable TableMap of the table this column is in.
+   * @param    string $name The name of the column.
+   * @param    TableMap containingTable TableMap of the table this column is in.
    */
   public function __construct($name, TableMap $containingTable)
   {
-    $this->columnName = $name;
-    $this->table = $containingTable;
+  $this->columnName = $name;
+  $this->table = $containingTable;
   }
 
   /**
    * Get the name of a column.
    *
-   * @return     string A String with the column name.
+   * @return   string A String with the column name.
    */
   public function getName()
   {
-    return $this->columnName;
+  return $this->columnName;
   }
 
   /**
    * Get the table map this column belongs to.
-   * @return     TableMap
+   * @return   TableMap
    */
   public function getTable()
   {
-    return $this->table;
+  return $this->table;
   }
 
   /**
    * Get the name of the table this column is in.
    *
-   * @return     string A String with the table name.
+   * @return   string A String with the table name.
    */
   public function getTableName()
   {
-    return $this->table->getName();
+  return $this->table->getName();
   }
   
   /**
    * Get the table name + column name.
    *
-   * @return     string A String with the full column name.
+   * @return   string A String with the full column name.
    */
   public function getFullyQualifiedName()
   {
-    return $this->getTableName() . "." . $this->columnName;
+  return $this->getTableName() . "." . $this->columnName;
   }
 
   /**
    * Set the php name of this column.
    *
-   * @param      string $phpName A string representing the PHP name.
-   * @return     void
+   * @param    string $phpName A string representing the PHP name.
+   * @return   void
    */
   public function setPhpName($phpName)
   {
-    $this->phpName = $phpName;
+  $this->phpName = $phpName;
   }
   
   /**
    * Get the name of a column.
    *
-   * @return     string A String with the column name.
+   * @return   string A String with the column name.
    */
   public function getPhpName()
   {
-    return $this->phpName;
+  return $this->phpName;
   }
   
   /**
    * Set the Propel type of this column.
    *
-   * @param      string $type A string representing the Propel type (e.g. PropelColumnTypes::DATE).
-   * @return     void
+   * @param    string $type A string representing the Propel type (e.g. PropelColumnTypes::DATE).
+   * @return   void
    */
   public function setType($type)
   {
-    $this->type = $type;
+  $this->type = $type;
   }
   
   /**
    * Get the Propel type of this column.
    *
-   * @return     string A string representing the Propel type (e.g. PropelColumnTypes::DATE).
+   * @return   string A string representing the Propel type (e.g. PropelColumnTypes::DATE).
    */
   public function getType()
   {
-    return $this->type;
+  return $this->type;
   }
 
   /**
    * Get the PDO type of this column.
    *
-   * @return     int The PDO::PARMA_* value
+   * @return   int The PDO::PARMA_* value
    */
   public function getPdoType()
   {
-    return PropelColumnTypes::getPdoType($this->type);
+  return PropelColumnTypes::getPdoType($this->type);
   }
 
   /**
    * Whether this is a BLOB, LONGVARBINARY, or VARBINARY.
-   * @return     boolean
+   * @return   boolean
    */
   public function isLob()
   {
-    return ($this->type == PropelColumnTypes::BLOB || $this->type == PropelColumnTypes::VARBINARY || $this->type == PropelColumnTypes::LONGVARBINARY);
+  return ($this->type == PropelColumnTypes::BLOB || $this->type == PropelColumnTypes::VARBINARY || $this->type == PropelColumnTypes::LONGVARBINARY);
   }
 
   /**
    * Whether this is a DATE/TIME/TIMESTAMP column.
    *
-   * @return     boolean
-   * @since      1.3
+   * @return   boolean
+   * @since    1.3
    */
   public function isTemporal()
   {
-    return ($this->type == PropelColumnTypes::TIMESTAMP || $this->type == PropelColumnTypes::DATE || $this->type == PropelColumnTypes::TIME || $this->type == PropelColumnTypes::BU_DATE  || $this->type == PropelColumnTypes::BU_TIMESTAMP);
+  return ($this->type == PropelColumnTypes::TIMESTAMP || $this->type == PropelColumnTypes::DATE || $this->type == PropelColumnTypes::TIME || $this->type == PropelColumnTypes::BU_DATE  || $this->type == PropelColumnTypes::BU_TIMESTAMP);
   }
   
   /**
@@ -194,79 +194,79 @@ class ColumnMap
    * PHP cannot handle pre-epoch timestamps well -- hence the need to differentiate
    * between epoch and pre-epoch timestamps.
    *
-   * @return     boolean
+   * @return   boolean
    * @deprecated Propel supports non-epoch dates
    */
   public function isEpochTemporal()
   {
-    return ($this->type == PropelColumnTypes::TIMESTAMP || $this->type == PropelColumnTypes::DATE || $this->type == PropelColumnTypes::TIME);
+  return ($this->type == PropelColumnTypes::TIMESTAMP || $this->type == PropelColumnTypes::DATE || $this->type == PropelColumnTypes::TIME);
   }
 
   /**
    * Whether this column is numeric (int, decimal, bigint etc).
-   * @return     boolean
+   * @return   boolean
    */
   public function isNumeric()
   {
-    return ($this->type == PropelColumnTypes::NUMERIC || $this->type == PropelColumnTypes::DECIMAL || $this->type == PropelColumnTypes::TINYINT || $this->type == PropelColumnTypes::SMALLINT || $this->type == PropelColumnTypes::INTEGER || $this->type == PropelColumnTypes::BIGINT || $this->type == PropelColumnTypes::REAL || $this->type == PropelColumnTypes::FLOAT || $this->type == PropelColumnTypes::DOUBLE);
+  return ($this->type == PropelColumnTypes::NUMERIC || $this->type == PropelColumnTypes::DECIMAL || $this->type == PropelColumnTypes::TINYINT || $this->type == PropelColumnTypes::SMALLINT || $this->type == PropelColumnTypes::INTEGER || $this->type == PropelColumnTypes::BIGINT || $this->type == PropelColumnTypes::REAL || $this->type == PropelColumnTypes::FLOAT || $this->type == PropelColumnTypes::DOUBLE);
   }
 
   /**
    * Whether this column is a text column (varchar, char, longvarchar).
-   * @return     boolean
+   * @return   boolean
    */
   public function isText()
   {
-    return ($this->type == PropelColumnTypes::VARCHAR || $this->type == PropelColumnTypes::LONGVARCHAR || $this->type == PropelColumnTypes::CHAR);
+  return ($this->type == PropelColumnTypes::VARCHAR || $this->type == PropelColumnTypes::LONGVARCHAR || $this->type == PropelColumnTypes::CHAR);
   }
 
   /**
    * Set the size of this column.
    *
-   * @param      int $size An int specifying the size.
-   * @return     void
+   * @param    int $size An int specifying the size.
+   * @return   void
    */
   public function setSize($size)
   {
-    $this->size = $size;
+  $this->size = $size;
   }
   
   /**
    * Get the size of this column.
    *
-   * @return     int An int specifying the size.
+   * @return   int An int specifying the size.
    */
   public function getSize()
   {
-    return $this->size;
+  return $this->size;
   }
 
   /**
    * Set if this column is a primary key or not.
    *
-   * @param      boolean $pk True if column is a primary key.
-   * @return     void
+   * @param    boolean $pk True if column is a primary key.
+   * @return   void
    */
   public function setPrimaryKey($pk)
   {
-    $this->pk = $pk;
+  $this->pk = $pk;
   }
   
   /**
    * Is this column a primary key?
    *
-   * @return     boolean True if column is a primary key.
+   * @return   boolean True if column is a primary key.
    */
   public function isPrimaryKey()
   {
-    return $this->pk;
+  return $this->pk;
   }
 
   /**
    * Set if this column may be null.
    *
-   * @param      boolean nn True if column may be null.
-   * @return     void
+   * @param    boolean nn True if column may be null.
+   * @return   void
    */
   public function setNotNull($nn)
   {
