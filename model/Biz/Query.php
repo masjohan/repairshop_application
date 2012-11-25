@@ -96,5 +96,21 @@ SQL;
     WHERE r.type = 'Shop'
 SQL;
 
+  public static $all_customer_user = <<<SQL
+    SELECT u.id AS Id,
+        u.username AS Username,
+        u.email AS Email,
+        u.recovery_token AS RecoveryToken,
+        CONCAT(u.first_name, ' ', u.last_name) AS FullName,
+        u.Phone AS Phone,
+        s.name AS Shop,
+        (u.passwd IS NOT NULL AND u.recovery_token IS NULL) AS IsActive
+    FROM Role r
+      JOIN User u ON r.id = u.role_id
+      JOIN Customer c ON c.id = u.role_type_id
+      JOIN Shop s ON s.id = c.shop_id
+    WHERE r.type = 'Customer'
+SQL;
+
 }
 

@@ -38,7 +38,7 @@ class VehicleTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-		$this->addForeignKey('CUSTOMER_ID', 'CustomerId', 'INTEGER', 'Customer', 'ID', false, 10, null);
+		$this->addForeignKey('CUSTOMER_ID', 'CustomerId', 'INTEGER', 'Customer', 'ID', true, 10, null);
 		$this->addColumn('YEAR', 'Year', 'CHAR', true, 4, null);
 		$this->addColumn('MAKE', 'Make', 'VARCHAR', true, 45, null);
 		$this->addColumn('MODEL', 'Model', 'VARCHAR', true, 45, null);

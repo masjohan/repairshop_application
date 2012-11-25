@@ -10,20 +10,22 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Token</th>
-                <th>Role</th>
-                <th>Shop name</th>
+                <th>Full name</th>
+                <th>Phone</th>
+                <th>Shop</th>
                 <th>Is Active</th>
                 <th>Run as</th>
 	            </tr>
-	            {% for v in shopUser %}
+	            {% for v in cusUser %}
 	            <tr valign="top">
                 <td>{{ v.Username }}</td>
                 <td>{{ v.Email }}</td>
                 <td>{{ v.RecoveryToken }}</td>
-                <td>{{ v.Role }}</td>
+                <td>{{ v.FullName }}</td>
+                <td>{{ v.Phone }}</td>
                 <td>{{ v.Shop }}</td>
                 <td>{{ v.IsActive ? "Yes" : "No" }}</td>
-                <td><a href="{{ ('/market/shop/runas?id=' ~ v.Id) | php('sign') }}">Run as</a></td>
+                <td><a href="{{ ('/market/shop/runas-cus?id=' ~ v.Id) | php('sign') }}">Run as</a></td>
 	            {% else %}
 	              <td colspan="5">Empty.</td>
 	            {% endfor %}

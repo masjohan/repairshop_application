@@ -478,7 +478,7 @@ abstract class BaseCustomerQuery extends ModelCriteria
 	 *
 	 * @return    CustomerQuery The current query, for fluid interface
 	 */
-	public function joinVehicle($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	public function joinVehicle($relationAlias = null, $joinType = Criteria::INNER_JOIN)
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('Vehicle');
@@ -513,7 +513,7 @@ abstract class BaseCustomerQuery extends ModelCriteria
 	 *
 	 * @return    VehicleQuery A secondary query class using the current class as primary query
 	 */
-	public function useVehicleQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	public function useVehicleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
 	{
 		return $this
 			->joinVehicle($relationAlias, $joinType)

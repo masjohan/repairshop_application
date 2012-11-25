@@ -1,7 +1,7 @@
 {{ C.loadCSS('sections/login.css') -}}
 {% if C.hasLogin() %}
     <div id="login-shop">
-        <b>{{ C.param('login_user').Email|php('truncate',22)}}</b>
+        <b>{{ C.param('login_user').Email|php('truncate', 15)}}</b>
         {% if C.param('session').isRunAs() %}| <a href="/common/exit-runas">Exit Runas</a> {% endif %}
         | <a href="/common/logout">Logout</a>
     </div>
