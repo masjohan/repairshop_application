@@ -1,3 +1,7 @@
+{% import 'macro/zf-form.twig' as form -%}
+{% import 'macro/widget.twig' as widget -%}
+{{ C.loadJS('util/country-region.js') -}}
+
 {% include "sections/header.twig" %}
 	<div class="yui-b">
         {% include "sections/side_nav.twig" %}
@@ -5,6 +9,64 @@
     <div class="yui-main">
         <div class="yui-b">
             <h2>{{ C.param('action').Name }}</h2>
+            {{ form.begin({"method":"post", "action":"/json/shop/setup/info", "id":"page-form"}) }}
+              {{ form.text({
+                "name" : "Name",
+                "label" : "Shop Name",
+                "value" : shop.Name
+              }) }}
+              {{ form.text({
+                "name" : "Address",
+                "label" : "Street Address",
+                "value" : shop.Address
+              }) }}
+              {{ form.text({
+                "name" : "City",
+                "label" : "City",
+                "value" : shop.City
+              }) }}
+              {{ form.select_country({
+                  "name" : "Country",
+                  "label" : "Country",
+                  "value" : shop.Country
+              }) }}
+              {{ form.select_region({
+                "name" : "Province",
+                "label" : "Province / State",
+                "value" : shop.Province
+              }) }}
+              {{ form.text({
+                "name" : "Postal",
+                "label" : "Postal/Zip",
+                "value" : shop.Postal
+              }) }}
+
+              {{ form.text({
+                "name" : "Phone",
+                "label" : "Contact phone",
+                "value" : shop.Phone
+              }) }}
+              {{ form.text({
+                "name" : "Fax",
+                "label" : "Fax",
+                "value" : shop.Fax
+              }) }}
+              {{ form.text({
+                "name" : "Email",
+                "label" : "Contact Email",
+                "value" : shop.Email |default(user.Email),
+                "help"  : "Default owner mail can be changed for shop contact purpose"
+              }) }}
+              {{ form.textarea({
+                "name" : "Notes",
+                "label" : "Notes",
+                "value" : shop.Notes
+              }) }}
+              <dd>
+                {{ form.submit({"input_only":true, "value":"Update shop information","id":"add-new"}) }}
+              </dd>
+            {{ form.end() }}
+        </div>
         </div>
     </div>
 {% include "sections/footer.twig" %}

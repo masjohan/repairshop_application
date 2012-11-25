@@ -748,10 +748,6 @@ abstract class BaseActionPeer {
 			$criteria = $values->buildCriteria(); // build Criteria from Action object
 		}
 
-		if ($criteria->containsKey(ActionPeer::ID) && $criteria->keyContainsValue(ActionPeer::ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.ActionPeer::ID.')');
-		}
-
 
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);

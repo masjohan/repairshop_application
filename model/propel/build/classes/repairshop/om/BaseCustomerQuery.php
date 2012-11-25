@@ -28,6 +28,10 @@
  * @method     CustomerQuery rightJoinShop($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Shop relation
  * @method     CustomerQuery innerJoinShop($relationAlias = null) Adds a INNER JOIN clause to the query using the Shop relation
  *
+ * @method     CustomerQuery leftJoinVehicle($relationAlias = null) Adds a LEFT JOIN clause to the query using the Vehicle relation
+ * @method     CustomerQuery rightJoinVehicle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Vehicle relation
+ * @method     CustomerQuery innerJoinVehicle($relationAlias = null) Adds a INNER JOIN clause to the query using the Vehicle relation
+ *
  * @method     Customer findOne(PropelPDO $con = null) Return the first Customer matching the query
  * @method     Customer findOneOrCreate(PropelPDO $con = null) Return the first Customer matching the query, or a new Customer object populated from the query conditions when no match is found
  *
@@ -441,6 +445,79 @@ abstract class BaseCustomerQuery extends ModelCriteria
 		return $this
 			->joinShop($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'Shop', 'ShopQuery');
+	}
+
+	/**
+	 * Filter the query by a related Vehicle object
+	 *
+	 * @param     Vehicle $vehicle  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function filterByVehicle($vehicle, $comparison = null)
+	{
+		if ($vehicle instanceof Vehicle) {
+			return $this
+				->addUsingAlias(CustomerPeer::ID, $vehicle->getCustomerId(), $comparison);
+		} elseif ($vehicle instanceof PropelCollection) {
+			return $this
+				->useVehicleQuery()
+					->filterByPrimaryKeys($vehicle->getPrimaryKeys())
+				->endUse();
+		} else {
+			throw new PropelException('filterByVehicle() only accepts arguments of type Vehicle or PropelCollection');
+		}
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Vehicle relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CustomerQuery The current query, for fluid interface
+	 */
+	public function joinVehicle($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Vehicle');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Vehicle');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Vehicle relation Vehicle object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    VehicleQuery A secondary query class using the current class as primary query
+	 */
+	public function useVehicleQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinVehicle($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Vehicle', 'VehicleQuery');
 	}
 
 	/**

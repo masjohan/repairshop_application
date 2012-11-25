@@ -3,6 +3,8 @@ Class TW_Session {  //  implements SessionHandlerInterface
 
   private $dbh;
 
+  const NS = 'user_ns';
+
   private function __construct() {
   $this->dbh = Controller::getInstance()->param('dbh');
   }
@@ -77,18 +79,34 @@ Class TW_Session {  //  implements SessionHandlerInterface
     return true;
   }
 
+  // Use this to handle session data, since handle run as
   public function data($key, $val = NULL, $remove = NULL) {
-    if ($remove === TRUE) {
-      unset($_SESSION[$key]);
-    } else if ( $val !== NULL ) {
-      $_SESSION[$key] = $val;
+    // user_ is special always at top. WHY? by mistake
+    if (preg_match('/^user_(id|stack|once|ns)/', $key)) {
+      $sess = &$_SESSION;
+    } else if ($this->isRunAs()) {
+      $namespace = self::NS.$this->login_id();
+      if (!isset($_SESSION[$namespace])) $_SESSION[$namespace] = array();
+      $sess = &$_SESSION[$namespace];
     } else {
-      return isset($_SESSION[$key]) ? $_SESSION[$key] : NULL;
+      $sess = &$_SESSION;
+    };
+
+    if ($remove === TRUE) {
+      unset($sess[$key]);
+    } else if ( $val !== NULL ) {
+      $sess[$key] = $val;
+    } else {
+      return isset($sess[$key]) ? $sess[$key] : NULL;
     }
   }
 
   public function login($user_id) {
     $this->data('user_id', $user_id);
+  }
+
+  public function login_id() {
+    return $this->data('user_id');
   }
 
   public function is_login() {
@@ -102,46 +120,47 @@ Class TW_Session {  //  implements SessionHandlerInterface
 
   // data put here will all throw out tpl
   public function putNext($assoc) {
-    $next = $this->data('_NEXT');
+    $next = $this->data('user_once');
     if ($next === NULL) $next = array();
-    $this->data('_NEXT', array_merge($next, $assoc));
+    $this->data('user_once', array_merge($next, $assoc));
+  }
+  public function throwNext() {
+    $next = $this->data('user_once');
+    if ($next === NULL) $next = array();
+    $this->data('user_once', NULL, TRUE);
+    return $next;
   }
 
   public function runAs($userId) {
-    $runAs = $this->data('_RUNAS');
+    $runAs = $this->data('user_stack');
     if ($runAs === NULL) $runAs = array();
-    $runAs[] = $this->data('user_id');
+    array_push($runAs, $this->data('user_id'));
 
     // can NOT loop, no change for any session data
     if (in_array($userId, $runAs)) return FALSE;
 
-    $this->data('_RUNAS', $runAs);
+    $this->data('user_stack', $runAs);
     $this->data('user_id', $userId);
     header("Location: /", TRUE, 307);
     exit;
   }
 
   public function exitRunAs() {
-    $runAs = $this->data('_RUNAS');
+    $runAs = $this->data('user_stack');
     if ($runAs === NULL) return FALSE;
 
-    $userId = array_pop($runAs);
+    $namespace = self::NS.$this->login_id();
+    $this->data($namespace, NULL, TRUE);
 
-    $this->data('_RUNAS', $runAs);
+    $userId = array_pop($runAs);
+    $this->data('user_stack', $runAs);
     $this->data('user_id', $userId);
     header("Location: /", TRUE, 307);
     exit;
   }
 
   public function isRunAs() {
-    $runAs = $this->data('_RUNAS');
+    $runAs = $this->data('user_stack');
     return is_array($runAs) && count($runAs);
-  }
-
-  public function throwNext() {
-    $next = $this->data('_NEXT');
-    if ($next === NULL) $next = array();
-    $this->data('_NEXT', array());
-    return $next;
   }
 }

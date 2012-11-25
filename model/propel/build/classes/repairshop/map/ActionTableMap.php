@@ -35,7 +35,7 @@ class ActionTableMap extends TableMap {
 		$this->setPhpName('Action');
 		$this->setClassname('Action');
 		$this->setPackage('repairshop');
-		$this->setUseIdGenerator(true);
+		$this->setUseIdGenerator(false);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
 		$this->addColumn('PATH', 'Path', 'VARCHAR', true, 99, null);

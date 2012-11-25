@@ -1,5 +1,7 @@
 {% import 'macro/zf-form.twig' as form %}
 {% import 'macro/widget.twig' as widget %}
+{{ C.loadJS('util/country-region.js') -}}
+
 {% include "sections/header.twig" %}
 	<div class="yui-b">
     {% include "sections/side_nav.twig" %}
@@ -7,6 +9,7 @@
   <div class="yui-main">
       <div class="yui-b">
         <h2>{{ C.param('action').Name }}</h2>
+        <p>Here is your personal information. Please keep them update to date.</p>
         {{ form.begin({"method":"post", "action":"/json/common/profile", "id":"profile-form"}) }}
           {{ form.radio({
               "name" : "Greeting",
@@ -48,20 +51,20 @@
           {{ form.text({
               "name" : "City",
               "label" : "City",
-              "value" : login_user.Address
+              "value" : login_user.City
           }) }}
 
-          {{ form.select({
+          {{ form.select_country({
               "name" : "Country",
               "label" : "Country",
-              "options": {"0" : "-- Choose --"},
+              "value" : login_user.Country,
               "help" : "Select country before province"
           }) }}
 
-          {{ form.select({
+          {{ form.select_region({
             "name" : "Province",
             "label" : "Province / State",
-            "options": {"0" : "-- Choose --"},
+            "value" : login_user.Province,
             "help" : "Select country before province"
           }) }}
 
@@ -74,6 +77,7 @@
             {{ form.submit({"input_only":true, "value":"Update my profile","id":"add-new"}) }}
           </dd>
         {{ form.end() }}
+        <p class="hide success">Your profile information has been updated.</p>
       </div>
   </div>
 {% include "sections/footer.twig" %}

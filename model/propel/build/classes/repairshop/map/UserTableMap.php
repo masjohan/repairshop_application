@@ -39,7 +39,7 @@ class UserTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
 		$this->addColumn('USERNAME', 'Username', 'VARCHAR', false, 15, null);
-		$this->addColumn('EMAIL', 'Email', 'VARCHAR', true, 45, null);
+		$this->addColumn('EMAIL', 'Email', 'VARCHAR', false, 45, null);
 		$this->addColumn('PASSWD', 'Passwd', 'VARCHAR', false, 45, null);
 		$this->addColumn('GREETING', 'Greeting', 'CHAR', false, null, null);
 		$this->addColumn('FIRST_NAME', 'FirstName', 'VARCHAR', false, 45, null);
@@ -64,7 +64,6 @@ class UserTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('Role', 'Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), null, null);
-    $this->addRelation('Shop', 'Shop', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null);
 	} // buildRelations()
 
 } // UserTableMap

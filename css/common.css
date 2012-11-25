@@ -108,3 +108,8 @@ a.no-hover:visited:hover {
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+/* twick jquery ui */
+ul.ui-menu li.ui-menu-item {
+  list-style: none;
+}

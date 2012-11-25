@@ -43,6 +43,9 @@ return array (
   'BaseUser' => 'repairshop/om/BaseUser.php',
   'BaseUserPeer' => 'repairshop/om/BaseUserPeer.php',
   'BaseUserQuery' => 'repairshop/om/BaseUserQuery.php',
+  'BaseVehicle' => 'repairshop/om/BaseVehicle.php',
+  'BaseVehiclePeer' => 'repairshop/om/BaseVehiclePeer.php',
+  'BaseVehicleQuery' => 'repairshop/om/BaseVehicleQuery.php',
   'Customer' => 'repairshop/Customer.php',
   'CustomerPeer' => 'repairshop/CustomerPeer.php',
   'CustomerQuery' => 'repairshop/CustomerQuery.php',
@@ -71,4 +74,8 @@ return array (
   'UserPeer' => 'repairshop/UserPeer.php',
   'UserQuery' => 'repairshop/UserQuery.php',
   'UserTableMap' => 'repairshop/map/UserTableMap.php',
+  'Vehicle' => 'repairshop/Vehicle.php',
+  'VehiclePeer' => 'repairshop/VehiclePeer.php',
+  'VehicleQuery' => 'repairshop/VehicleQuery.php',
+  'VehicleTableMap' => 'repairshop/map/VehicleTableMap.php',
 );

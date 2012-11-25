@@ -123,7 +123,7 @@ class Controller {
     if (preg_match('/^(jsonp?|yaml|session|cookie|cache)$/', $pathType)) {
       $this->_output_type = $pathType;
     // path imply the output type request
-    } else if(preg_match('/^\/(jsonp?|yaml|session|cookie|cache)\b/', $pathType, $match)) {
+    } else if(preg_match('/^\/(jsonp?|yaml|session|param|cookie|cache)\b/', $pathType, $match)) {
       $this->_output_type = $match[1];
       $pathType = str_replace("/{$match[1]}", '', $pathType);
     } else {
@@ -244,11 +244,14 @@ class Controller {
       header('Content-type: text/x-yaml');
       print yaml_emit($this->_tplVars);
     } else if ($this->_output_type == 'session') {
-      header('Content-type: text/x-yaml');
-      print yaml_emit($_SESSION);
+      header('Content-type: text/plain');
+      print json_encode($_SESSION, JSON_PRETTY_PRINT);
+    } else if ($this->_output_type == 'param') {
+      header('Content-type: text/plain');
+      print json_encode($this->_runParams, JSON_PRETTY_PRINT);
     } else if ($this->_output_type == 'cookie') {
-      header('Content-type: text/x-yaml');
-      print yaml_emit($_COOKIE);
+      header('Content-type: text/plain');
+      print json_encode($_COOKIE, JSON_PRETTY_PRINT);
     } else {
       $html = TW_PropelHelper::create()->render($tpl, array_merge(
         $this->_tplVars,
@@ -257,7 +260,7 @@ class Controller {
           'request' => $_REQUEST,
           'server' => $_SERVER,
         ),
-      $this->param('session')->throwNext()
+        $this->param('session')->throwNext()
       ));
 
       /* typically return a section of page */

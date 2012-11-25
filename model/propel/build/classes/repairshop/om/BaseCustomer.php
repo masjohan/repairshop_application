@@ -32,7 +32,6 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the reward_point field.
-	 * Note: this column has a database default value of: 0
 	 * @var        int
 	 */
 	protected $reward_point;
@@ -67,6 +66,11 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 	protected $aShop;
 
 	/**
+	 * @var        array Vehicle[] Collection to store aggregation of Vehicle objects.
+	 */
+	protected $collVehicles;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -79,27 +83,6 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 	 * @var        boolean
 	 */
 	protected $alreadyInValidation = false;
-
-	/**
-	 * Applies default values to this object.
-	 * This method should be called from the object's constructor (or
-	 * equivalent initialization method).
-	 * @see        __construct()
-	 */
-	public function applyDefaultValues()
-	{
-		$this->reward_point = 0;
-	}
-
-	/**
-	 * Initializes internal state of BaseCustomer object.
-	 * @see        applyDefaults()
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->applyDefaultValues();
-	}
 
 	/**
 	 * Get the [id] column value.
@@ -193,7 +176,7 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 			$v = (int) $v;
 		}
 
-		if ($this->reward_point !== $v || $this->isNew()) {
+		if ($this->reward_point !== $v) {
 			$this->reward_point = $v;
 			$this->modifiedColumns[] = CustomerPeer::REWARD_POINT;
 		}
@@ -295,10 +278,6 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
-			if ($this->reward_point !== 0) {
-				return false;
-			}
-
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -401,6 +380,8 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aShop = null;
+			$this->collVehicles = null;
+
 		} // if (deep)
 	}
 
@@ -546,6 +527,14 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collVehicles !== null) {
+				foreach ($this->collVehicles as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -628,6 +617,14 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collVehicles !== null) {
+					foreach ($this->collVehicles as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -719,6 +716,9 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 		if ($includeForeignObjects) {
 			if (null !== $this->aShop) {
 				$result['Shop'] = $this->aShop->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+			}
+			if (null !== $this->collVehicles) {
+				$result['Vehicles'] = $this->collVehicles->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
 		}
 		return $result;
@@ -883,6 +883,20 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 		$copyObj->setNotes($this->getNotes());
 		$copyObj->setFamilyId($this->getFamilyId());
 		$copyObj->setShopId($this->getShopId());
+
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getVehicles() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addVehicle($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
+
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -977,6 +991,121 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collVehicles collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addVehicles()
+	 */
+	public function clearVehicles()
+	{
+		$this->collVehicles = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collVehicles collection.
+	 *
+	 * By default this just sets the collVehicles collection to an empty array (like clearcollVehicles());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @param      boolean $overrideExisting If set to true, the method call initializes
+	 *                                        the collection even if it is not empty
+	 *
+	 * @return     void
+	 */
+	public function initVehicles($overrideExisting = true)
+	{
+		if (null !== $this->collVehicles && !$overrideExisting) {
+			return;
+		}
+		$this->collVehicles = new PropelObjectCollection();
+		$this->collVehicles->setModel('Vehicle');
+	}
+
+	/**
+	 * Gets an array of Vehicle objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this Customer is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Vehicle[] List of Vehicle objects
+	 * @throws     PropelException
+	 */
+	public function getVehicles($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collVehicles || null !== $criteria) {
+			if ($this->isNew() && null === $this->collVehicles) {
+				// return empty collection
+				$this->initVehicles();
+			} else {
+				$collVehicles = VehicleQuery::create(null, $criteria)
+					->filterByCustomer($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collVehicles;
+				}
+				$this->collVehicles = $collVehicles;
+			}
+		}
+		return $this->collVehicles;
+	}
+
+	/**
+	 * Returns the number of related Vehicle objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Vehicle objects.
+	 * @throws     PropelException
+	 */
+	public function countVehicles(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collVehicles || null !== $criteria) {
+			if ($this->isNew() && null === $this->collVehicles) {
+				return 0;
+			} else {
+				$query = VehicleQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCustomer($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collVehicles);
+		}
+	}
+
+	/**
+	 * Method called to associate a Vehicle object to this object
+	 * through the Vehicle foreign key attribute.
+	 *
+	 * @param      Vehicle $l Vehicle
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addVehicle(Vehicle $l)
+	{
+		if ($this->collVehicles === null) {
+			$this->initVehicles();
+		}
+		if (!$this->collVehicles->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collVehicles[]= $l;
+			$l->setCustomer($this);
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -990,7 +1119,6 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
-		$this->applyDefaultValues();
 		$this->resetModified();
 		$this->setNew(true);
 		$this->setDeleted(false);
@@ -1008,8 +1136,17 @@ abstract class BaseCustomer extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collVehicles) {
+				foreach ($this->collVehicles as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
+		if ($this->collVehicles instanceof PropelCollection) {
+			$this->collVehicles->clearIterator();
+		}
+		$this->collVehicles = null;
 		$this->aShop = null;
 	}
 

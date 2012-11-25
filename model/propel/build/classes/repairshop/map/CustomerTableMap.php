@@ -38,7 +38,7 @@ class CustomerTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-		$this->addColumn('REWARD_POINT', 'RewardPoint', 'INTEGER', true, null, 0);
+		$this->addColumn('REWARD_POINT', 'RewardPoint', 'INTEGER', false, null, null);
 		$this->addColumn('REFERER_ID', 'RefererId', 'INTEGER', false, 10, null);
 		$this->addColumn('NOTES', 'Notes', 'LONGVARCHAR', false, null, null);
 		$this->addColumn('FAMILY_ID', 'FamilyId', 'INTEGER', false, 10, null);
@@ -52,6 +52,7 @@ class CustomerTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('Shop', 'Shop', RelationMap::MANY_TO_ONE, array('shop_id' => 'id', ), null, null);
+    $this->addRelation('Vehicle', 'Vehicle', RelationMap::ONE_TO_MANY, array('id' => 'customer_id', ), null, null);
 	} // buildRelations()
 
 } // CustomerTableMap

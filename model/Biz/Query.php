@@ -3,6 +3,7 @@ class Biz_Query {
 
   const GUESS_ROLE_NAME = 'guest';
   const OWNER_ROLE_ID = 3;
+  const CUSTOMER_ROLE_ID = 7;
 
   // check if a user has access to given path
   public static $ACL_check_login = <<<SQL

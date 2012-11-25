@@ -57,6 +57,14 @@ class TW_PropelHelper {
       return preg_replace('/(\d{1,3})(?=(?:\d{3})+(?!\d))/', '$1,', $args[0]);
     } else if ($func == 'sign') {
       return Controller::getInstance()->acl->signUrl($args[0]);
+    } else if ($func == 'yearOpts') {
+      $dt = new DateTime();
+      $year = (int)$dt->format("Y");
+      $yearOpts = array();
+      for($i = $year + 1; $i > $year - $args[0]; $i--) {
+        $yearOpts[$i] = $i;
+      }
+      return $yearOpts;
     } else {
       // donot know what to do, untouch return
       return $args[0];

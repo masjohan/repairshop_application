@@ -138,11 +138,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $aRole;
 
 	/**
-	 * @var        array Shop[] Collection to store aggregation of Shop objects.
-	 */
-	protected $collShops;
-
-	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -854,8 +849,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aRole = null;
-			$this->collShops = null;
-
 		} // if (deep)
 	}
 
@@ -1001,14 +994,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collShops !== null) {
-				foreach ($this->collShops as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
 			$this->alreadyInSave = false;
 
 		}
@@ -1091,14 +1076,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
-
-				if ($this->collShops !== null) {
-					foreach ($this->collShops as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
 
 
 			$this->alreadyInValidation = false;
@@ -1238,9 +1215,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		if ($includeForeignObjects) {
 			if (null !== $this->aRole) {
 				$result['Role'] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
-			if (null !== $this->collShops) {
-				$result['Shops'] = $this->collShops->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
 		}
 		return $result;
@@ -1477,20 +1451,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		$copyObj->setRoleTypeId($this->getRoleTypeId());
 		$copyObj->setRecoveryToken($this->getRecoveryToken());
 		$copyObj->setRecoverySent($this->getRecoverySent());
-
-		if ($deepCopy) {
-			// important: temporarily setNew(false) because this affects the behavior of
-			// the getter/setter methods for fkey referrer objects.
-			$copyObj->setNew(false);
-
-			foreach ($this->getShops() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addShop($relObj->copy($deepCopy));
-				}
-			}
-
-		} // if ($deepCopy)
-
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1585,121 +1545,6 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Clears out the collShops collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addShops()
-	 */
-	public function clearShops()
-	{
-		$this->collShops = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collShops collection.
-	 *
-	 * By default this just sets the collShops collection to an empty array (like clearcollShops());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @param      boolean $overrideExisting If set to true, the method call initializes
-	 *                                        the collection even if it is not empty
-	 *
-	 * @return     void
-	 */
-	public function initShops($overrideExisting = true)
-	{
-		if (null !== $this->collShops && !$overrideExisting) {
-			return;
-		}
-		$this->collShops = new PropelObjectCollection();
-		$this->collShops->setModel('Shop');
-	}
-
-	/**
-	 * Gets an array of Shop objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this User is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array Shop[] List of Shop objects
-	 * @throws     PropelException
-	 */
-	public function getShops($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collShops || null !== $criteria) {
-			if ($this->isNew() && null === $this->collShops) {
-				// return empty collection
-				$this->initShops();
-			} else {
-				$collShops = ShopQuery::create(null, $criteria)
-					->filterByUser($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collShops;
-				}
-				$this->collShops = $collShops;
-			}
-		}
-		return $this->collShops;
-	}
-
-	/**
-	 * Returns the number of related Shop objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related Shop objects.
-	 * @throws     PropelException
-	 */
-	public function countShops(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collShops || null !== $criteria) {
-			if ($this->isNew() && null === $this->collShops) {
-				return 0;
-			} else {
-				$query = ShopQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByUser($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collShops);
-		}
-	}
-
-	/**
-	 * Method called to associate a Shop object to this object
-	 * through the Shop foreign key attribute.
-	 *
-	 * @param      Shop $l Shop
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addShop(Shop $l)
-	{
-		if ($this->collShops === null) {
-			$this->initShops();
-		}
-		if (!$this->collShops->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collShops[]= $l;
-			$l->setUser($this);
-		}
-	}
-
-	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1742,17 +1587,8 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collShops) {
-				foreach ($this->collShops as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 		} // if ($deep)
 
-		if ($this->collShops instanceof PropelCollection) {
-			$this->collShops->clearIterator();
-		}
-		$this->collShops = null;
 		$this->aRole = null;
 	}
 

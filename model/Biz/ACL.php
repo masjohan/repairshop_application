@@ -24,7 +24,7 @@ class Biz_ACL {
     if ($sess->is_login()) {
       $stmt = $dbh->prepare(Biz_Query::$ACL_check_login);
       $stmt->execute(array(
-        ':user' => $sess->data('user_id'),
+        ':user' => $sess->login_id(),
         ':path' => $action
       ));
     } else {
@@ -41,8 +41,8 @@ class Biz_ACL {
         $sess->data('redirect', $action);
         $sess->putNext(array(
           'messager'=>array(
-          'txt' => 'To proceed, please first login!',
-          'cls' => 'alert'
+            'txt' => 'To proceed, please first login!',
+            'cls' => 'alert'
           )
         ));
         header("Location: /", TRUE, 307);
@@ -62,6 +62,27 @@ class Biz_ACL {
     if ($sess->is_login()) {
       $C->param('login_user', UserQuery::create('u')->findPk($sess->data('user_id'))->toArray());
     }
+    $customer_id = $sess->data('customer_id');
+    if ($customer_id) {
+      $C->param('serving_customer', array_merge(
+        CustomerQuery::create('c')->findPk($customer_id)->toArray(),
+        UserQuery::create('c')
+          ->where('c.RoleId=?',  Biz_Query::CUSTOMER_ROLE_ID)
+          ->where('c.RoleTypeId=?', $customer_id)
+          ->findOne()
+          ->toArray()
+      ));
+    }
+    $vehicle_id = $sess->data('vehicle_id');
+    if ($vehicle_id) {
+      $vehicle = VehicleQuery::create()->findPk($vehicle_id);
+      if ($vehicle && $vehicle->getCustomerId() == $customer_id) {
+        $C->param('serving_vehicle', $vehicle->toArray());
+      } else {
+        $sess->data('vehicle_id', NULL, TRUE); //remove vehicle from sesssion, it is wrong
+      }
+    }
+
     return (boolean)$cnt;
   }
 
@@ -74,7 +95,7 @@ class Biz_ACL {
     if ($sess->is_login()) {
       $stmt = $dbh->prepare(Biz_Query::$ACL_rightActions_login);
       $stmt->execute(array(
-        ':user' => $sess->data('user_id')
+        ':user' => $sess->login_id()
       ));
     } else {
       $stmt = $dbh->prepare(Biz_Query::$ACL_rightActions_guest);
@@ -149,7 +170,7 @@ class Biz_ACL {
     $output[self::SIGN_URL] = sha1($signBase.session_id().$_SERVER['REMOTE_ADDR'].self::SIGN_URL_SALT);
 
     return $isMatch
-      ? ($output[self::SIGN_URL] == $_GET[self::SIGN_URL])
+      ? (isset($_GET[self::SIGN_URL]) && $output[self::SIGN_URL] == $_GET[self::SIGN_URL])
       : ($parts['path'].'?'.http_build_query($output));
   }
 

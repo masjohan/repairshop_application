@@ -221,21 +221,34 @@
 {% endmacro %}
 
 {% macro select_country(options) %}
-    {% set country_code %}{% include 'include/country-code.json' %}{% endset %}
-    {{ _self.select({
-        "name":options.name|default('country_code'),
-        "label": options.label|default('Country'),
-        "options": country_code|php('json_decode', true),
-        "first_blank": "select country"
-    }) }}
+  {% set country_code %}{% include 'macro/country-US-CA.json.twig' with {"country": options} %}{% endset %}
+  {{ _self.select({
+    "name":options.name|default('country_code'),
+    "label": options.label|default('Country'),
+    "options": country_code|php('json_decode', true),
+    "first_blank": "select country"
+  }) }}
+  {# push value to util/country-region.js #}
+  <script type="text/javascript">
+    RW.CountryRegion.input.country.push({
+      "name": "{{ options.name }}",
+      "value": "{{ options.value }}"
+    })
+  </script>
 {% endmacro %}
 
 {% macro select_region(options) %}
-    {% include 'include/country-region.js.twig' %}
     {{ _self.select({
-        "name":options.name|default('region_code'),
-        "label": options.label|default('State/Province'),
-        "options": [],
+        "name":options.name,
+        "label": options.label,
+        "options": {},
         "first_blank": "select region"
     }) }}
+    {# push value to util/country-region.js #}
+    <script type="text/javascript">
+      RW.CountryRegion.input.region.push({
+        "name": "{{ options.name }}",
+        "value": "{{ options.value }}"
+      })
+    </script>
 {% endmacro %}

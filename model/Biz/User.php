@@ -24,7 +24,6 @@ class Biz_User extends User{
 
   public function getTokenSent() {
     preg_match('/[A-Z].{5}/', strtoupper(md5(uniqid())), $match);
-trigger_error(print_r($match, true));
     list($token) = $match;
 
     return array(
@@ -32,6 +31,11 @@ trigger_error(print_r($match, true));
       'RecoverySent'  => new DateTime(),
     );
   }
+
+  public function getShop($RoleTypeId) {
+    return ShopQuery::create()->findPk($RoleTypeId);
+  }
+
 }
 
 ?>

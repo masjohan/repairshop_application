@@ -1,20 +1,17 @@
 // require jformval | juiautocomplete | juibutton
-RW.MyCarForm = function() {
-	$('#add-new').button();
-
-	$('form#mycar-form :input[name=Year]').length && this.initYearAutoComp();
+RW.ShopCustomer = function() {
   this.initForm();
 }
 
-RW.MyCarForm.prototype.initYearAutoComp = function() {
-  // last 30 year
+RW.ShopCustomer.prototype.initYearAutoComp = function() {
+  // deal with refer id
   var yearSrc = [];
   for(var i=0, n=new Date().getFullYear() + 1; i<30; i++) {
-  yearSrc.push((n-i).toString());
+    yearSrc.push((n-i).toString());
   }
   $('form#mycar-form input[name=year]')
-  .autocomplete({
-  'source': yearSrc
+    .autocomplete({
+    'source': yearSrc
   })
   .bind('blur', function(e){
   	if ($.inArray(this.value, yearSrc) == -1){
@@ -23,27 +20,35 @@ RW.MyCarForm.prototype.initYearAutoComp = function() {
   });
 }
 
-RW.MyCarForm.prototype.initForm = function() {
+RW.ShopCustomer.prototype.initForm = function() {
 	$('form#new-customer-form').formval({
-  rules: {
-  Title: {
-  required: true
-  },
-  FirstName: {
-  required: true
-  },
-  LastName: {
-  required: true
-  }
-  },
-
-  onSuccess: function() {
-  $(this).formval('ajaxUpload', function(){
-console.log(arguments);
-return;
-  });
-  }
+    rules: {
+      Email: {
+        required: false,
+        email: true,
+        remote: function(ele) {
+          return {
+            'type': "post",
+            'url': "/json/shop/customer/new",
+            'data': {"checkemail": ele.value},
+            'custom': function(oJson) { return  oJson }
+          };
+        }
+      },
+      Title: {
+        required: true
+      },
+      FirstName: {
+        required: true
+      },
+      LastName: {
+        required: true
+      },
+      Phone: {
+        required: true
+      }
+    }
   });
 }
 
-$(function(){new RW.MyCarForm()});
+$(function(){new RW.ShopCustomer()});

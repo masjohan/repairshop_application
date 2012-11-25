@@ -91,21 +91,10 @@ abstract class BaseShop extends BaseObject  implements Persistent
 	protected $email;
 
 	/**
-	 * The value for the owner_id field.
-	 * @var        int
-	 */
-	protected $owner_id;
-
-	/**
 	 * The value for the notes field.
 	 * @var        string
 	 */
 	protected $notes;
-
-	/**
-	 * @var        User
-	 */
-	protected $aUser;
 
 	/**
 	 * @var        array Customer[] Collection to store aggregation of Customer objects.
@@ -234,16 +223,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 	public function getEmail()
 	{
 		return $this->email;
-	}
-
-	/**
-	 * Get the [owner_id] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getOwnerId()
-	{
-		return $this->owner_id;
 	}
 
 	/**
@@ -477,30 +456,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 	} // setEmail()
 
 	/**
-	 * Set the value of [owner_id] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     Shop The current object (for fluent API support)
-	 */
-	public function setOwnerId($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->owner_id !== $v) {
-			$this->owner_id = $v;
-			$this->modifiedColumns[] = ShopPeer::OWNER_ID;
-		}
-
-		if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-			$this->aUser = null;
-		}
-
-		return $this;
-	} // setOwnerId()
-
-	/**
 	 * Set the value of [notes] column.
 	 * 
 	 * @param      string $v new value
@@ -563,8 +518,7 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			$this->phone = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
 			$this->fax = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->email = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-			$this->owner_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
-			$this->notes = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+			$this->notes = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -573,7 +527,7 @@ abstract class BaseShop extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 13; // 13 = ShopPeer::NUM_HYDRATE_COLUMNS.
+			return $startcol + 12; // 12 = ShopPeer::NUM_HYDRATE_COLUMNS.
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Shop object", $e);
@@ -596,9 +550,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aUser !== null && $this->owner_id !== $this->aUser->getId()) {
-			$this->aUser = null;
-		}
 	} // ensureConsistency
 
 	/**
@@ -638,7 +589,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aUser = null;
 			$this->collCustomers = null;
 
 		} // if (deep)
@@ -751,18 +701,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
-			// We call the save method on the following object(s) if they
-			// were passed to this object by their coresponding set
-			// method.  This object relates to these object(s) by a
-			// foreign key reference.
-
-			if ($this->aUser !== null) {
-				if ($this->aUser->isModified() || $this->aUser->isNew()) {
-					$affectedRows += $this->aUser->save($con);
-				}
-				$this->setUser($this->aUser);
-			}
-
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = ShopPeer::ID;
 			}
@@ -776,11 +714,11 @@ abstract class BaseShop extends BaseObject  implements Persistent
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
-					$affectedRows += 1;
+					$affectedRows = 1;
 					$this->setId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows += ShopPeer::doUpdate($this, $con);
+					$affectedRows = ShopPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -858,18 +796,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			$retval = null;
 
 			$failureMap = array();
-
-
-			// We call the validate method on the following object(s) if they
-			// were passed to this object by their coresponding set
-			// method.  This object relates to these object(s) by a
-			// foreign key reference.
-
-			if ($this->aUser !== null) {
-				if (!$this->aUser->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
-				}
-			}
 
 
 			if (($retval = ShopPeer::doValidate($this, $columns)) !== true) {
@@ -952,9 +878,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 				return $this->getEmail();
 				break;
 			case 11:
-				return $this->getOwnerId();
-				break;
-			case 12:
 				return $this->getNotes();
 				break;
 			default:
@@ -997,13 +920,9 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			$keys[8] => $this->getPhone(),
 			$keys[9] => $this->getFax(),
 			$keys[10] => $this->getEmail(),
-			$keys[11] => $this->getOwnerId(),
-			$keys[12] => $this->getNotes(),
+			$keys[11] => $this->getNotes(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aUser) {
-				$result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
 			if (null !== $this->collCustomers) {
 				$result['Customers'] = $this->collCustomers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
@@ -1072,9 +991,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 				$this->setEmail($value);
 				break;
 			case 11:
-				$this->setOwnerId($value);
-				break;
-			case 12:
 				$this->setNotes($value);
 				break;
 		} // switch()
@@ -1112,8 +1028,7 @@ abstract class BaseShop extends BaseObject  implements Persistent
 		if (array_key_exists($keys[8], $arr)) $this->setPhone($arr[$keys[8]]);
 		if (array_key_exists($keys[9], $arr)) $this->setFax($arr[$keys[9]]);
 		if (array_key_exists($keys[10], $arr)) $this->setEmail($arr[$keys[10]]);
-		if (array_key_exists($keys[11], $arr)) $this->setOwnerId($arr[$keys[11]]);
-		if (array_key_exists($keys[12], $arr)) $this->setNotes($arr[$keys[12]]);
+		if (array_key_exists($keys[11], $arr)) $this->setNotes($arr[$keys[11]]);
 	}
 
 	/**
@@ -1136,7 +1051,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 		if ($this->isColumnModified(ShopPeer::PHONE)) $criteria->add(ShopPeer::PHONE, $this->phone);
 		if ($this->isColumnModified(ShopPeer::FAX)) $criteria->add(ShopPeer::FAX, $this->fax);
 		if ($this->isColumnModified(ShopPeer::EMAIL)) $criteria->add(ShopPeer::EMAIL, $this->email);
-		if ($this->isColumnModified(ShopPeer::OWNER_ID)) $criteria->add(ShopPeer::OWNER_ID, $this->owner_id);
 		if ($this->isColumnModified(ShopPeer::NOTES)) $criteria->add(ShopPeer::NOTES, $this->notes);
 
 		return $criteria;
@@ -1210,7 +1124,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 		$copyObj->setPhone($this->getPhone());
 		$copyObj->setFax($this->getFax());
 		$copyObj->setEmail($this->getEmail());
-		$copyObj->setOwnerId($this->getOwnerId());
 		$copyObj->setNotes($this->getNotes());
 
 		if ($deepCopy) {
@@ -1268,55 +1181,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			self::$peer = new ShopPeer();
 		}
 		return self::$peer;
-	}
-
-	/**
-	 * Declares an association between this object and a User object.
-	 *
-	 * @param      User $v
-	 * @return     Shop The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setUser(User $v = null)
-	{
-		if ($v === null) {
-			$this->setOwnerId(NULL);
-		} else {
-			$this->setOwnerId($v->getId());
-		}
-
-		$this->aUser = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the User object, it will not be re-added.
-		if ($v !== null) {
-			$v->addShop($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated User object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     User The associated User object.
-	 * @throws     PropelException
-	 */
-	public function getUser(PropelPDO $con = null)
-	{
-		if ($this->aUser === null && ($this->owner_id !== null)) {
-			$this->aUser = UserQuery::create()->findPk($this->owner_id, $con);
-			/* The following can be used additionally to
-				guarantee the related object contains a reference
-				to this object.  This level of coupling may, however, be
-				undesirable since it could result in an only partially populated collection
-				in the referenced object.
-				$this->aUser->addShops($this);
-			 */
-		}
-		return $this->aUser;
 	}
 
 	/**
@@ -1450,7 +1314,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 		$this->phone = null;
 		$this->fax = null;
 		$this->email = null;
-		$this->owner_id = null;
 		$this->notes = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
@@ -1483,7 +1346,6 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			$this->collCustomers->clearIterator();
 		}
 		$this->collCustomers = null;
-		$this->aUser = null;
 	}
 
 	/**

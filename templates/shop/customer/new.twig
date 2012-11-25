@@ -1,94 +1,93 @@
 {% import 'macro/zf-form.twig' as form -%}
 {% import 'macro/widget.twig' as widget -%}
+{{ C.loadJS('util/country-region.js') -}}
 {% include "sections/header.twig" -%}
 	<div class="yui-b">
-        {% include "sections/side_nav.twig" %}
+    {% include "sections/side_nav.twig" %}
+  </div>
+  <div class="yui-main">
+    <div class="yui-b">
+        <h3>{{ C.param('action').Name }}</h3>
+        {{ form.begin({"method":"post", "action":"/shop/customer/new", "id":"new-customer-form"}) }}
+            {{ form.text({
+              "name" : "Email",
+              "label" : "Email",
+              "value" : customer.Email,
+              "help" : "If the customer provide a email, they can login in and do lots of stuff by themself. But, it has to be unique."
+            }) }}
+            {{ form.radio({
+              "name" : "Title",
+              "label" : "Salutation",
+              "options": {
+                "Mr" : "Mr.",
+                "Mrs" : "Mrs.",
+                "Ms" : "Ms."
+              },
+              "value": customer.OdometerUnit|default("km"),
+              "cols"  : 3
+            }) }}
+            {{ form.text({
+              "name" : "FirstName",
+              "label" : "First Name",
+              "value" : customer.FirstName
+            }) }}
+
+            {{ form.text({
+              "name" : "LastName",
+              "label" : "Last Name",
+              "value" : customer.LastName
+            }) }}
+            {{ form.text({
+              "name" : "Phone",
+              "label" : "Phone",
+              "value" : customer.Phone,
+              "help" : "Format: 123-456-7890"
+            }) }}
+        <h5 class="section">Extra information</h5>
+            {{ form.text({
+              "name" : "Cell",
+              "label" : "Cell",
+              "value" : customer.Cell,
+              "push_label" : 1
+            }) }}
+            {{ form.text({
+                "name" : "Address",
+                "label" : "Street Address",
+                "value" : customer.Address
+            }) }}
+            {{ form.select_country({
+                "name" : "Country",
+                "label" : "Country"
+            }) }}
+            {{ form.select_region({
+              "name" : "Province",
+              "label" : "Province / State"
+            }) }}
+            {{ form.text({
+              "name" : "Postal",
+              "label" : "Postal/Zip",
+              "value" : customer.Postal
+            }) }}
+            {{ form.text({
+              "name" : "RewardPoint",
+              "label" : "Reward point",
+              "value" : customer.RewardPoint
+            }) }}
+            {{ form.select({
+              "name" : "RefererId",
+              "label" : "Referred by",
+              "value" : customer.RefererId,
+              "help"  : "select customer"
+            }) }}
+            {{ form.textarea({
+                "name" : "Notes",
+                "label" : "Notes",
+                "value" : customer.Notes
+            }) }}
+            <dd>
+              {{ form.submit({"input_only":true, "value":"Add Customer","id":"add-new"}) }}
+            </dd>
+        {{ form.end() }}
     </div>
-    <div class="yui-main">
-        <div class="yui-b">
-            <h2>{{ C.param('action').Name }}</h2>
-            {{ form.begin({"method":"post", "action":"/json/customer/new", "id":"new-customer-form"}) }}
-                {{ form.radio({
-                	"name" : "Title",
-                	"label" : "Salutation",
-                	"options": {
-                			"Mr" : "Mr.",
-                			"Mrs" : "Mrs.",
-                			"Ms" : "Ms."
-						},
-                    "value": customer.OdometerUnit|default("km"),
-                    "cols"  : 3
-				}) }}
-				{{ form.text({
-                	"name" : "FirstName",
-                	"label" : "First Name",
-                    "value" : customer.FirstName
-				}) }}
-
-				{{ form.text({
-                	"name" : "LastName",
-                	"label" : "Last Name",
-                    "value" : customer.LastName
-				}) }}
-				{{ form.text({
-                	"name" : "Phone",
-                	"label" : "Phone",
-                    "value" : customer.Phone
-				}) }}
-				{{ form.text({
-                	"name" : "Cell",
-                	"label" : "Cell",
-                    "value" : customer.Cell
-				}) }}
-				{{ form.text({
-                	"name" : "Email",
-                	"label" : "Email",
-                    "value" : customer.Email,
-                    "help" : "say <b>\"2010\"</b> Ford Mustang 4.6L V8"
-				}) }}
-
-				{{ form.text({
-                	"name" : "Address",
-                	"label" : "Street Address",
-                    "value" : customer.Address,
-                    "help" : "say 2010 Ford Mustang <b>\"4.6\"</b>L V8"
-				}) }}
-
-                {{ form.select({
-                    "name" : "Country",
-                    "label" : "Country",
-                    "options": {"0" : "-- Choose --"},
-                    "help" : "say 2010 Ford <b>\"Mustang\"</b> 4.6L V8"
-                }) }}
-
-                {{ form.select({
-                	"name" : "Province",
-                	"label" : "Province / State",
-                	"options": {"0" : "-- Choose --"},
-                    "help" : "say 2010 <b>\"Ford\"</b> Mustang 4.6L V8"
-				}) }}
-
-				{{ form.text({
-                	"name" : "Postal",
-                	"label" : "Postal/Zip",
-                    "value" : customer.Postal
-				}) }}
-				{{ form.text({
-                	"name" : "Company",
-                	"label" : "Company",
-                    "value" : customer.Company
-				}) }}
-
-				{{ form.textarea({
-                	"name" : "Notes",
-                	"label" : "Notes",
-                    "value" : customer.Notes
-				}) }}
-
-				<dd>
-					{{ form.submit({"input_only":true, "value":"Add Customer","id":"add-new"}) }}
-				</dd>
-            {{ form.end() }}
-        </div>
-    </div>
+  </div>
 {% include "sections/footer.twig" %}

@@ -7,77 +7,30 @@
   <div class="yui-main">
       <div class="yui-b">
         <h2>{{ C.param('action').Name }}</h2>
-        {{ form.begin({"method":"post", "action":"/json/common/profile", "id":"profile-form"}) }}
-          {{ form.radio({
-              "name" : "Greeting",
-              "label" : "Greeting",
-              "options": {
-                  "Mr." : "Mr.",
-                  "Mrs." : "Mrs.",
-                  "Ms." : "Ms."
-              },
-              "value": login_user.Greeting,
-              "cols"  : 3
-          }) }}
-          {{ form.text({
-              "name" : "FirstName",
-              "label" : "First Name",
-              "value" : login_user.FirstName
-          }) }}
-          {{ form.text({
-              "name" : "LastName",
-              "label" : "Last Name",
-              "value" : login_user.LastName
-          }) }}
-          {{ form.text({
-              "name" : "Phone",
-              "label" : "Phone",
-              "value" : login_user.Phone
-          }) }}
-          {{ form.text({
-              "name" : "Cell",
-              "label" : "Cell",
-              "value" : login_user.Cell
+        <p>Your profile email is extremely important since:
+          <ul>
+            <li>Served as your login Id</li>
+            <li>Used for get back your password</li>
+            <li>Some important notice.</li>
+          </ul>
+        </p>
+        {{ form.begin({"method":"post", "action":"/json/common/profile/email", "id":"page-form"}) }}
+          {{ form.info({
+              "label" : "Current email",
+              "value" : login_user.Email
           }) }}
           {{ form.text({
               "name" : "Email",
-              "label" : "Email",
-              "value" : login_user.Email,
+              "label" : "New email",
               "help" : "As your login Id, we will check if it is unique"
           }) }}
           {{ form.text({
-              "name" : "Address",
-              "label" : "Street Address",
-              "value" : login_user.Address,
-              "help" : "say 2010 Ford Mustang <b>\"4.6\"</b>L V8"
-          }) }}
-          {{ form.text({
-              "name" : "City",
-              "label" : "City",
-              "value" : login_user.Address
-          }) }}
-
-          {{ form.select({
-              "name" : "Country",
-              "label" : "Country",
-              "options": {"0" : "-- Choose --"},
-              "help" : "Select country before province"
-          }) }}
-
-          {{ form.select({
-            "name" : "Province",
-            "label" : "Province / State",
-            "options": {"0" : "-- Choose --"},
-            "help" : "Select country before province"
-          }) }}
-
-          {{ form.text({
-            "name" : "Postal",
-            "label" : "Postal/Zip",
-            "value" : login_user.Postal
+              "name" : "Email2",
+              "label" : "Re-type new email",
+              "help" : "Just because it is important"
           }) }}
           <dd>
-            {{ form.submit({"input_only":true, "value":"Update my profile","id":"add-new"}) }}
+            {{ form.submit({"input_only":true, "value":"Update my email"}) }}
           </dd>
         {{ form.end() }}
       </div>

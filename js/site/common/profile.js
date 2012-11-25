@@ -19,7 +19,7 @@ RW.CommonProfile.prototype.initForm = function() {
 
     onSuccess: function() {
       $(this).formval('ajaxUpload', function(){
-        return;
+        RW.notifyOK("Your profile informatin has been updated successfully");
       });
     }
   });
