@@ -1,53 +1,61 @@
-ul.columnar {
+.columnar {
   list-style-type: none;
 }
 
-ul.columnar li {
+.columnar dl,
+.columnar li {
   float: left;
   margin: 0;
   padding: 0;
   display: block;
 }
-
-.columnar li.new {
-  clear: left;
-}
-
-ul.cols1 li {
+.cols1 li {
   float: none;
   width: 100%;
 }
 
-ul.cols2 li {
+.cols2 dl,
+.cols2 li {
   width: 48%;
   margin-left:4%;
 }
 
-ul.cols3 li {
+.cols3 dl,
+.cols3 li {
   width: 32%;
   margin-left:2%;
 }
+.cols3 dl.span2 {
+  width: 66%;
+}
+.cols3 dl.span3 {
+  width: 100%;
+}
 
-ul.cols4 li {
+.cols4 li {
   width: 24%;
   margin-left:1.3%;
 }
 
-ul.cols5 li {
+.cols5 li {
   width: 19%;
   margin-left:1.2%;
 }
 
-ul.cols6 li {
+.cols6 li {
   width: 16%;
   margin-left:0.8%;
 }
 
-ul.columnar li.end,
-ul.columnar li.new {
+.columnar .new {
+  clear: left;
+}
+
+.columnar .end,
+.columnar .new {
   margin-left: 0;
 }
 
-ul.columnar li.end {
+.columnar .end {
   float: right;
 }

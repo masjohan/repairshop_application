@@ -1,9 +1,10 @@
 {{ C.loadCSS('common.css') -}}
+{{ C.loadCSS('columnar.css') -}}
 {{ C.loadCSS('sections/header.css') -}}
 {{ C.loadJS('sections/menu.js') -}}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="zh-cn" xml:lang="zh-cn">
-<head>
+  <head>
     <title>Repair Shop Management</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />-->
@@ -12,62 +13,64 @@
     <script src="//code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
     <!--<script src="//code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>-->
     <!--LOADER_PLACE_HOLDER-->
-</head>
-<body>
-<div id="body-container">
-<div class="yui-d3">
-    <div class="headerbar" id="hd">
-        <div class="inner">
+  </head>
+  <body>
+    <div id="body-container">
+      <div class="yui-d3">
+        <div class="headerbar" id="hd">
+          <div class="inner">
             <div id="site-description">
-                <div id="shop-title">
+              <div id="shop-title">
                     {% if not no_login %}{% include "sections/login-form.twig" %}{% endif %}
                 </div>
                 <a id="logo" title="Repair Shop" href="/">
-                    <img src="/static/images/logo.png" alt="Repair Shop Logo" title="Repair Shop Logo">
+                  <img src="/static/images/logo.png" alt="Repair Shop Logo" title="Repair Shop Logo">
                 </a>
                 <h1>Repair Shop Management</h1>
                 <br />
                 <h3>Repair, Parts, Technician, Supplier, Customer, Report, Bookkeeping, Payroll</h3>
-            </div>
-            <div id="nav">
+              </div>
+              <div id="nav">
                 <ul>
-                    <li><a href="/report" class="menu">Part</a>
-                        <ul class="hide sub-menu">
-                            <li><a href="#">Add</a></li>
-                            <li><a href="#">Return</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/report" class="menu">Payment</a>
-                        <ul class="hide sub-menu">
-                            <li><a href="#">Submenu 1</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/track" class="menu">Daily OP</a>
-                        <ul class="hide sub-menu">
-                            <li><a href="#">Payroll</a></li>
-                            <li><a href="#">Invoice In</a></li>
-                            <li><a href="#">Invoice out</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="/repair" class="menu">Repair</a>
-                        <ul class="hide sub-menu">
-                            <li><a href="#">New</a></li>
-                            <li><a href="#">Search</a></li>
-                            <li><a href="#">Estimate</a></li>
-                        </ul>
-                    </li>
-                    <li class="quick">Quick</li>
-                    <li class="vip-info">
+                  <li><a href="/shop/calendar" class="menu">Calendar</a>
+                  </li>
+                  <li><a href="/report" class="menu">Part</a>
+                    <ul class="hide sub-menu">
+                      <li><a href="#">Add</a></li>
+                      <li><a href="#">Return</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="/report" class="menu">Payment</a>
+                    <ul class="hide sub-menu">
+                      <li><a href="#">Submenu 1</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="/track" class="menu">Daily OP</a>
+                    <ul class="hide sub-menu">
+                      <li><a href="#">Payroll</a></li>
+                      <li><a href="#">Invoice In</a></li>
+                      <li><a href="#">Invoice out</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="/repair" class="menu">Repair</a>
+                    <ul class="hide sub-menu">
+                      <li><a href="#">New</a></li>
+                      <li><a href="#">Search</a></li>
+                      <li><a href="#">Estimate</a></li>
+                    </ul>
+                  </li>
+                  <li class="quick">Quick</li>
+                  <li class="vip-info">
                       {% set cus = C.param('serving_customer') %}
                       {{ cus ? ('Customer: '~cus.FirstName~' '~cus.LastName~', '~cus.Phone) : '' -}}
                       {%- set veh = C.param('serving_vehicle') -%}
                       {{- veh ? (', '~veh.Year~' '~veh.Make~' '~veh.Model) : '' }}
                     </li>
-                </ul>
-                <div class="cleaner"></div>
+                  </ul>
+                  <div class="cleaner"></div>
+                </div>
+              </div>
             </div>
-        </div>
-    </div>
-    <div id="bd" class="{{ bd_cls|default("yui-t2") }}">
-    	<div id="bd-container">
+            <div id="bd" class="{{ bd_cls|default("yui-t2") }}">
+              <div id="bd-container">
 

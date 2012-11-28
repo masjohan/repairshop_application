@@ -20,24 +20,24 @@ Popover = function (jqEx, options) {
 			"offset" 	: '0 0',
 			"collision"	: 'fit fit'
 		},
-     	'trigger' : {
-     		"click" 	 : "",
-     		"hover"		 : "",
-     		"hoverdelay" : ""
-     	},
+    'trigger' : {
+      "click" 	 : "",
+      "hover"		 : "",
+      "hoverdelay" : ""
+    },
     'events' : {
       "show": false,        // function(evt){ "this" }
       "hide": false
     },
     'hideOnClick': ''         // selector
 	}, options);
-	
+
 	this._popover(jqEx);
 
   this.args.trigger.click && this._clickShow(this.args.trigger.click);
 	this.args.trigger.hover && this._hoverShow(this.args.trigger.hover, {"show_over": true});
 	this.args.trigger.show && this._hoverShow(this.args.trigger.hoverdelay, {"show_over": true, "show_slow": true});
-	
+
 	this.args.events.show && this._bindEvent('show', this.args.events.show);
 	this.args.events.hide && this._bindEvent('hide', this.args.events.hide);
 
@@ -92,7 +92,7 @@ Popover.prototype._container = function () {
      	},
      	fnMouseEnterHdl =  function (){ // reposition only onMouseEnter container
      		oInst && oInst._slowUIAct(!oInst.args.slowActOverPopover,false);
-     	},     	
+     	},
 
     // replace anthingy in container with "intc", show it and bind related event
     fnShow = function(intc,evt){
@@ -207,13 +207,24 @@ Popover.prototype._popover = function (jqEx) {
    return this._jPopover;
 }
 
+Popover.prototype.getTrigger = function() {
+  var lastShowEvt = this._container({'get': 'event'});
+  return lastShowEvt ? lastShowEvt.target : null;
+}
+
 // jSel: the trigger to show;  bStayOpen: default the tigger toggle the popover
 Popover.prototype._clickShow = function (jSel) {
-   $(jSel)
-   .addClass('popover-trigger') // for position
-   .bind("click", function (evt){
-     this.isOpen() ? this.hide(evt) : this.show(evt);
-   }.bind(this).release(false));
+  $(jSel).addClass('popover-trigger');
+
+  $(document).on("click", jSel, function (evt){
+    if (this.isOpen()) {
+      if(this.getTrigger() === evt.target) {
+        this.hide(evt);
+        return;
+      }
+    }
+    this.show(evt);
+  }.bind(this).release(false));
 }
 
 //  options {
@@ -296,16 +307,18 @@ Popover.prototype.hide = function(evt) {
 
 // only ["viewport",element] without evt
 Popover.prototype._position = function (evt) {
-	var of;
-	if (this.args.position.of === 'trigger') {
+	var of, posi = this.args.position;
+  if ( typeof posi.of === 'function' ){
+    of = posi.of(evt);
+  } else if (posi.of === 'trigger') {
 		of = {"of": $(evt.target).parents('.popover-trigger').andSelf()};
-	} else if (this.args.position.of === 'mouse') {
+	} else if (posi.of === 'mouse') {
 		of = {"of": evt};
 	} else {
 		of = {};
 	}
 
-	this._container().position($.extend({}, this.args.position, of));
+	this._container().position($.extend({}, posi, of));
 	return this;
 }
 
@@ -326,14 +339,14 @@ $.extend($.ui, { popover: Popover });
 $.fn.popover = function(options){
 	/* do nothing if empty */
 	if ( !this.length ) return this;
-	
+
 	var args = Array.prototype.slice.call(arguments, 1),
 		fnCallInst = function(el){
 	     	var inst = $.data(el, 'popover-inst');
 	     	return inst && inst[options] && inst[options].apply(inst, args);
 	   	};
 
-   	return (typeof options == 'string' && $.inArray(options, ['isOpen']) != -1)  //(options == 'isDisabled' || options == 'getDate' || options == 'widget')
+   	return (typeof options == 'string' && $.inArray(options, ['isOpen', 'getTrigger']) != -1)  //(options == 'isDisabled' || options == 'getDate' || options == 'widget')
 		? fnCallInst(this[0])
 		: this.each(function(){
       return typeof options == 'object'

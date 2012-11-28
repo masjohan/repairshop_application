@@ -14,9 +14,6 @@
     }
   }
 
-  $C->param('session')->putNext(array('messager'=>array(
-    'txt' => 'The username or password you entered is incorrect.',
-    'cls' => 'error'
-  )));
+  $C->param('session')->messenger('The username or password you entered is incorrect.', 'error');
 
 	$C->dispatch("/");

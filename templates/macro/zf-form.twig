@@ -1,41 +1,76 @@
+{# need php to maintain status between the call, that is why 'zf-form'|php(counter) #}
 {% macro begin(options) %}
     {% set options = options|default({}) %}
     <form method="{{ options.method|default('post') }}"
         action="{{ options.action|default('#') }}"
         {%- if options.upload %} enctype="multipart/form-data"{% endif %}
         {%- if options.id %} id="{{ options.id }}"{% endif %}
-        {%- if options.class %} class="{{ options.class }}"{% endif %}>
-        <dl class="def-input-list">
+        class="def-form{%-
+           if options.class %} {{ options.class }}{% endif -%}{%
+           if options.columnar %} columnar cols{{options.columnar-}}
+              {{- 'zf-form'|php('counter', options.columnar) -}}
+              {{- 'zf-form-col'|php('static', options.columnar) -}}
+            {%- endif
+            %}">
 {% endmacro %}
 
 {% macro end() %}
-        </dl>
     </form>
 {% endmacro %}
 
 {% macro _begin (options) %}
     {% if not options.input_only %}
+      {% set c = 'zf-form'|php('counter') %}
+      {% set c_num = 'zf-form-col'|php('static') %}
+      {# start of dl container #}
+      <dl class="def-input
+        {%- if c>0 -%}
+          {%- if c % c_num == 0 %} new{% endif -%}
+          {%- if options.colspan -%}
+            {{- ' span'~options.colspan -}}
+            {%- for i in 1..options.colspan %}{{'zf-form'|php('counter', '++')}}{% endfor -%}
+          {%- else -%}
+            {{-'zf-form'|php('counter', '++')-}}
+          {%- endif -%}
+          {% set c = 'zf-form'|php('counter') %}
+          {%- if c % c_num == 0 %} end{% endif -%}
+        {%- endif %}">
+
+        {# label #}
         {% if options.label %}
-        {% if options.push_label %}<div class="push-lable"></div>{% endif %}
-        <dt id="{{options.name}}-label"><label {{ _self._attr(options, def, 'class') }}>{{ options.label|raw }}</label></dt>
+          {% if options.push_label %}<div class="push-lable"></div>{% endif %}
+          <dt id="{{options.name}}-label"><label>{{options.label}}{% if options.required %}<span class="mark-required">*</span>{% endif %}</label></dt>
         {% endif %}
+
+        {# start of dd #}
         <dd id="{{options.name}}-element" class="{{options.error?'has-error':''}}">
     {% endif %}
 {% endmacro %}
 {% macro _end (options) %}
-    {% if not options.input_only%}
-        {% if options.help %}
-            <span class="help-bk">
-                <span class="pointer"></span>
-                <span class="help">{{ options.help|raw }}</span>
-            </span>
-        {% endif %}
-            <span class="error-bk">
-                <span class="pointer"></span>
-                <span class="error">{{ options.error }}</span>
-            </span>
+    {%- if not options.input_only -%}
+      {%- set c = 'zf-form'|php('counter') -%}
+      {%- set c_num = 'zf-form-col'|php('static') -%}
+          {%- if options.help -%}
+          <span class="help-bk">
+            <span class="pointer"></span>
+            <span class="help">{{ options.help|raw }}</span>
+          </span>
+          {%- endif -%}
+          <span class="error-bk">
+            <span class="pointer"></span>
+            <span class="error">{{ options.error }}</span>
+          </span>
         </dd>
+      </dl>
+      {%- if c>0 and c % c_num == 0 -%}<div class="cleaner"></div>{% endif %}
     {% endif %}
+{% endmacro %}
+
+{# hold a place  for columnar case #}
+{% macro holder(options) %}
+    {{- _self._begin(options) }}
+    {{- ' ' -}}
+    {{- _self._end(options) }}
 {% endmacro %}
 
 {% macro text(options) %}
@@ -83,9 +118,9 @@
 {% macro select(options) %}
     {{- _self._begin(options) }}
     <select name="{{ options.name }}" class="select {{options.class}}"
-       {% if options.id %}id="{{options.id}}"{% endif -%}>
-       {% if options.disabled %}disabled="disabled"{% endif -%}>
-       {% if options.first_blank %}<option value="">-- {{options.first_blank}} --</option>{% endif -%}
+       {%- if options.id %} id="{{options.id}}"{% endif -%}
+       {%- if options.disabled %}disabled="disabled"{% endif -%}>
+       {%- if options.first_blank %}<option value="">-- {{options.first_blank}} --</option>{% endif -%}
        {% for val,txt in options.options %}
             <option value="{{ val }}"
                 {% if val==options.value %}selected="selected"{% endif %}>

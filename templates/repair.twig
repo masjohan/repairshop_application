@@ -1,11 +1,11 @@
 {% include "sections/header.twig" %}
-	<div class="yui-b">
+<div class="yui-b">
         {% include "sections/side_nav.twig"  with {'module': 'repair'} %}
-    </div>
-    <div class="yui-main">
-        <div class="yui-b">
-            <h2>{{ C.param('action').Name }}</h2>
-            <pre>
+  </div>
+  <div class="yui-main">
+    <div class="yui-b">
+      <h2>{{ C.param('action').Name }}</h2>
+      <pre>
             appointment/dropin,
             promised time job assign,
             future work, no show,
@@ -15,7 +15,7 @@
             authorization, done,
             work on hold, done,
             archive invoice
-            </pre>
-        </div>
+      </pre>
     </div>
+  </div>
 {% include "sections/footer.twig" %}

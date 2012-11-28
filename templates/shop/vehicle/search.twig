@@ -5,6 +5,26 @@
     <div class="yui-main">
         <div class="yui-b">
             <h2>{{ C.param('action').Name }}</h2>
+            <table>
+	            <tr>
+                <th>Year/Make/Model/Submodel</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Select</th>
+	            </tr>
+	            {% for v in allV %}
+	            <tr valign="top">
+                <td>{{ v.YMMS }}</td>
+                <td>{{ v.Customer }}</td>
+                <td>{{ v.Phone }}</td>
+                <td>{{ v.Email }}</td>
+                <td><a href="{{ ('/shop/vehicle/search?select_id=' ~ v.Id) | php('sign') }}">Select</a></td>
+	            {% else %}
+	              <td colspan="7">Empty.</td>
+	            {% endfor %}
+	            </tr>
+            </table>
         </div>
     </div>
 {% include "sections/footer.twig" %}

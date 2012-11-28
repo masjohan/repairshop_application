@@ -296,10 +296,11 @@
 	}
 
 	FormVal.prototype.focus = function (){
+
 	  // pay more attention for error field
 	  var jErr = this._jForm.find('.has-error :input'),
 	    jEl = jErr.length ? jErr.eq(0) : this._jForm.find(':input').not(':hidden').eq(0),
-	    top = jEl.offset().top,
+	    top = jEl.offset() ? jEl.offset().top : 1,  // when form not on screen
 	    scTop = $(document).scrollTop();
 
 	  // if element out of viewport, animate

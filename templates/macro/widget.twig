@@ -10,33 +10,45 @@
     {# merge given styles #}
     {% set styles = options.style|default([])|php('array_merge', {"margin":0, "display":"inline-block", "overflow": "hidden"}) %}
 
-    <ul id="{{ options.id }}"{{ options.class ? ' class="'~options.class~'"' : '' }}
-        style="{% for nm, val in styles %}{{ nm }}:{{ val }};{% endfor %}">
+<ul id="{{ options.id }}"{{ options.class ? ' class="'~options.class~'"' : '' }}
+    style="{% for nm, val in styles %}{{ nm }}:{{ val }};{% endfor %}">
     {% for r in rows %}
-        <li>{{ r|php('trim')|raw }}</li>
+  <li>{{ r|php('trim')|raw }}</li>
     {% endfor %}
-    </ul>
+</ul>
 
-    <script type="text/javascript">
-        $(function(){ $('#{{ options.id }}').rolltext() });
-    </script>
+<script type="text/javascript">
+    $(function(){ $('#{{ options.id }}').rolltext() });
+  </script>
 {% endmacro %}
 
 {% macro success_msg(link, text) %}
-    <div class="successbox">
-        <p>
+  <div class="successbox">
+    <p>
             {{ text|default("系统更新完成.") }}
-            <br /><br />
-            <a href="{{ link }}">&laquo; 正在返回前一页 ... </a>
-        </p>
-        <script type="text/javascript">
-            $(function(){
-                (function(){location.assign("{{ link }}")}).later(3000);
-            });
+        <br /><br />
+        <a href="{{ link }}">&laquo; 正在返回前一页 ... </a>
+      </p>
+      <script type="text/javascript">
+          $(function(){
+              (function(){location.assign("{{ link }}")}).later(3000);
+          });
         </script>
-    </div>
+      </div>
 {% endmacro %}
 
 {% macro menu_link(url, text, server) %}
-    <a href="{{ url }}"{% if server.SCRIPT_NAME == url %} class="current"{% endif %}>{{ text }}</a>
+  <a href="{{ url }}"{% if server.SCRIPT_NAME == url %} class="current"{% endif %}>{{ text }}</a>
+{% endmacro %}
+
+{% macro token_link(user_ranas, server_SCRIPT_NAME) %}
+  {% if user_ranas.RecoveryToken %}
+    <a href="#" onclick="prompt('Send the link to user. ', location.origin+'/?{{user_ranas.RecoveryToken}}')">
+      {{-user_ranas.RecoveryToken-}}
+    </a>
+  {% else %}
+    <a href="{{ (server_SCRIPT_NAME ~ '?token=' ~ user_ranas.Id) | php('sign') }}" class="float-right">
+      {{-user_ranas.IsActive ? "re-send" : "send" -}}
+    </a>
+  {% endif %}
 {% endmacro %}

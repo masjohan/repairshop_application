@@ -39,18 +39,10 @@ class Biz_ACL {
     if ( !$cnt ) {
       if (!$sess->is_login()) {
         $sess->data('redirect', $action);
-        $sess->putNext(array(
-          'messager'=>array(
-            'txt' => 'To proceed, please first login!',
-            'cls' => 'alert'
-          )
-        ));
+        $sess->messenger('To proceed, please first login!', 'alert');
         header("Location: /", TRUE, 307);
       } else {
-        $sess->putNext(array('messager'=>array(
-          'txt' => 'It seems you are not supposed to view that page',
-          'cls' => 'error'
-        )));
+        $sess->messenger('It seems you are not supposed to view that page', 'error');
         $to = $_SERVER["HTTP_REFERER"] ? $_SERVER["HTTP_REFERER"] : '/';
         // HTTP/1.1 204 No Content
         header("Location: $to", TRUE, 307);

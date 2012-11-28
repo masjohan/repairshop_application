@@ -1,0 +1,68 @@
+table.phpc-calendar {
+  width: 100%;
+  display: table;
+  border-spacing: 2px;
+  border-color: gray;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+table.phpc-calendar th {
+  width: 14.3%;
+}
+
+table.phpc-calendar td {
+  padding: 0;
+  vertical-align: top;
+}
+
+table.phpc-calendar caption {
+  font-size: 175%;
+  color: black;
+  background-color: white;
+  padding: 2px;
+  font-weight: bolder;
+  margin: 1px;
+}
+
+table.phpc-calendar .phpc-date {
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #aaa;
+  font-size: larger;
+  background-color: #DDD;
+}
+
+ul.day-calendar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.day-calendar li {
+  list-style: none;
+  padding: 0 0.3em;
+  border-bottom: 1px solid #aaa;
+}
+
+.phpc-calendar .fake-link {
+  color: #111;
+  font-size: smaller;
+}
+
+.phpc-calendar .fake-link:hover {
+  color: #000;
+  background-color: silver;
+}
+
+.calendar-pop .def-form.columnar .cleaner {
+  margin: 10px 0;
+}
+
+.calendar-pop h3 {
+  margin-top: 0;
+}
+
+#calendar-add-form .button {
+  margin-right: 2em;
+}

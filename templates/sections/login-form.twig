@@ -1,23 +1,23 @@
 {{ C.loadCSS('sections/login.css') -}}
 {% if C.hasLogin() %}
-    <div id="login-shop">
-        <b>{{ C.param('login_user').Email|php('truncate', 15)}}</b>
+<div id="login-shop">
+  <b>{{ C.param('login_user').Email|php('truncate', 15)}}</b>
         {% if C.param('session').isRunAs() %}| <a href="/common/exit-runas">Exit Runas</a> {% endif %}
-        | <a href="/common/logout">Logout</a>
-    </div>
+  | <a href="/common/logout">Logout</a>
+</div>
 {% else %}
-    <form id="login-fm" method="post" action="/common/login"{% if login_error %} class="error"{% endif %}>
-        <label for="username" title="">Username:</label>
-        <input type="text" name="username" id="username" value="{{ request.username }}" placeholder="Or email" />
-        <div class="cleaner"></div>
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" />
-        <a class="forget" href="/common/forget{% if request.username %}?email={{ request.username }}{% endif %}" title="retrieve password">forget</a>
-        <br />
-        <input class="submit" type="submit" value="Log-in" name="login" />
-<!--        <hr />
-        Or 3rd party account<br>
-        <a class="openid-link google" href="#"></a>
--->
-    </form>
+<form id="login-fm" method="post" action="/common/login"{% if login_error %} class="error"{% endif %}>
+  <label for="username" title="">Username:</label>
+  <input type="text" name="username" id="username" value="{{ request.username }}" placeholder="Or email" />
+  <div class="cleaner"></div>
+  <label for="password">Password:</label>
+  <input type="password" name="password" id="password" />
+  <a class="forget" href="/common/forget{% if request.username %}?email={{ request.username }}{% endif %}" title="retrieve password">forget</a>
+  <br />
+  <input class="submit" type="submit" value="Log-in" name="login" />
+  <!--        <hr />
+          Or 3rd party account<br>
+          <a class="openid-link google" href="#"></a>
+  -->
+</form>
 {% endif %}

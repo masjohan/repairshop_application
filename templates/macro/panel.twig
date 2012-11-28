@@ -3,20 +3,20 @@
 {% macro begin(label, class, id) %}
     {% set id = id ? ('id="' ~ id ~ '"') : "" %}
     {% set label = label ? ('<div class="panel-head"><h3>' ~ label ~ '</h3></div>') : "" %}
-    <div class="panel {{ class|default("light-grey") }}" {{ id|raw }}>
+<div class="panel {{ class|default("light-grey") }}" {{ id|raw }}>
         {{- _self.expander(class) -}}
         {{ label|raw }}
-        <div class="panel-body">
+    <div class="panel-body">
 {% endmacro %}
 
 {% macro section(label) %}
-    </div>
+      </div>
     {% if label %}
-        <div class="panel-section"><h3>{{ label|default('Info') }}</h3></div>
+      <div class="panel-section"><h3>{{ label|default('Info') }}</h3></div>
     {% else %}
-        <div class="panel-section-only"></div>
+      <div class="panel-section-only"></div>
     {% endif %}
-    <div class="panel-body">
+      <div class="panel-body">
 {% endmacro %}
 
 {% macro end(label, class) %}
@@ -24,7 +24,7 @@
     {% set label = label ? ('<div class="panel-foot ' ~ class ~ '">' ~ (label|raw) ~ '</div>') : "" %}
         </div>
         {{ label|raw }}
-    </div>
+      </div>
 {% endmacro %}
 
 {# display a list of items in equal width columns, vertical sequence always
@@ -39,22 +39,22 @@
     {% set id = id ? (' id="' ~ id ~ '"') : "" %}
     {% set rows = items|length // cols + (items|length % cols ? 1 : 0) %}
 
-    <ul class="columnar cols-{{ cols }}{{ class ? ' '~class : ''}}"{{ id }}>
+      <ul class="columnar cols-{{ cols }}{{ class ? ' '~class : ''}}"{{ id }}>
         {% for row in 0..(rows-1) %}
             {% for col in 0..(cols-1) %}
                 {% set bgn_end = col==0 ? ' bgn' : ( col == (cols-1) ? ' end' : '') %}
                 {% set cus = col_cls and col_cls[col] ? ' '~col_cls[col] : '' %}
 
-                <li class="{{ row % 2 ? 'odd' : 'even' }} col-{{ (col % 2 ? 'odd' : 'even')~bgn_end~cus }}">
-                    <div class="in-cell">
+          <li class="{{ row % 2 ? 'odd' : 'even' }} col-{{ (col % 2 ? 'odd' : 'even')~bgn_end~cus }}">
+            <div class="in-cell">
                         {% set idx = (row + col*rows)~'' %} {# twig convert math to double, we convert it back to string #}
                         {{ items[idx] | raw }}
-                    </div>
-                </li>
+              </div>
+            </li>
 
             {% endfor %}
         {% endfor %}
-    </ul>
+          </ul>
 
 {% endmacro %}
 
@@ -68,20 +68,20 @@
 {% macro tabular(data, col_cls, id, class) %}
     {% set id = id ? (' id="' ~ id ~ '"') : "" %}
 
-    <table class="tabular {{ class ? ' '~class : ''}}"{{ id }}>
+          <table class="tabular {{ class ? ' '~class : ''}}"{{ id }}>
     {% for row in data %}
         {% set odd = loop.index0 % 2 ? 'odd' : 'even' %}
-        <tr class="{{ odd }}">
+              <tr class="{{ odd }}">
         {% for cell in row %}
 
             {% set cus = col_cls and col_cls[loop.index0] ? ' '~col_cls[loop.index0] : '' %}
 
-            <td class="column{{loop.index0}}{{ (loop.index0 % 2 ? ' odd' : ' even')~cus }}">{{ cell|raw }}</td>
+                  <td class="column{{loop.index0}}{{ (loop.index0 % 2 ? ' odd' : ' even')~cus }}">{{ cell|raw }}</td>
 
         {% endfor %}
-        </tr>
+                </tr>
     {% endfor %}
-    </table>
+              </table>
 {% endmacro %}
 
 
@@ -94,17 +94,17 @@
     - class: optional, class for this tab
 #}
 {% macro mktab(data, id, class) %}
-    <div id="{{ id }}" class="panel {{ class|default('light-blue') }}">
+              <div id="{{ id }}" class="panel {{ class|default('light-blue') }}">
         {{- _self.expander(class) -}}
-        <ul class="panel-head">
+                  <ul class="panel-head">
             {% for tab in data %}
-                <li><a href="#tabs-{{ loop.index }}">{{ tab[0]|raw }}</a></li>
+                      <li><a href="#tabs-{{ loop.index }}">{{ tab[0]|raw }}</a></li>
             {% endfor %}
-        </ul>
+                    </ul>
         {% for tab in data %}
-            <div id="tabs-{{ loop.index }}">{{ tab[1]|raw }}</div>
+                    <div id="tabs-{{ loop.index }}">{{ tab[1]|raw }}</div>
         {% endfor %}
-    </div>
+                  </div>
 {% endmacro %}
 
 {#  HOW-it-work
@@ -113,6 +113,6 @@
 #}
 {% macro expander(panel_class) %}
     {% if 'expandable' in panel_class %}
-    <div class="expander" title="expand here"></div>
+                  <div class="expander" title="expand here"></div>
     {% endif %}
 {% endmacro %}

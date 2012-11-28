@@ -7,117 +7,129 @@
     <div class="yui-main">
         <div class="yui-b">
             <h2>{{ C.param('action').Name }}</h2>
-            {{ form.begin({"method":"post", "action":"/shop/vehicle/new", "id":"page-form"}) }}
-              {{ form.select({
-                  "name" : "Year",
-                  "label" : "Year",
-                  "options": 30|php('yearOpts'),
-                  "first_blank": "Choose the year",
-                  "value" : vehicle.Year,
-                  "help" : "say <b>\"2010\"</b> Ford Mustang 4.6L V8"
-              }) }}
-              {{ form.select({
-                "name" : "Make",
-                "label" : "Make",
-                "help" : "say 2010 <b>\"Ford\"</b> Mustang 4.6L V8"
-              }) }}
-              {{ form.select({
-                  "name" : "Model",
-                  "label" : "Model",
-                  "help" : "say 2010 Ford <b>\"Mustang\"</b> 4.6L V8"
-              }) }}
-              {{ form.select({
-                  "name" : "Submodel",
-                  "label" : "Sub Model",
-                  "options": {"0" : "-- Choose a submodel --"}
-              }) }}
-              {% include "sections/make-model.twig" %}
-              {{ form.text({
-                  "name" : "Volume",
-                  "label" : "Engine discharge (L)",
-                  "value" : vehicle.Volume,
-                  "help" : "say 2010 Ford Mustang <b>\"4.6\"</b>L V8"
-              }) }}
-              {{ form.radio({
-                	"name" : "Cylinders",
-                	"label" : "Engine cylinders",
-                	"options": {
-                    "4" : "V4",
-                    "6" : "V6",
-                    "8" : "V8",
-                    "10" : "V10",
-                    "12" : "V12"
+            {% if C.param('session').data('customer_id') %}
+              {{ form.begin({"method":"post", "action":"/shop/vehicle/new", "id":"page-form", "columnar": 3}) }}
+                {{ form.select({
+                    "name" : "Year",
+                    "label" : "Year",
+                    "options": 30|php('yearOpts'),
+                    "first_blank": "Choose the year",
+                    "value" : vehicle.Year,
+                    "required": true,
+                    "help" : "say <b>\"2010\"</b> Ford Mustang 4.6L V8"
+                }) }}
+                {{ form.select({
+                  "name" : "Make",
+                  "label" : "Make",
+                  "required": true,
+                  "help" : "say 2010 <b>\"Ford\"</b> Mustang 4.6L V8"
+                }) }}
+                {{ form.select({
+                    "name" : "Model",
+                    "label" : "Model",
+                    "required": true,
+                    "help" : "say 2010 Ford <b>\"Mustang\"</b> 4.6L V8"
+                }) }}
+                {{ form.select({
+                    "name" : "Submodel",
+                    "label" : "Sub Model",
+                    "options": {"0" : "-- Choose a submodel --"}
+                }) }}
+                {% include "sections/make-model.twig" %}
+                {{ form.text({
+                    "name" : "Volume",
+                    "label" : "Engine discharge (L)",
+                    "required": true,
+                    "value" : vehicle.Volume,
+                    "help" : "say 2010 Ford Mustang <b>\"4.6\"</b>L V8"
+                }) }}
+                {{ form.radio({
+                    "name" : "Cylinders",
+                    "label" : "Engine cylinders",
+                    "options": {
+                      "4" : "V4",
+                      "6" : "V6",
+                      "8" : "V8",
+                      "10" : "V10",
+                      "12" : "V12"
+                    },
+                    "value": vehicle.Cylinders|default(4),
+                    "help" : "say 2010 Ford Mustang 4.6L <b>\"V8\"</b>",
+                    "cols"  : 2
+                }) }}
+
+                {{ form.radio({
+                  "name" : "OdometerUnit",
+                  "label" : "Odometer unit",
+                  "options": {
+                    "km" : "km",
+                    "mile" : "mile"
                   },
-                  "value": vehicle.Cylinders|default(4),
-                  "help" : "say 2010 Ford Mustang 4.6L <b>\"V8\"</b>",
+                  "value": vehicle.OdometerUnit|default("km"),
+                  "help" : "Later records for this car's mileage will use this unit.",
                   "cols"  : 2
-              }) }}
+                }) }}
+                {{ form.radio({
+                  "name" : "GasUnit",
+                  "label" : "Gas unit",
+                  "options": {
+                    "L" : "Liter",
+                    "GAL" : "Gallon"
+                  },
+                  "value": vehicle.GasUnit|default("L"),
+                  "help" : "Later records for this car's mileage will use this unit.",
+                  "cols"  : 2
+                }) }}
+                {{ form.radio({
+                  "name" : "Transmission",
+                  "label" : "Transmission",
+                  "options": {
+                    "AT" : "Auto",
+                    "MT" : "Manual"
+                  },
+                  "value": vehicle.Transmission|default("AT"),
+                  "help" : "Later records for this car's mileage will use this unit.",
+                  "cols"  : 2
+                }) }}
 
-              {{ form.radio({
-                "name" : "OdometerUnit",
-                "label" : "Odometer unit",
-                "options": {
-                  "km" : "km",
-                  "mile" : "mile"
-                },
-                "value": vehicle.OdometerUnit|default("km"),
-                "help" : "Later records for this car's mileage will use this unit.",
-                "cols"  : 2
-              }) }}
-              {{ form.radio({
-                "name" : "GasUnit",
-                "label" : "Gas unit",
-                "options": {
-                  "L" : "Liter",
-                  "GAL" : "Gallon"
-                },
-                "value": vehicle.GasUnit|default("L"),
-                "help" : "Later records for this car's mileage will use this unit.",
-                "cols"  : 2
-              }) }}
-              {{ form.radio({
-                "name" : "Transmission",
-                "label" : "Transmission",
-                "options": {
-                  "AT" : "Auto",
-                  "MT" : "Manual"
-                },
-                "value": vehicle.Transmission|default("AT"),
-                "help" : "Later records for this car's mileage will use this unit.",
-                "cols"  : 2
-              }) }}
+                {{ form.text({
+                  "name" : "Color",
+                  "label" : "Color",
+                  "value" : vehicle.Color
+                }) }}
+                {{ form.text({
+                  "name" : "Vin",
+                  "label" : "VIN number",
+                  "value" : vehicle.Vin
+                }) }}
+                {{ form.text({
+                  "name" : "LicensePlate",
+                  "label" : "License plate",
+                  "value" : vehicle.LicensePlate
+                }) }}
+                {{ form.text({
+                  "name" : "IniOdometer",
+                  "label" : "Initial odometer",
+                  "required": true,
+                  "value" : vehicle.IniOdometer
+                }) }}
 
-              {{ form.text({
-                "name" : "Color",
-                "label" : "Color",
-                "value" : vehicle.Color
-              }) }}
-              {{ form.text({
-                "name" : "Vin",
-                "label" : "VIN number",
-                "value" : vehicle.Vin
-              }) }}
-              {{ form.text({
-                "name" : "LicensePlate",
-                "label" : "License plate",
-                "value" : vehicle.LicensePlate
-              }) }}
-              {{ form.text({
-                "name" : "IniOdometer",
-                "label" : "Initial odometer",
-                "value" : vehicle.IniOdometer
-              }) }}
-
-              {{ form.textarea({
-                "name" : "Notes",
-                "label" : "Notes",
-                  "value" : vehicle.Notes
-              }) }}
-
-              <dd>
-                {{ form.submit({"input_only":true, "value":"Add my car"}) }}
-              </dd>
-              {{ form.end() }}
+                {{ form.textarea({
+                  "name" : "Notes",
+                  "label" : "Notes",
+                  "value" : vehicle.Notes,
+                  "colspan": 2
+                }) }}
+                <dd>
+                  {{ form.submit({"input_only":true, "value":"Add my car"}) }}
+                </dd>
+                {{ form.end() }}
+              {% else %}
+                <p>Vehicles can not be created before a CUSTOMER been specified by either
+                    <a href="/shop/customer/new">new</a>
+                    or <a href="/shop/customer/search">search</a>
+                </p>
+              {% endif %}
         </div>
     </div>
 {% include "sections/footer.twig" %}

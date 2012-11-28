@@ -159,22 +159,22 @@ class Controller {
     while(!is_file($tpl_dir.$path.'.twig') && !is_file($hdl_dir.$path.'.php')) {
       // if dir, serve index file
       if(is_dir($tpl_dir.$path)) {
-      $path .= '/index';
+        $path .= '/index';
 
-      // a file path, not exist
+        // a file path, not exist
       } else if (preg_match('/(?<=\w)\/(\w+)$/', $path, $match)) {
 
-      // try this dir, parent dir
-      $path = $match[1] == 'index'
-        ? preg_replace('/\/\w+\/\w+$/', '', $path)
-        : preg_replace('/\/\w+$/', '', $path);
+        // try this dir, parent dir
+        $path = $match[1] == 'index'
+          ? preg_replace('/\/\w+\/\w+$/', '', $path)
+          : preg_replace('/\/\w+$/', '', $path);
 
-      $bad_request = TRUE;
+        $bad_request = TRUE;
 
       // by all means, serve home page
       } else {
-      $path = '';
-      $bad_request = TRUE;
+        $path = '';
+        $bad_request = TRUE;
       }
     }
 

@@ -1,13 +1,13 @@
 /*
   intend to work with Zend form
 */
-.def-input-list {
+.def-form {
   display: block;
   margin: 0;
   padding: 0;
 }
 
-.def-input-list h5.section {
+.def-form h5.section {
   background-color: #666;
   color: #fff;
   padding: 0.3em 1em;
@@ -18,42 +18,37 @@ input, select, textarea {
   padding: 2px;
 }
 
-.def-input-list dt {
+.def-form dt {
   position: absolute;
   width: 15em;
 }
 
-.def-input-list .push-lable {
+.def-form .push-lable {
   margin-bottom:1em;
   height:1px;
 }
 
-.def-input-list .two_column dt {
+.def-form .two_column dt {
   width: 16em;
 }
 
-.gradient .def-input-list dt {
-  background-color: transparent;
-}
-
-.def-input-list dt label {
-  font-weight: bold;
+.def-form dt label {
   float: right;
+  font-weight: bold;
 }
 
-.def-input-list dt label.required {
-  background-position: right center;
-  background-repeat: no-repeat;
+.def-form .mark-required {
+  color: red;
 }
 
-.def-input-list dd {
+.def-form dd {
   display: block;
   padding-top: 1px;
   position: relative;
   margin: 1em 0 1em 15.5em;
 }
 
-.def-input-list dd .description {
+.def-form dd .description {
   color: #888888;
   font-size: smaller;
   line-height: 1em;
@@ -62,12 +57,11 @@ input, select, textarea {
 }
 
 
-.def-input-list dd input {
-  font-size:12px;
+.def-form dd input {
   width:20em;
 }
 
-.def-input-list dd input.optional:focus {
+.def-form dd input.optional:focus {
   background: white;
   font-weight: lighter;
   background-image: none;
@@ -75,82 +69,70 @@ input, select, textarea {
   background-position: center center;
 }
 
-.def-input-list dd input.error {
+.def-form dd input.error {
    border-color: #CC0000;
 }
 
-.def-input-list dd textarea.error {
+.def-form dd textarea.error {
    border-color: #CC0000;
 }
 
 
-.def-input-list dd select.error {
+.def-form dd select.error {
    border-color: #CC0000;
 }
 
-.def-input-list dd input.btn {
+.def-form dd input.btn {
   width: auto;
 }
 
-.def-input-list dd input.hasDatepicker,
-.def-input-list dd input.calendar,
-.def-input-list dd input.calendar-background {
+.def-form dd input.hasDatepicker,
+.def-form dd input.calendar,
+.def-form dd input.calendar-background {
   background: url(/static/images/icons/Calendar.png) no-repeat scroll right 1px;
   background-color: white;
   cursor: pointer
 }
 
-.def-input-list dd input.calendar.small {
+.def-form dd input.calendar.small {
   width: 95px;
 }
 
-.def-input-list .two_column dd input {
+.def-form .two_column dd input {
   width: 16em;
   margin-left: -100px;
 }
 
-.def-input-list dd textarea {
+.def-form dd textarea {
   background-color: white;
-  font-size:12px;
   width:20em;
 }
 
-.def-input-list .two_column dd textarea {
-  width: 16em;
-  margin-left: -100px;
-}
-
-.def-input-list dd select {
-  font-size:12px;
+.def-form dd select {
   width:20.5em;
 }
 
 
-.def-input-list .two_column dd select {
-  width: 16.5em;
-  margin-left: -100px;
-}
-
-.def-input-list dd input.radio,
-.def-input-list dd input.checkbox {
+.def-form dd input.radio,
+.def-form dd input.checkbox {
   border: medium none;
   margin-right: 0.33em;
   vertical-align: middle;
   width: auto;
 }
 
-.def-input-list dt#submit-label{
+.def-form dt#submit-label{
   background-color: transparent;
 }
 
-.def-input-list dd#submit-element {
+.def-form dd#submit-element {
   display: inline-block;
   float: none;
   margin: 1em 0.5em 1em 21.5em;
 }
 
-.def-input-list dt#cancel-label,
-.def-input-list dd#cancel-element {
+.def-form dt#cancel-label,
+.def-form dd#cancel-element {
   display: inline-block;
   float: none;
   margin: 1em 0.5em;
@@ -168,11 +150,11 @@ select:focus {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
 }
 
-.def-input-list dt#cancel-label {
+.def-form dt#cancel-label {
   display: none;
 }
 
-.def-input-list dd .errors {
+.def-form dd .errors {
   color: #CC0000;
   left: 22em;
   position: absolute;
@@ -180,26 +162,26 @@ select:focus {
 }
 
 /* Lightbox */
-.def-input-list.lightbox dt {
+.def-form.lightbox dt {
   position: absolute;
   width: 10em;
   clear: left;
   padding: 1px;
 }
 
-.def-input-list.lightbox dd {
+.def-form.lightbox dd {
   display: block;
   margin: 1em 0 1em 5.5em;
   padding-top: 1px;
   position: relative;
 }
 
-.def-input-list.lightbox dt label {
+.def-form.lightbox dt label {
   font-weight: bold;
   float: left;
 }
 
-.def-input-list dd .help-bk {
+.def-form dd .help-bk {
   position: absolute;
   left: 19em;
   padding: 0 0 0 1em;
@@ -207,15 +189,15 @@ select:focus {
   display: none;
 }
 
-.def-input-list dd.focus .help-bk {
+.def-form dd.focus .help-bk {
   display: block;
 }
 
-.def-input-list dd.focus.has-error .help-bk {
+.def-form dd.focus.has-error .help-bk {
   display: none;
 }
 
-.def-input-list dd .help-bk .help {
+.def-form dd .help-bk .help {
   background-color: #FFFFFF;
   border: 1px dotted #AAAAAA;
   color: #888888;
@@ -225,7 +207,7 @@ select:focus {
   width: 140px;
 }
 
-.def-input-list dd .error-bk {
+.def-form dd .error-bk {
   position: absolute;
   left: 19em;
   top: 0px;
@@ -234,7 +216,7 @@ select:focus {
   background-color: #fff;
 }
 
-.def-input-list dd .error-bk .error{
+.def-form dd .error-bk .error{
   color: #cc0000;
   font-size: small;
   border: 1px dotted #cc0000;
@@ -242,7 +224,7 @@ select:focus {
   width: 140px;
 }
 
-.def-input-list dd .error-bk .pointer{
+.def-form dd .error-bk .pointer{
   background: url("/static/images/jqueryui/ui-icons_cd0a0a_256x240.png") no-repeat scroll -98px -15px transparent;
   height: 15px;
   left: 0;
@@ -251,7 +233,7 @@ select:focus {
   width: 15px;
 }
 
-.def-input-list dd .help-bk .pointer{
+.def-form dd .help-bk .pointer{
   background: url("/static/images/jqueryui/ui-icons_454545_256x240.png") no-repeat scroll -98px -15px transparent;
   height: 15px;
   left: 0;
@@ -260,36 +242,104 @@ select:focus {
   width: 15px;
 }
 
-.def-input-list dd.has-error.focus .error-bk {
+.def-form dd.has-error.focus .error-bk {
   display:block;
 }
 
-.def-input-list dd.has-error input,
-.def-input-list dd.has-error textarea,
-.def-input-list dd.has-error select {
+.def-form dd.has-error input,
+.def-form dd.has-error textarea,
+.def-form dd.has-error select {
   border: 1px dotted #cc0000;
 }
 
-.def-input-list .zf-form-set {
+.def-form .zf-form-set {
   width: 20em;
 }
-.def-input-list .zf-form-set td {
+.def-form .zf-form-set td {
   border: none;
   padding: 0 0.5em;
 }
 
-.def-input-list .all-in-out {
+.def-form .all-in-out {
   float: right;
   top: -1em;
   position: relative;
 }
 
-.def-input-list dd input::-webkit-input-placeholder,
+.def-form dd input::-webkit-input-placeholder,
 input::-webkit-input-placeholder {
    color: #999;
 }
 
-.def-input-list dd input:-moz-placeholder,
+.def-form dd input:-moz-placeholder,
 input:-moz-placeholder {
    color: #999;
+}
+
+.def-form.columnar dt {
+  width: auto;
+  position: static;
+}
+
+.def-form.columnar dd {
+  margin: 0;
+}
+
+.def-form.columnar dt label {
+  float: none;
+}
+
+.def-form.columnar dd textarea,
+.def-form.columnar dd input,
+.def-form.columnar .zf-form-set {
+  width: 98%;
+}
+.def-form.columnar dd select {
+  width: 99%;
+}
+
+.def-form.columnar dd input.btn,
+.def-form.columnar dd input.checkbox,
+.def-form.columnar dd input.radio {
+  width: auto;
+}
+
+.def-form.columnar .cleaner {
+  margin: 20px 0;
+}
+
+
+.def-form.columnar dd .help-bk {
+  position: absolute;
+  left: 0;
+  padding: 0;
+  top: 2.0em;
+  display: none; /* disable help info */
+}
+
+.def-form.columnar dd .help-bk .help {
+  width: auto;
+  padding: 0;
+  border: none;
+}
+
+.def-form.columnar dd .help-bk .pointer {
+  display: none;
+}
+
+.def-form.columnar dd .error-bk {
+  position: static;
+  left: 0;
+  top: 0;
+  padding: 0;
+}
+
+.def-form.columnar dd .error-bk .pointer {
+  display: none;
+}
+
+.def-form.columnar dd .error-bk .error {
+  border: 0;
+  padding: 0;
+  width: auto;
 }

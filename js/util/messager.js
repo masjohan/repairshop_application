@@ -2,54 +2,37 @@
 
 $(function(){
     var box = $('<span />').dialog({
-        width: '33%',
+        width: '66%',
         autoOpen: false,
-        dialogClass: "no-title message",
         position: ['center', 'top'],
+        draggable: false,
+        resizable: false,
         open: function(){
             box.hide()
                 .prev('.ui-dialog-titlebar')
-                    .css('padding', '0')
-                .find('.ui-dialog-title')
-                    .css({
-                        color: '#555555',
-                        margin: '0.1em 16px 0.1em 0.3em'
-                    })
-                .parents('.ui-dialog')
-                    .css({
-                        borderRadius: '2px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
-                    });
+                    .css('padding', '0.5em');
         }
     }),
-    fnShowMsg = function(css, msg, last) {
+    fnShowMsg = function(cls, msg, last) {
         box
         .dialog('option', 'title', msg)
-        .dialog('open')
-        .parents('.ui-dialog')
-            .css(css)
-            .delay(last).fadeOut( 'slow', function(){
-                box.dialog('close')
-            });
+        .dialog('option', 'dialogClass', "message "+cls)
+        .dialog('open');
+
+        setTimeout(function(){box.dialog('close')}, last);
     };
 
     RW.notifyOK = function (msg, last) {
-        fnShowMsg({
-            backgroundColor: '#ccff99',
-            border: '1px solid #66cc33'
-        }, msg, last || 6000);
+        fnShowMsg("ok", msg, last || 6000);
     }
     RW.notifyError = function (msg, last) {
-         fnShowMsg({
-            backgroundColor: '#ffcccc',
-            border: '1px solid #993333'
-        }, msg, last || 30000);
+         fnShowMsg('error', msg, last || 30000);
     }
     RW.notify = function (msg, last) {
-         fnShowMsg({
-            backgroundColor: '#F9EDBE',
-            border: '1px solid #F0C36D'
-        }, msg, last || 12000);
+         fnShowMsg('', msg, last || 12000);
+    }
+    RW.notifyClose = function () {
+         box.dialog('close');
     }
 
     var jmsg = $('#messager');

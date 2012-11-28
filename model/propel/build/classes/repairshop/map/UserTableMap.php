@@ -64,6 +64,7 @@ class UserTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('Role', 'Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), null, null);
+    $this->addRelation('Calendar', 'Calendar', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null);
 	} // buildRelations()
 
 } // UserTableMap

@@ -138,6 +138,11 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	protected $aRole;
 
 	/**
+	 * @var        array Calendar[] Collection to store aggregation of Calendar objects.
+	 */
+	protected $collCalendars;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -849,6 +854,8 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aRole = null;
+			$this->collCalendars = null;
+
 		} // if (deep)
 	}
 
@@ -994,6 +1001,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collCalendars !== null) {
+				foreach ($this->collCalendars as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -1076,6 +1091,14 @@ abstract class BaseUser extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collCalendars !== null) {
+					foreach ($this->collCalendars as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -1215,6 +1238,9 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		if ($includeForeignObjects) {
 			if (null !== $this->aRole) {
 				$result['Role'] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+			}
+			if (null !== $this->collCalendars) {
+				$result['Calendars'] = $this->collCalendars->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
 		}
 		return $result;
@@ -1451,6 +1477,20 @@ abstract class BaseUser extends BaseObject  implements Persistent
 		$copyObj->setRoleTypeId($this->getRoleTypeId());
 		$copyObj->setRecoveryToken($this->getRecoveryToken());
 		$copyObj->setRecoverySent($this->getRecoverySent());
+
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getCalendars() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCalendar($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
+
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1545,6 +1585,171 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCalendars collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCalendars()
+	 */
+	public function clearCalendars()
+	{
+		$this->collCalendars = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCalendars collection.
+	 *
+	 * By default this just sets the collCalendars collection to an empty array (like clearcollCalendars());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @param      boolean $overrideExisting If set to true, the method call initializes
+	 *                                        the collection even if it is not empty
+	 *
+	 * @return     void
+	 */
+	public function initCalendars($overrideExisting = true)
+	{
+		if (null !== $this->collCalendars && !$overrideExisting) {
+			return;
+		}
+		$this->collCalendars = new PropelObjectCollection();
+		$this->collCalendars->setModel('Calendar');
+	}
+
+	/**
+	 * Gets an array of Calendar objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this User is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Calendar[] List of Calendar objects
+	 * @throws     PropelException
+	 */
+	public function getCalendars($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCalendars || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCalendars) {
+				// return empty collection
+				$this->initCalendars();
+			} else {
+				$collCalendars = CalendarQuery::create(null, $criteria)
+					->filterByUser($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCalendars;
+				}
+				$this->collCalendars = $collCalendars;
+			}
+		}
+		return $this->collCalendars;
+	}
+
+	/**
+	 * Returns the number of related Calendar objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Calendar objects.
+	 * @throws     PropelException
+	 */
+	public function countCalendars(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCalendars || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCalendars) {
+				return 0;
+			} else {
+				$query = CalendarQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByUser($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCalendars);
+		}
+	}
+
+	/**
+	 * Method called to associate a Calendar object to this object
+	 * through the Calendar foreign key attribute.
+	 *
+	 * @param      Calendar $l Calendar
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCalendar(Calendar $l)
+	{
+		if ($this->collCalendars === null) {
+			$this->initCalendars();
+		}
+		if (!$this->collCalendars->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCalendars[]= $l;
+			$l->setUser($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this User is new, it will return
+	 * an empty collection; or if this User has previously
+	 * been saved, it will retrieve related Calendars from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in User.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array Calendar[] List of Calendar objects
+	 */
+	public function getCalendarsJoinCalendarevent($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CalendarQuery::create(null, $criteria);
+		$query->joinWith('Calendarevent', $join_behavior);
+
+		return $this->getCalendars($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this User is new, it will return
+	 * an empty collection; or if this User has previously
+	 * been saved, it will retrieve related Calendars from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in User.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array Calendar[] List of Calendar objects
+	 */
+	public function getCalendarsJoinCalendarslot($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CalendarQuery::create(null, $criteria);
+		$query->joinWith('Calendarslot', $join_behavior);
+
+		return $this->getCalendars($query, $con);
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1587,8 +1792,17 @@ abstract class BaseUser extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collCalendars) {
+				foreach ($this->collCalendars as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
+		if ($this->collCalendars instanceof PropelCollection) {
+			$this->collCalendars->clearIterator();
+		}
+		$this->collCalendars = null;
 		$this->aRole = null;
 	}
 

@@ -1,10 +1,10 @@
 {% include "sections/header.twig" %}
-	<div class="yui-b">
+<div class="yui-b">
         {% include "sections/side_nav.twig" with {'module': 'track'} %}
+  </div>
+  <div class="yui-main">
+    <div class="yui-b">
+      <h2>{{ C.param('action').Name }}</h2>
     </div>
-    <div class="yui-main">
-        <div class="yui-b">
-            <h2>{{ C.param('action').Name }}</h2>
-        </div>
-    </div>
+  </div>
 {% include "sections/footer.twig" %}

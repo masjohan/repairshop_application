@@ -1,3 +1,4 @@
+{% import 'macro/widget.twig' as widget -%}
 {% include "sections/header.twig" %}
 	<div class="yui-b">
         {% include "sections/side_nav.twig" %}
@@ -9,7 +10,7 @@
 	            <tr>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Token</th>
+                <th>Token*</th>
                 <th>Role</th>
                 <th>Shop name</th>
                 <th>Is Active</th>
@@ -19,16 +20,18 @@
 	            <tr valign="top">
                 <td>{{ v.Username }}</td>
                 <td>{{ v.Email }}</td>
-                <td>{{ v.RecoveryToken }}</td>
+                <td>{{ widget.token_link(v, server.SCRIPT_NAME) }}</td>
                 <td>{{ v.Role }}</td>
                 <td>{{ v.Shop }}</td>
                 <td>{{ v.IsActive ? "Yes" : "No" }}</td>
-                <td><a href="{{ ('/market/shop/runas?id=' ~ v.Id) | php('sign') }}">Run as</a></td>
+                <td><a href="{{ ('/market/shop/runas?runas=' ~ v.Id) | php('sign') }}">Run as</a></td>
 	            {% else %}
 	              <td colspan="5">Empty.</td>
 	            {% endfor %}
 	            </tr>
             </table>
+            <p>*: Older than 24h token will be removed by system automatically
+              <br>TODO: Token function is not fully automated until we have a statle email server</p>
         </div>
     </div>
 {% include "sections/footer.twig" %}

@@ -11,9 +11,9 @@
   {% endif %}
 
   {# sub menu action #}
-  <ul class="side-nav">
+<ul class="side-nav">
     {% for act in actions -%}
-      <li>{{ widget.menu_link("/" ~ act.path, act.name, server) }}</li>
+    <li>{{ widget.menu_link("/" ~ act.path, act.name, server) }}</li>
     {% endfor %}
   </ul>
 

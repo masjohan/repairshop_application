@@ -57,6 +57,32 @@ class TW_PropelHelper {
       return preg_replace('/(\d{1,3})(?=(?:\d{3})+(?!\d))/', '$1,', $args[0]);
     } else if ($func == 'sign') {
       return Controller::getInstance()->acl->signUrl($args[0]);
+    // maintain status in twig
+    } else if ($func == 'static') {
+      static $container = array();
+      if (!isset($args[1])){
+        return isset($container[$args[0]]) ? $container[$args[0]] : "";
+      }else if ($args[1] === "NULL") {
+        unset($container[$args[0]]);
+      } else if (is_int($args[1])) {
+        $container[$args[0]] = $args[1];
+      }
+      return "";
+    // maintain counter in twig
+    } else if ($func == 'counter') {
+      static $counter = array();
+      if (!isset($counter[$args[0]])) $counter[$args[0]] = 0;
+
+      if (!isset($args[1])){
+        return $counter[$args[0]];
+      }else if ($args[1] === "++") {
+        $counter[$args[0]]++;
+      } else if ($args[1] === "--") {
+        $counter[$args[0]]--;
+      } else if (is_int($args[1])) {
+        $counter[$args[0]] = $args[1];
+      }
+      return "";
     } else if ($func == 'yearOpts') {
       $dt = new DateTime();
       $year = (int)$dt->format("Y");

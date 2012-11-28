@@ -36,6 +36,13 @@ class Biz_User extends User{
     return ShopQuery::create()->findPk($RoleTypeId);
   }
 
+  public function getShopCustomers() {
+
+  }
+
+  public function getShopVehicles() {
+
+  }
 }
 
 ?>

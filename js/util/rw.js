@@ -35,8 +35,29 @@ RW.log = (typeof console !== 'undefined') ? function(s){console.log(s)} : functi
 // disable ajax cache
 $.ajaxSetup({"cache" : false});
 
-jQuery.fn.outerHTML = function(s) {
-	return (s)
-	? this.before(s).remove()
-	: jQuery("<p>").append(this.eq(0).clone()).html();
-}
+/**
+ * mouse right click event, posted at
+ * http://forum.jquery.com/topic/rclick-simple-event-implementation-of-mouse-right-click
+ */
+(function($) {
+    $.event.special.rclick = {
+        setup: function() {
+            var testRclick = function(e) {
+                if (e.which == 3) {
+                    e.type = 'rclick';
+                    return $.event.trigger(e, arguments[1], e.target);
+                }
+            }
+
+            // disable contextmenu for this element
+            $.event.add(this, 'contextmenu.specialrclick', function(){return false});
+            // use mousedown as proxy, kind of
+            $.event.add(this, 'mousedown.specialrclick', testRclick);
+        },
+
+        teardown: function() {
+            $.event.remove(this, '.specialrclick');
+        }
+    };
+
+})(jQuery);

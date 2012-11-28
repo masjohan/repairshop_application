@@ -6,7 +6,7 @@ Class TW_Session {  //  implements SessionHandlerInterface
   const NS = 'user_ns';
 
   private function __construct() {
-  $this->dbh = Controller::getInstance()->param('dbh');
+    $this->dbh = Controller::getInstance()->param('dbh');
   }
   public static function getInstance() {
     static $singlton;
@@ -103,6 +103,15 @@ Class TW_Session {  //  implements SessionHandlerInterface
 
   public function login($user_id) {
     $this->data('user_id', $user_id);
+
+    // LoginUserType LoginUserCustomerId LoginUserShopId LoginUserMarketId
+    $stmt = $this->dbh->prepare(Biz_Query::$all_login_type);
+    $stmt->execute(array(":user_id" => $user_id));
+    $loginTypes = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    foreach($loginTypes as $k => $v) {
+      $this->data($k, $v);
+    }
   }
 
   public function login_id() {
@@ -130,17 +139,25 @@ Class TW_Session {  //  implements SessionHandlerInterface
     $this->data('user_once', NULL, TRUE);
     return $next;
   }
+  public function messenger($msg, $type) {
+    $this->putNext(array(
+      'messager'=>array(
+        'txt' => $msg,
+        'cls' => preg_match('/^ok|error$/', $type) ? $type : 'alert'
+      )
+    ));
+  }
 
   public function runAs($userId) {
     $runAs = $this->data('user_stack');
     if ($runAs === NULL) $runAs = array();
-    array_push($runAs, $this->data('user_id'));
+    array_push($runAs, $this->login_id());
 
     // can NOT loop, no change for any session data
     if (in_array($userId, $runAs)) return FALSE;
 
     $this->data('user_stack', $runAs);
-    $this->data('user_id', $userId);
+    $this->login($userId);
     header("Location: /", TRUE, 307);
     exit;
   }
@@ -154,7 +171,7 @@ Class TW_Session {  //  implements SessionHandlerInterface
 
     $userId = array_pop($runAs);
     $this->data('user_stack', $runAs);
-    $this->data('user_id', $userId);
+    $this->login($userId);
     header("Location: /", TRUE, 307);
     exit;
   }

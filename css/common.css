@@ -1,4 +1,4 @@
-/* require yui/reset.css | yui/base.css |yui/fonts.css |yui/grids.css|zf-form.css|panel.css|theme/smoothness/jquery.ui.dialog.css */
+/* require yui/reset.css | yui/base.css |yui/fonts.css |yui/grids.css|zf-form.css|panel.css */
 body {
 	background-color: #dddddd;
   color: #666666;
@@ -21,12 +21,15 @@ img { border: 0; }
   background: transparent;
 }
 
+.fake-link,
 a,
 a:visited {
   color:#0066CC;
   text-decoration:none;
+  cursor: pointer;
 }
 
+.fake-link:hover,
 a:hover,
 a:visited:hover {
   background-color:#0066CC;
@@ -78,8 +81,14 @@ a.no-hover:visited:hover {
 .align-right {
   text-align: right;
 }
+.align-left {
+  text-align: left;
+}
 .float-right {
   float:right;
+}
+.float-left {
+  float:left;
 }
 
 .hide {
@@ -112,4 +121,34 @@ a.no-hover:visited:hover {
 /* twick jquery ui */
 ul.ui-menu li.ui-menu-item {
   list-style: none;
+}
+
+/* messager box */
+.message.ui-dialog .ui-dialog-titlebar {
+  padding: 1em;
+  background: #F9EDBE;
+  border: none;
+}
+.message.ok.ui-dialog .ui-dialog-titlebar {
+  background-color: #ccff99;
+}
+.message.error.ui-dialog .ui-dialog-titlebar {
+  background-color: #ffcccc;
+}
+
+.message .ui-widget-header {
+  font-weight: normal;
+}
+
+.message.ui-dialog .ui-dialog-titlebar-close {
+  top: .7em;
+  right: 0.1em;
+}
+
+.message.ui-widget {
+  font-size: 1em;
+}
+
+.message.ui-dialog {
+  padding: 0;
 }
