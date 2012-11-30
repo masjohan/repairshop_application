@@ -7,12 +7,12 @@
  * 
  *
  * @method     CalendarQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     CalendarQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     CalendarQuery orderByResourceId($order = Criteria::ASC) Order by the resource_id column
  * @method     CalendarQuery orderBySlotId($order = Criteria::ASC) Order by the slot_id column
  * @method     CalendarQuery orderByEventId($order = Criteria::ASC) Order by the event_id column
  *
  * @method     CalendarQuery groupById() Group by the id column
- * @method     CalendarQuery groupByUserId() Group by the user_id column
+ * @method     CalendarQuery groupByResourceId() Group by the resource_id column
  * @method     CalendarQuery groupBySlotId() Group by the slot_id column
  * @method     CalendarQuery groupByEventId() Group by the event_id column
  *
@@ -20,28 +20,28 @@
  * @method     CalendarQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CalendarQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CalendarQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     CalendarQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     CalendarQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
- *
- * @method     CalendarQuery leftJoinCalendarevent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Calendarevent relation
- * @method     CalendarQuery rightJoinCalendarevent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Calendarevent relation
- * @method     CalendarQuery innerJoinCalendarevent($relationAlias = null) Adds a INNER JOIN clause to the query using the Calendarevent relation
+ * @method     CalendarQuery leftJoinCalendarresource($relationAlias = null) Adds a LEFT JOIN clause to the query using the Calendarresource relation
+ * @method     CalendarQuery rightJoinCalendarresource($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Calendarresource relation
+ * @method     CalendarQuery innerJoinCalendarresource($relationAlias = null) Adds a INNER JOIN clause to the query using the Calendarresource relation
  *
  * @method     CalendarQuery leftJoinCalendarslot($relationAlias = null) Adds a LEFT JOIN clause to the query using the Calendarslot relation
  * @method     CalendarQuery rightJoinCalendarslot($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Calendarslot relation
  * @method     CalendarQuery innerJoinCalendarslot($relationAlias = null) Adds a INNER JOIN clause to the query using the Calendarslot relation
  *
+ * @method     CalendarQuery leftJoinCalendarevent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Calendarevent relation
+ * @method     CalendarQuery rightJoinCalendarevent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Calendarevent relation
+ * @method     CalendarQuery innerJoinCalendarevent($relationAlias = null) Adds a INNER JOIN clause to the query using the Calendarevent relation
+ *
  * @method     Calendar findOne(PropelPDO $con = null) Return the first Calendar matching the query
  * @method     Calendar findOneOrCreate(PropelPDO $con = null) Return the first Calendar matching the query, or a new Calendar object populated from the query conditions when no match is found
  *
  * @method     Calendar findOneById(int $id) Return the first Calendar filtered by the id column
- * @method     Calendar findOneByUserId(int $user_id) Return the first Calendar filtered by the user_id column
+ * @method     Calendar findOneByResourceId(int $resource_id) Return the first Calendar filtered by the resource_id column
  * @method     Calendar findOneBySlotId(int $slot_id) Return the first Calendar filtered by the slot_id column
  * @method     Calendar findOneByEventId(int $event_id) Return the first Calendar filtered by the event_id column
  *
  * @method     array findById(int $id) Return Calendar objects filtered by the id column
- * @method     array findByUserId(int $user_id) Return Calendar objects filtered by the user_id column
+ * @method     array findByResourceId(int $resource_id) Return Calendar objects filtered by the resource_id column
  * @method     array findBySlotId(int $slot_id) Return Calendar objects filtered by the slot_id column
  * @method     array findByEventId(int $event_id) Return Calendar objects filtered by the event_id column
  *
@@ -180,18 +180,18 @@ abstract class BaseCalendarQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the user_id column
+	 * Filter the query on the resource_id column
 	 * 
 	 * Example usage:
 	 * <code>
-	 * $query->filterByUserId(1234); // WHERE user_id = 1234
-	 * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
-	 * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
+	 * $query->filterByResourceId(1234); // WHERE resource_id = 1234
+	 * $query->filterByResourceId(array(12, 34)); // WHERE resource_id IN (12, 34)
+	 * $query->filterByResourceId(array('min' => 12)); // WHERE resource_id > 12
 	 * </code>
 	 *
-	 * @see       filterByUser()
+	 * @see       filterByCalendarresource()
 	 *
-	 * @param     mixed $userId The value to use as filter.
+	 * @param     mixed $resourceId The value to use as filter.
 	 *              Use scalar values for equality.
 	 *              Use array values for in_array() equivalent.
 	 *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -199,16 +199,16 @@ abstract class BaseCalendarQuery extends ModelCriteria
 	 *
 	 * @return    CalendarQuery The current query, for fluid interface
 	 */
-	public function filterByUserId($userId = null, $comparison = null)
+	public function filterByResourceId($resourceId = null, $comparison = null)
 	{
-		if (is_array($userId)) {
+		if (is_array($resourceId)) {
 			$useMinMax = false;
-			if (isset($userId['min'])) {
-				$this->addUsingAlias(CalendarPeer::USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+			if (isset($resourceId['min'])) {
+				$this->addUsingAlias(CalendarPeer::RESOURCE_ID, $resourceId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($userId['max'])) {
-				$this->addUsingAlias(CalendarPeer::USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+			if (isset($resourceId['max'])) {
+				$this->addUsingAlias(CalendarPeer::RESOURCE_ID, $resourceId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -218,7 +218,7 @@ abstract class BaseCalendarQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CalendarPeer::USER_ID, $userId, $comparison);
+		return $this->addUsingAlias(CalendarPeer::RESOURCE_ID, $resourceId, $comparison);
 	}
 
 	/**
@@ -306,41 +306,41 @@ abstract class BaseCalendarQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related User object
+	 * Filter the query by a related Calendarresource object
 	 *
-	 * @param     User|PropelCollection $user The related object(s) to use as filter
+	 * @param     Calendarresource|PropelCollection $calendarresource The related object(s) to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CalendarQuery The current query, for fluid interface
 	 */
-	public function filterByUser($user, $comparison = null)
+	public function filterByCalendarresource($calendarresource, $comparison = null)
 	{
-		if ($user instanceof User) {
+		if ($calendarresource instanceof Calendarresource) {
 			return $this
-				->addUsingAlias(CalendarPeer::USER_ID, $user->getId(), $comparison);
-		} elseif ($user instanceof PropelCollection) {
+				->addUsingAlias(CalendarPeer::RESOURCE_ID, $calendarresource->getId(), $comparison);
+		} elseif ($calendarresource instanceof PropelCollection) {
 			if (null === $comparison) {
 				$comparison = Criteria::IN;
 			}
 			return $this
-				->addUsingAlias(CalendarPeer::USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
+				->addUsingAlias(CalendarPeer::RESOURCE_ID, $calendarresource->toKeyValue('PrimaryKey', 'Id'), $comparison);
 		} else {
-			throw new PropelException('filterByUser() only accepts arguments of type User or PropelCollection');
+			throw new PropelException('filterByCalendarresource() only accepts arguments of type Calendarresource or PropelCollection');
 		}
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the User relation
+	 * Adds a JOIN clause to the query using the Calendarresource relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CalendarQuery The current query, for fluid interface
 	 */
-	public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	public function joinCalendarresource($relationAlias = null, $joinType = Criteria::INNER_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('User');
+		$relationMap = $tableMap->getRelation('Calendarresource');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -355,14 +355,14 @@ abstract class BaseCalendarQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'User');
+			$this->addJoinObject($join, 'Calendarresource');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the User relation User object
+	 * Use the Calendarresource relation Calendarresource object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -370,87 +370,13 @@ abstract class BaseCalendarQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    UserQuery A secondary query class using the current class as primary query
+	 * @return    CalendarresourceQuery A secondary query class using the current class as primary query
 	 */
-	public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	public function useCalendarresourceQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
 	{
 		return $this
-			->joinUser($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'User', 'UserQuery');
-	}
-
-	/**
-	 * Filter the query by a related Calendarevent object
-	 *
-	 * @param     Calendarevent|PropelCollection $calendarevent The related object(s) to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CalendarQuery The current query, for fluid interface
-	 */
-	public function filterByCalendarevent($calendarevent, $comparison = null)
-	{
-		if ($calendarevent instanceof Calendarevent) {
-			return $this
-				->addUsingAlias(CalendarPeer::EVENT_ID, $calendarevent->getId(), $comparison);
-		} elseif ($calendarevent instanceof PropelCollection) {
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-			return $this
-				->addUsingAlias(CalendarPeer::EVENT_ID, $calendarevent->toKeyValue('PrimaryKey', 'Id'), $comparison);
-		} else {
-			throw new PropelException('filterByCalendarevent() only accepts arguments of type Calendarevent or PropelCollection');
-		}
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the Calendarevent relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CalendarQuery The current query, for fluid interface
-	 */
-	public function joinCalendarevent($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Calendarevent');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'Calendarevent');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the Calendarevent relation Calendarevent object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CalendareventQuery A secondary query class using the current class as primary query
-	 */
-	public function useCalendareventQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCalendarevent($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Calendarevent', 'CalendareventQuery');
+			->joinCalendarresource($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Calendarresource', 'CalendarresourceQuery');
 	}
 
 	/**
@@ -525,6 +451,80 @@ abstract class BaseCalendarQuery extends ModelCriteria
 		return $this
 			->joinCalendarslot($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'Calendarslot', 'CalendarslotQuery');
+	}
+
+	/**
+	 * Filter the query by a related Calendarevent object
+	 *
+	 * @param     Calendarevent|PropelCollection $calendarevent The related object(s) to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CalendarQuery The current query, for fluid interface
+	 */
+	public function filterByCalendarevent($calendarevent, $comparison = null)
+	{
+		if ($calendarevent instanceof Calendarevent) {
+			return $this
+				->addUsingAlias(CalendarPeer::EVENT_ID, $calendarevent->getId(), $comparison);
+		} elseif ($calendarevent instanceof PropelCollection) {
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+			return $this
+				->addUsingAlias(CalendarPeer::EVENT_ID, $calendarevent->toKeyValue('PrimaryKey', 'Id'), $comparison);
+		} else {
+			throw new PropelException('filterByCalendarevent() only accepts arguments of type Calendarevent or PropelCollection');
+		}
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Calendarevent relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CalendarQuery The current query, for fluid interface
+	 */
+	public function joinCalendarevent($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Calendarevent');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Calendarevent');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Calendarevent relation Calendarevent object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CalendareventQuery A secondary query class using the current class as primary query
+	 */
+	public function useCalendareventQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCalendarevent($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Calendarevent', 'CalendareventQuery');
 	}
 
 	/**

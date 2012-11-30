@@ -38,7 +38,7 @@ class CalendarTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		// columns
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, 10, null);
-		$this->addForeignKey('USER_ID', 'UserId', 'INTEGER', 'User', 'ID', true, 10, null);
+		$this->addForeignKey('RESOURCE_ID', 'ResourceId', 'INTEGER', 'CalendarResource', 'ID', true, 10, null);
 		$this->addForeignKey('SLOT_ID', 'SlotId', 'INTEGER', 'CalendarSlot', 'ID', true, 10, null);
 		$this->addForeignKey('EVENT_ID', 'EventId', 'INTEGER', 'CalendarEvent', 'ID', true, 10, null);
 		// validators
@@ -49,9 +49,9 @@ class CalendarTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('User', 'User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
-    $this->addRelation('Calendarevent', 'Calendarevent', RelationMap::MANY_TO_ONE, array('event_id' => 'id', ), null, null);
+    $this->addRelation('Calendarresource', 'Calendarresource', RelationMap::MANY_TO_ONE, array('resource_id' => 'id', ), 'CASCADE', 'CASCADE');
     $this->addRelation('Calendarslot', 'Calendarslot', RelationMap::MANY_TO_ONE, array('slot_id' => 'id', ), null, null);
+    $this->addRelation('Calendarevent', 'Calendarevent', RelationMap::MANY_TO_ONE, array('event_id' => 'id', ), 'CASCADE', 'CASCADE');
 	} // buildRelations()
 
 } // CalendarTableMap

@@ -114,8 +114,23 @@ Class TW_Session {  //  implements SessionHandlerInterface
     }
   }
 
-  public function login_id() {
-    return $this->data('user_id');
+  public function login_id($type = NULL) {
+    if (!$type) {
+      return $this->data("user_id");
+    }
+
+    $LoginUserType = $this->data('LoginUserType');
+    if (strcasecmp($type, "type") === 0 ) {
+      return strtoupper($LoginUserType);
+    } else if ( strcasecmp($type, $LoginUserType) === 0 ) {
+      return $this->data("LoginUser{$LoginUserType}Id");
+    }
+    return NULL;
+  }
+
+  public function login_type_id() {
+    $LoginUserType = $this->data('LoginUserType');
+    return $this->data('LoginUser' + $LoginUserType + 'Id');
   }
 
   public function is_login() {

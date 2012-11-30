@@ -7,7 +7,7 @@
   <div class="yui-main">
     <div class="yui-b">
       <h2>{{ C.param('action').Name }}</h2>
-      <table class="phpc-main phpc-calendar"></table>
+      <div id="main-conent"></div>
     </div>
   </div>
   <div class="calendar-pop hide">
@@ -48,8 +48,9 @@
     {{ form.holder({}) }}
     {{ form.submit({"input_only":true, "value":"Save"}) }}
     {{ form.button({"input_only":true, "value":"Delete", "id":"cal-delete"}) }}
-    {{ form.button({"input_only":true, "value":"Move to another day", "id":"cal-move"}) }}
+    {{ form.button({"input_only":true, "value":"Move", "id":"cal-move"}) }}
     <input type="hidden" name="EventId" value="" />
+    <input type="hidden" name="ResourceId" value="" />
   {{ form.end() }}
   </div>
 {% include "sections/footer.twig" %}

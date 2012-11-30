@@ -97,6 +97,11 @@ abstract class BaseShop extends BaseObject  implements Persistent
 	protected $notes;
 
 	/**
+	 * @var        array Calendarresource[] Collection to store aggregation of Calendarresource objects.
+	 */
+	protected $collCalendarresources;
+
+	/**
 	 * @var        array Customer[] Collection to store aggregation of Customer objects.
 	 */
 	protected $collCustomers;
@@ -589,6 +594,8 @@ abstract class BaseShop extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
+			$this->collCalendarresources = null;
+
 			$this->collCustomers = null;
 
 		} // if (deep)
@@ -724,6 +731,14 @@ abstract class BaseShop extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collCalendarresources !== null) {
+				foreach ($this->collCalendarresources as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCustomers !== null) {
 				foreach ($this->collCustomers as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -802,6 +817,14 @@ abstract class BaseShop extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collCalendarresources !== null) {
+					foreach ($this->collCalendarresources as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 				if ($this->collCustomers !== null) {
 					foreach ($this->collCustomers as $referrerFK) {
@@ -923,6 +946,9 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			$keys[11] => $this->getNotes(),
 		);
 		if ($includeForeignObjects) {
+			if (null !== $this->collCalendarresources) {
+				$result['Calendarresources'] = $this->collCalendarresources->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+			}
 			if (null !== $this->collCustomers) {
 				$result['Customers'] = $this->collCustomers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
@@ -1131,6 +1157,12 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
+			foreach ($this->getCalendarresources() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCalendarresource($relObj->copy($deepCopy));
+				}
+			}
+
 			foreach ($this->getCustomers() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCustomer($relObj->copy($deepCopy));
@@ -1181,6 +1213,121 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			self::$peer = new ShopPeer();
 		}
 		return self::$peer;
+	}
+
+	/**
+	 * Clears out the collCalendarresources collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCalendarresources()
+	 */
+	public function clearCalendarresources()
+	{
+		$this->collCalendarresources = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCalendarresources collection.
+	 *
+	 * By default this just sets the collCalendarresources collection to an empty array (like clearcollCalendarresources());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @param      boolean $overrideExisting If set to true, the method call initializes
+	 *                                        the collection even if it is not empty
+	 *
+	 * @return     void
+	 */
+	public function initCalendarresources($overrideExisting = true)
+	{
+		if (null !== $this->collCalendarresources && !$overrideExisting) {
+			return;
+		}
+		$this->collCalendarresources = new PropelObjectCollection();
+		$this->collCalendarresources->setModel('Calendarresource');
+	}
+
+	/**
+	 * Gets an array of Calendarresource objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this Shop is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Calendarresource[] List of Calendarresource objects
+	 * @throws     PropelException
+	 */
+	public function getCalendarresources($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCalendarresources || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCalendarresources) {
+				// return empty collection
+				$this->initCalendarresources();
+			} else {
+				$collCalendarresources = CalendarresourceQuery::create(null, $criteria)
+					->filterByShop($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCalendarresources;
+				}
+				$this->collCalendarresources = $collCalendarresources;
+			}
+		}
+		return $this->collCalendarresources;
+	}
+
+	/**
+	 * Returns the number of related Calendarresource objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Calendarresource objects.
+	 * @throws     PropelException
+	 */
+	public function countCalendarresources(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCalendarresources || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCalendarresources) {
+				return 0;
+			} else {
+				$query = CalendarresourceQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByShop($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCalendarresources);
+		}
+	}
+
+	/**
+	 * Method called to associate a Calendarresource object to this object
+	 * through the Calendarresource foreign key attribute.
+	 *
+	 * @param      Calendarresource $l Calendarresource
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCalendarresource(Calendarresource $l)
+	{
+		if ($this->collCalendarresources === null) {
+			$this->initCalendarresources();
+		}
+		if (!$this->collCalendarresources->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCalendarresources[]= $l;
+			$l->setShop($this);
+		}
 	}
 
 	/**
@@ -1335,6 +1482,11 @@ abstract class BaseShop extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collCalendarresources) {
+				foreach ($this->collCalendarresources as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCustomers) {
 				foreach ($this->collCustomers as $o) {
 					$o->clearAllReferences($deep);
@@ -1342,6 +1494,10 @@ abstract class BaseShop extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
+		if ($this->collCalendarresources instanceof PropelCollection) {
+			$this->collCalendarresources->clearIterator();
+		}
+		$this->collCalendarresources = null;
 		if ($this->collCustomers instanceof PropelCollection) {
 			$this->collCustomers->clearIterator();
 		}

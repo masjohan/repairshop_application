@@ -172,38 +172,54 @@ SQL
 ;
 
   public static $day_free_slot = <<<SQL
-    SELECT cs.id, CONCAT(DATE_FORMAT(cs.timeslot, '%l:%i%p'),'~',DATE_FORMAT(DATE_ADD(cs.timeslot, INTERVAL 30 MINUTE), '%l:%i%p')) AS slot
+    SELECT cr.id AS ResourceID,
+      cr.name AS ResourceName,
+      cs.id AS SlotID,
+      CONCAT(DATE_FORMAT(cs.timeslot, '%l:%i%p')) AS Slot,
+      IF(c.id IS NULL, 1, 0) AS IsFree,
+      ce.id AS EventId,
+      CONCAT(ce.first_name, ' ', ce.last_name) AS EventName,
+      ce.phone AS EventPhone,
+      ce.Notes AS EventNotes
+    FROM CalendarResource cr
+    JOIN CalendarSlot cs ON
+      cs.timeslot >= DATE_ADD(CAST(:day AS DATETIME), INTERVAL 7 HOUR) -- @todo
+      AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 19 HOUR) -- @todo
+      AND cs.timeslot >= NOW()
+    LEFT JOIN Calendar c
+      ON c.resource_id = cr.id
+      AND c.slot_id = cs.id
+    LEFT JOIN CalendarEvent ce
+      ON ce.id = c.event_id
+    WHERE cr.shop_id = :shop_id
+    ORDER BY cr.id, cs.id
+SQL
+;
+
+  // given resource and day, get free slots
+  public static $day_resource_free_slot = <<<SQL
+    SELECT cs.id,
+      DATE_FORMAT(cs.timeslot, '%l:%i%p') AS FromSlot,
+      DATE_FORMAT(DATE_ADD(cs.timeslot, INTERVAL 30 MINUTE), '%l:%i%p') AS EndSlot
     FROM CalendarSlot cs
     LEFT JOIN Calendar c
-      ON c.user_id = :login_user
+      ON c.resource_id = :resource_id
       AND c.slot_id = cs.id
     WHERE cs.timeslot >= NOW()
         AND cs.timeslot >= DATE_ADD(CAST(:day AS DATETIME), INTERVAL 7 HOUR) -- @todo
         AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 19 HOUR) -- @todo
         AND (c.id IS NULL OR event_id = :update_event)
-    ORDER BY id
-SQL
-;
-  public static $day_calendar = <<<SQL
-    SELECT t0.StartSlot, t0.EndSlot, ce.first_name AS FirstName, ce.last_name AS LastName, ce.phone AS Phone, t0.NumSlots, ce.id AS Id
-    FROM (
-      SELECT c.event_id, COUNT(*) AS NumSlots, MIN(c.slot_id) AS ord,
-        DATE_FORMAT(MIN(cs.timeslot), '%l:%i%p') AS StartSlot,
-        DATE_FORMAT(DATE_ADD(MAX(cs.timeslot), INTERVAL 30 MINUTE), '%l:%i %p') AS EndSlot
-      FROM CalendarSlot cs
-      JOIN Calendar c
-        ON c.user_id = :login_user
-        AND c.slot_id = cs.id
-      WHERE cs.timeslot >= CAST(:day AS DATETIME)
-          AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 1 DAY)
-      GROUP BY c.event_id
-    ) t0
-    JOIN CalendarEvent ce
-      ON ce.id = t0.event_id
-    ORDER BY t0.ord
+        AND EXISTS(
+          SELECT *
+          FROM CalendarResource
+          WHERE id=:resource_id
+            AND shop_id = :shop_id
+        )
+    ORDER BY cs.id
 SQL
 ;
 
+  // given event, return details
   public static $view_calendar_event = <<<SQL
     SELECT t0.StartSlot, t0.EndSlot, t0.NumSlots,
       ce.first_name AS FirstName, ce.last_name AS LastName, ce.phone AS Phone,ce.notes AS Notes,
@@ -214,12 +230,26 @@ SQL
         MAX(c.slot_id) AS EndSlot,
         COUNT(*) AS NumSlots
       FROM Calendar c
-      WHERE c.user_id = :login_user
-        AND c.event_id = :event
-      GROUP BY c.user_id, c.event_id
+      JOIN CalendarResource cr
+        ON cr.id = c.resource_id
+      WHERE c.event_id = :event
+          AND cr.shop_id = :shop_id
+      GROUP BY c.event_id
     ) t0
     JOIN CalendarEvent ce
       ON ce.id = t0.event_id
+SQL
+;
+
+  // given event, return details
+  public static $delete_resource_event_calendar = <<<SQL
+    DELETE FROM Calendar
+    WHERE event_id = :event
+      AND resource_id IN (
+        SELECT id
+        FROM CalendarResource
+        WHERE shop_id = :shop_id
+      )
 SQL
 ;
 

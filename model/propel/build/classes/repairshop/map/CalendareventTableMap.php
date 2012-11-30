@@ -50,7 +50,7 @@ class CalendareventTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('Calendar', 'Calendar', RelationMap::ONE_TO_MANY, array('id' => 'event_id', ), null, null);
+    $this->addRelation('Calendar', 'Calendar', RelationMap::ONE_TO_MANY, array('id' => 'event_id', ), 'CASCADE', 'CASCADE');
 	} // buildRelations()
 
 } // CalendareventTableMap

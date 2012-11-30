@@ -46,11 +46,7 @@ class Asset_Loader {
   	));
 
   	// try after title
-  	$html = str_replace('<!--LOADER_PLACE_HOLDER-->', $stype_script, $html, $count);
-
-  	if (!$count) trigger_error("Can NOT find LOADER_PLACE_HOLDER");
-
-  	return $html;
+  	return str_replace('<!--LOADER_PLACE_HOLDER-->', $stype_script, $html);
   }
 
   private function __construct(){}

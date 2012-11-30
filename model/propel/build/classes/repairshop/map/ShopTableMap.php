@@ -57,6 +57,7 @@ class ShopTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('Calendarresource', 'Calendarresource', RelationMap::ONE_TO_MANY, array('id' => 'shop_id', ), null, null);
     $this->addRelation('Customer', 'Customer', RelationMap::ONE_TO_MANY, array('id' => 'shop_id', ), null, null);
 	} // buildRelations()
 

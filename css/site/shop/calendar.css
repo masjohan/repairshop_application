@@ -66,3 +66,24 @@ ul.day-calendar li {
 #calendar-add-form .button {
   margin-right: 2em;
 }
+
+#calendar-daily-view {
+  width: 100%
+}
+
+.selectable .ui-selecting { background: #FECA40; }
+.selectable .ui-selected { background: #F39814; color: white; }
+.selectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+.selectable .ui-widget-content { border-top: none; border-left: none; border-right: none; padding: 0 0.3em;}
+.phpc-calendar ol { margin: 0;}
+.phpc-calendar ol li {
+  list-style: none; border-color: #efefef;
+  height: 1.2em;
+  border-bottom: 0.07em solid #aaa;
+  overflow: hidden;
+}
+
+.phpc-calendar ol li.booked {
+  background-color: #FFCCCC;
+  border-bottom: 1px solid #ff5555;
+}

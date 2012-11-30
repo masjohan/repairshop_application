@@ -212,11 +212,9 @@ Popover.prototype.getTrigger = function() {
   return lastShowEvt ? lastShowEvt.target : null;
 }
 
-// jSel: the trigger to show;  bStayOpen: default the tigger toggle the popover
 Popover.prototype._clickShow = function (jSel) {
-  $(jSel).addClass('popover-trigger');
-
   $(document).on("click", jSel, function (evt){
+    $(evt.target).addClass('popover-trigger');
     if (this.isOpen()) {
       if(this.getTrigger() === evt.target) {
         this.hide(evt);
