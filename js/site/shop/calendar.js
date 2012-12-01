@@ -182,8 +182,8 @@ RW.ShopCalendar.prototype.onShow = function(evt, pop) {
 }
 
 RW.ShopCalendar.prototype.initForm = function() {
-  var jForm = $('form#calendar-add-form');
-	jForm.formval({
+  var jForm = $('form#calendar-add-form')
+  .formval({
     rules: {
       FirstName: {
         required: true
@@ -201,7 +201,8 @@ RW.ShopCalendar.prototype.initForm = function() {
     "onSuccess": function() {
       jForm.formval('ajaxSubmit', this.popoverDone.bind(this));
     }.bind(this)
-  });
+  })
+  .formval('disable');
 }
 
 RW.ShopCalendar.prototype.popoverDone = function(oRe){

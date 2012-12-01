@@ -1,0 +1,70 @@
+<script>
+  $(function() {
+    $( ".selectable" ).each(function(){
+      $(this).selectable({
+        filter: 'li.ui-widget-content',
+        stop: function(evt) {
+          var i=-1;
+          $( ".ui-selected", this ).each(function() {
+            var index = $(this).parent().children().index( this );
+            if ( i<0 ) {
+              i = index
+            } else if (i !== index ) {
+              $(this).removeClass('ui-selected');
+            }
+            i++;
+          });
+
+          RW.shopCal.jCalPop.popover('show', evt);
+        }
+      });
+    });
+
+    $('#calendar-daily-view').on('mousedown', function(evt){
+      if ($(evt.target).is('li.booked')) {
+        setTimeout(function(){
+          RW.shopCal.jCalPop.popover('show', evt);
+        }, 300)
+      }
+    })
+  });
+</script>
+<table id="calendar-daily-view" class="phpc-calendar">
+  <caption class="phpc-date" id="date-{{day}}">
+    <span data-m="{{month}}" data-y="{{year}}" class="fake-link calendar-nav float-left">&laquo; Monlthly view</span>
+    <div id="calendar-title-blk">
+      <span data-d="{{prevDay}}" class="float-left fake-link calendar-nav">&laquo;</span>
+      Daily view <span id="calendar-daily-date">{{day}}</span>
+      <span data-d="{{nextDay}}" class="float-right fake-link calendar-nav">&raquo;</span>
+    </div>
+  </caption>
+  <tr>
+    {% for j in resource_names %}
+      <th>{{j}}</th>
+    {% endfor %}
+  </tr>
+  <tr>
+    {% for i, id in resource_ids %}
+    <td>
+      <ol class="selectable" data-resource="{{id}}">
+          {%- for slot in slots[i] -%}
+          {% if not slot.IsFree %}
+            <li class="booked" data-event="{{slot.EventId}}" style="height:{{slot.NumSlots * 1.2}}em;border-width:{{slot.NumSlots*0.07}}em">
+                {{slot.Slot}}
+                {{slot.EventName}}
+                <br>{{slot.EventPhone}}
+                {{slot.EventNotes}}
+            </li>
+          {%- else -%}
+            <li class="ui-widget-content" data-slot="{{slot.SlotID}}">
+               {{- slot.Slot -}}
+            </li>
+          {%- endif -%}
+          {%- endfor -%}
+      </ol>
+    </td>
+    {% else %}
+    <td>No slots can be found!</td>
+    {% endfor %}
+  </tr>
+</table>

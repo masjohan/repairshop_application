@@ -142,12 +142,15 @@ Popover.prototype._container = function () {
      // create single one container
      if (!jContainer) {
        jContainer = $('<div id="popover-container" style="position:absolute;margin:0;border:0;padding:0"></div>')
-         .appendTo(document.body)
-         .hide()
-         // onResize container, reposition. work for IE only. not important
-         .bind('resize',function(){
-           fnReposition(oEvt);
-         });
+        .appendTo(document.body)
+        .hide()
+        // onResize container, reposition. work for IE only. not important
+        .on('resize',function(){
+          fnReposition(oEvt);
+        })
+        .on('keyup', function(evt){
+          (evt.keyCode == 27) && oInst && oInst.hide(evt);
+        });
 
        // on window resize, reposition. !IMPORTANT
        $(window).bind('resize scroll', function(){fnReposition(oEvt);} );

@@ -95,7 +95,7 @@
 	  this.enable();
 
 	  // if loaded with error, do validate to show them
-	  $.isEmptyObject(this._options.rules) ? this.focus() : this.validate();
+	  $.isEmptyObject(this._options.rules) || this.validate();
 
     // init event callback
     $.each({'success':'onSuccess','change':'onChange','error':'onError'}, function(evt, opEvt){
@@ -261,6 +261,7 @@
 	  // record form value
 	  this._initFmValue = this._currentFmValue = this._serializeForm();
 	  this._isEnabled = true;
+    this.focus();
 	  return this;
 	}
 

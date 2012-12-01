@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="calendar-pop hide">
-    <span class="popover-close float-right fake-link">X</span>
+    <span class="popover-close float-right fake-link" id="calendar-popover-close">X</span>
     <h3></h3>
     {{ form.begin({"method":"post", "action":"/json/shop/calendar", "id":"calendar-add-form", "columnar": 3}) }}
     {{ form.text({
@@ -36,13 +36,13 @@
     }) }}
     {{ form.select({
         "name" : "FromSlot",
-        "label" : "Start time slot",
+        "label" : "Start time",
         "first_blank": "Choose",
         "required": true
     }) }}
     {{ form.select({
         "name" : "EndSlot",
-        "label" : "End time slot",
+        "label" : "End time",
         "first_blank": "Choose"
     }) }}
     {{ form.holder({}) }}

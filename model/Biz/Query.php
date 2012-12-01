@@ -196,6 +196,27 @@ SQL
 SQL
 ;
 
+  // monthly calendar overview
+  public static $day_calendar = <<<SQL
+    SELECT t0.StartSlot, t0.EndSlot, ce.first_name AS FirstName, ce.last_name AS LastName, ce.phone AS Phone, t0.NumSlots, ce.id AS Id
+    FROM (
+      SELECT c.event_id, COUNT(*) AS NumSlots, MIN(c.slot_id) AS ord,
+        DATE_FORMAT(MIN(cs.timeslot), '%l:%i%p') AS StartSlot,
+        DATE_FORMAT(DATE_ADD(MAX(cs.timeslot), INTERVAL 30 MINUTE), '%l:%i %p') AS EndSlot
+      FROM CalendarSlot cs
+      JOIN Calendar c
+        ON c.user_id = :login_user
+        AND c.slot_id = cs.id
+      WHERE cs.timeslot >= CAST(:day AS DATETIME)
+          AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 1 DAY)
+      GROUP BY c.event_id
+    ) t0
+    JOIN CalendarEvent ce
+      ON ce.id = t0.event_id
+    ORDER BY t0.ord
+SQL
+;
+
   // given resource and day, get free slots
   public static $day_resource_free_slot = <<<SQL
     SELECT cs.id,
