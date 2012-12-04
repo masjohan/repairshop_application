@@ -1,21 +1,19 @@
 // require jformval
 RW.ShopCalendar = function() {
   // init popup
-  this.jCalPop = $('.calendar-pop').popover({
+  var jPop = this.jCalPop = $('.calendar-pop').popover({
     'containerCss' : {
       "width"		: 400
     },
     'position' : {
       "of" 		: function(evt) {
-        if (!evt) return;
-        var leftSide = $(evt.target).parent().index() < 3;
-        return {
-          "of"    : evt.target,
-          "my" 		: leftSide ? 'left top' : 'right top',
-          "at" 		: leftSide ? 'right top' : 'left top',
+        return evt ? {
+          "of"    : $(evt.target).is('.booked') ? evt.target : $(evt.target).find(".ui-selected").eq(0).parent(),
+          "my" 		: 'right top',
+          "at" 		: 'left top',
           "offset" 	: '0 0',
           "collision"	: 'fit fit'
-        }
+        } : null;
       }
     },
     'events' : {
@@ -26,34 +24,39 @@ RW.ShopCalendar = function() {
 
   this.initForm();
 
-  $(document)
-    .on('click','#calendar-daily-view', function(evt){
-      this.jCalPop.popover('show',evt.toElement);
-    }.bind(this))
-    .on('click','#cal-delete', this.deleteEvent.bind(this))
+  $(document).on('click','#cal-delete', this.deleteEvent.bind(this))
     .on('click','#cal-move', this.moveEvent.bind(this))
     .on('change','select[name=FromSlot]', this.onFromChange.bind(this))
-    .on('click','.calendar-nav, .phpc-date', this.loadCore.bind(this));
+    .on('click','.calendar-nav, .phpc-date', this.loadCore.bind(this))
+    .on('click', '#calendar-daily-view', function(evt){
+      if ($(evt.target).is('.tdItem')) {
+        $(evt.target).addClass('ui-selected');
+        evt.target = this;
+        jPop.popover.bind(jPop,'show', evt).later(100);
+      } else if ($(evt.target).is('.booked')) {
+        jPop.popover.bind(jPop,'show', evt).later(100);
+      }
+    });
 
   this.loadCore();
 }
 
 RW.ShopCalendar.prototype.loadCore = function(evt) {
   var query = {}, url;
-  if (evt && $(evt.target).is('.phpc-date')) {
+  var elDate = !evt ? null : $(evt.target).is('.phpc-date') ? evt.target : $(evt.target).parents('.phpc-date').get(0);
+
+  // daily view
+  if (elDate) {
     url = '/shop/calendar/daily';
-    query.d = evt.target.id.substring(5); // get day from id
+    query.d = $(elDate).attr('data-date'); // get day from id
+
+  // monthly view
   } else {
     url = '/shop/calendar/monthly'; // load monthly by default
     if (evt) {
       var jEl = $(evt.target);
       query.m = jEl.attr('data-m');
       query.y = jEl.attr('data-y');
-      query.d = jEl.attr('data-d');
-      if (query.d) {
-        url = '/shop/calendar/daily';
-      }
-      RW.notifyOK('loading ... ', 3000);
     }
   }
 
@@ -119,47 +122,50 @@ RW.ShopCalendar.retrieveDayCalenar = function(elDay) {
 }
 
 RW.ShopCalendar.prototype.onShow = function(evt, pop) {
-  $( ".selectable" ).selectable('disable');
+  $("#calendar-daily-view" ).selectable('disable');
+  RW.notifyClose();
 
   var move_cal = this.jCalPop.data('calendar_move');
   this.jCalPop.removeData('calendar_move');  // one time thing
 
   // query data sending back
-  var query = {};
-  query.free_slot = $('#calendar-daily-date').text();
+  var jC = $(evt.target).is('.booked')
+    ? $(evt.target)
+    : $(evt.target).find(".ui-selected").eq(0).parent();
 
-  if ($(evt.target).is('li.booked')) {
+  var query = {
+    free_slot : $('#calendar-daily-date').attr("data-date"),
+    resource_id : jC.attr('data-resource')
+  };
+
+  // edit
+  if (jC.is('.booked')) {
     if (move_cal) {
       RW.notify("Calendar moving has been cancelled");
     }
-    query.resource_id = $(evt.target).parent().attr('data-resource');
-    query.event_id = $(evt.target).attr("data-event");
-    $('h3', pop).html( 'Update existing event');
+    query.event_id = jC.attr("data-event");
+    $('h3', pop).html( 'Update existing calendar');
     $('#cal-delete', pop).show();
     $('#cal-move', pop).show();
+  // move
   } else if (move_cal) {
-    // no select return
-    if ($(this.jCalPop.popover('getTrigger')).find(".ui-selected").length === 0) {
-      this.jCalPop.popover('hide');
-      RW.notify("Calendar moving has been cancelled");
-      return;
-    }
     query.event_id = move_cal;
-    query.resource_id = $(evt.target).attr('data-resource');
-    $('h3', pop).html( 'Move existing event ' );
+    $('h3', pop).html( 'Move existing calendar');
     $('#cal-delete', pop).hide();
     $('#cal-move', pop).hide();
+  // new
   } else {
     // no select return
-    if ($(this.jCalPop.popover('getTrigger')).find(".ui-selected").length === 0) {
+    if ($(evt.target).find(".ui-selected").length === 0) {
       this.jCalPop.popover('hide');
       return;
     }
-    query.resource_id = $(evt.target).attr('data-resource');
+
     $('h3', pop).html( 'Add calendar ' + query.free_slot );
     $('#cal-delete', pop).hide();
     $('#cal-move', pop).hide();
   }
+
   $('[name=FirstName]').val('');
   $('[name=LastName]').val('');
   $('[name=Phone]').val('');
@@ -213,7 +219,7 @@ RW.ShopCalendar.prototype.popoverDone = function(oRe){
   (oRe.error? RW.notifyError : RW.notifyOK).bind(window, oRe.message).later(100);
 
   // hack for trigger one update
-  $("#calendar-daily-view .phpc-date").trigger('click');
+  $("#calendar-daily-date").trigger('click');
 }
 
 RW.ShopCalendar.prototype.onLoadFreeSlots = function(oJson, pop) {
@@ -233,21 +239,23 @@ RW.ShopCalendar.prototype.onLoadFreeSlots = function(oJson, pop) {
   this.jEnd = $('select[name=EndSlot]', pop);
   this.slots = oJson.slots;
 
-  var olEle = this.jCalPop.popover('getTrigger');
+  var olEle = $(this.jCalPop.popover('getTrigger'));
+  if (!olEle.is('.booked')) {
+    olEle = olEle.find(".ui-selected").eq(0).parent();
+  }
+  var resource_id = $(olEle).attr('data-resource');
+  $('[name=ResourceId]').val(resource_id);
+
   if (oJson.viewEvent) {
     var event = oJson.viewEvent[0];
     $('[name=FirstName]').val(event.FirstName);
     $('[name=LastName]').val(event.LastName);
     $('[name=Phone]').val(event.Phone);
     $('[name=Notes]').val(event.Notes);
-
-    // hidden value for update
     $('[name=EventId]').val(event.Id);
 
     // update case
-    if ($(olEle).is('li.booked')) {
-      $('[name=ResourceId]').val($(olEle).parent().attr('data-resource'));
-
+    if ($(olEle).is('.booked')) {
       // set start slot and trigger change
       jFrom.val(event.StartSlot).trigger('change');
 
@@ -255,33 +263,29 @@ RW.ShopCalendar.prototype.onLoadFreeSlots = function(oJson, pop) {
       if (event.NumSlots > 1) {
         this.jEnd.delay(100).val(event.EndSlot);
       }
-    } else if ($(olEle).is('ol.selectable')) {  // move case
-      // populate slot start and end
+    } else {  // move case
+      // populate slot start
       var selectSlots = [];
-      $(olEle).find(".ui-selected").each(function(){
-        selectSlots.push($(this).attr("data-slot"));
-      })
-
+      $(this.jCalPop.popover('getTrigger')).find(".ui-selected").each(function(){
+        selectSlots.push($(this).parent().attr("data-slot"));
+      });
       jFrom.val(selectSlots[0]).trigger('change');
       if (selectSlots.length > 1) {
         this.jEnd.delay(100).val(selectSlots.pop());
+      } else if (event.NumSlots > 1){
+        this.jEnd.delay(100).val(parseInt(selectSlots[0]) + parseInt(event.NumSlots) - 1 );
       }
-      // populate resource id
-      $('[name=ResourceId]').val($(olEle).attr('data-resource'));
     }
   } else {
-    // populate slot start and end
+    // populate slot start
     var selectSlots = [];
-    $(olEle).find(".ui-selected").each(function(){
-      selectSlots.push($(this).attr("data-slot"));
-    })
-
+    $(this.jCalPop.popover('getTrigger')).find(".ui-selected").each(function(){
+      selectSlots.push($(this).parent().attr("data-slot"));
+    });
     jFrom.val(selectSlots[0]).trigger('change');
     if (selectSlots.length > 1) {
       this.jEnd.delay(100).val(selectSlots.pop());
     }
-    // populate resource id
-    $('[name=ResourceId]').val($(olEle).attr('data-resource'));
   }
 }
 
@@ -305,8 +309,10 @@ RW.ShopCalendar.prototype.onFromChange = function(){
 RW.ShopCalendar.prototype.onHide = function() {
   RW.notifyClose();
   $('form#calendar-add-form').formval('disable');
-  $('.selectable .ui-selected').removeClass('ui-selected');
-  $( ".selectable" ).selectable('enable');
+  $("#calendar-daily-view" )
+  .selectable('enable')
+  .find('.ui-selected')
+    .removeClass('ui-selected');
 }
 
 $(function(){RW.shopCal = new RW.ShopCalendar()});

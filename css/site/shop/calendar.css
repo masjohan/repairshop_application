@@ -7,25 +7,13 @@ table.phpc-calendar {
   margin-left: auto;
   margin-right: auto;
 }
-table.phpc-calendar th {
-  width: 14.3%;
-}
 
 table.phpc-calendar td {
   padding: 0;
   vertical-align: top;
 }
 
-table.phpc-calendar caption {
-  font-size: 175%;
-  color: black;
-  background-color: white;
-  padding: 2px;
-  font-weight: bolder;
-  margin: 1px;
-}
-
-table.phpc-calendar .phpc-date {
+table.phpc-calendar .date-title {
   text-align: center;
   font-weight: bold;
   border-bottom: 1px solid #aaa;
@@ -43,6 +31,8 @@ ul.day-calendar li {
   list-style: none;
   padding: 0 0.3em;
   border-bottom: 1px solid #aaa;
+  font-size: small;
+  color: black;
 }
 
 .phpc-calendar .fake-link {
@@ -71,10 +61,8 @@ ul.day-calendar li {
   width: 100%
 }
 
-.selectable .ui-selecting { background: #FECA40; }
-.selectable .ui-selected { background: #F39814; color: white; }
-.selectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-.selectable .ui-widget-content { border-top: none; border-left: none; border-right: none; padding: 0 0.3em;}
+.ui-selecting { background: #FECA40; }
+.ui-selected { background: #F39814; color: white; }
 .phpc-calendar ol { margin: 0;}
 .phpc-calendar ol li {
   list-style: none; border-color: #efefef;
@@ -83,9 +71,24 @@ ul.day-calendar li {
   overflow: hidden;
 }
 
-.phpc-calendar ol li.booked {
+.phpc-calendar .res-slot.booked {
   background-color: #FFCCCC;
-  border-bottom: 1px solid #ff5555;
+}
+
+.calendar-day,
+.phpc-calendar .res-slot {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.calendar-day.today,
+.phpc-calendar .res-slot.slot-now {
+  background-color:#FECA40;
+}
+
+.calendar-day.past,
+.phpc-calendar .slot-past {
+  background-color: #CCCCCC;
 }
 
 #calendar-popover-close {
@@ -101,10 +104,23 @@ ul.day-calendar li {
 #calendar-title-blk {
   width: 12em;
   margin: 0 auto;
+  text-align: center;
 }
 
 table#calendar-daily-view.phpc-calendar .phpc-date {
   background-color: white;
   border-bottom: none;
   font-size: 1.6em;
+}
+
+table#calendar-daily-view td {
+  padding: 0.2em;
+}
+
+#calendar-daily-view tr:hover {
+  background-color: #88FF88;
+}
+
+#calendar-daily-view th.resource {
+  background-color: #fff;
 }

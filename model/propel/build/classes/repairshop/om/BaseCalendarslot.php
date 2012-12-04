@@ -875,10 +875,10 @@ abstract class BaseCalendarslot extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array Calendar[] List of Calendar objects
 	 */
-	public function getCalendarsJoinCalendarresource($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCalendarsJoinCalendarevent($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = CalendarQuery::create(null, $criteria);
-		$query->joinWith('Calendarresource', $join_behavior);
+		$query->joinWith('Calendarevent', $join_behavior);
 
 		return $this->getCalendars($query, $con);
 	}
@@ -900,10 +900,10 @@ abstract class BaseCalendarslot extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array Calendar[] List of Calendar objects
 	 */
-	public function getCalendarsJoinCalendarevent($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCalendarsJoinCalendarresource($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = CalendarQuery::create(null, $criteria);
-		$query->joinWith('Calendarevent', $join_behavior);
+		$query->joinWith('Calendarresource', $join_behavior);
 
 		return $this->getCalendars($query, $con);
 	}

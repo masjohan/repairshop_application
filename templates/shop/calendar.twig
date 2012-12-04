@@ -47,8 +47,8 @@
     }) }}
     {{ form.holder({}) }}
     {{ form.submit({"input_only":true, "value":"Save"}) }}
-    {{ form.button({"input_only":true, "value":"Delete", "id":"cal-delete"}) }}
-    {{ form.button({"input_only":true, "value":"Move", "id":"cal-move"}) }}
+    {{ form.button({"input_only":true, "value":"Delete", "id":"cal-delete", "secondary": 1}) }}
+    {{ form.button({"input_only":true, "value":"Move", "id":"cal-move", "secondary": 1}) }}
     <input type="hidden" name="EventId" value="" />
     <input type="hidden" name="ResourceId" value="" />
   {{ form.end() }}

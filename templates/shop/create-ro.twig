@@ -5,19 +5,33 @@
   <div class="yui-main">
     <div class="yui-b">
       <h2>{{ C.param('action').Name }}</h2>
-            {% if C.param('session').data('vehicle_id') %}
-      form
-            {% elseif C.param('session').data('customer_id') %}
-      <p>OR can not be created before a Vehicle been specified by either
-        <a href="/shop/vehicle/new">new</a>
-        or <a href="/shop/vehicle/search">search</a>
-      </p>
-            {% else %}
-      <p>OR can not be created before a CUSTOMER been specified by either
-        <a href="/shop/customer/new">new</a>
-        or <a href="/shop/customer/search">search</a>
-      </p>
-            {% endif %}
+    <script>
+    $(function() {
+        $( "#accordion" ).accordion();
+    });
+    </script>
+      <div id="accordion">
+        <h3>Customer Search/Create</h3>
+        <div>
+            Customer
+        </div>
+        <h3>Vehicle search/create</h3>
+        <div>
+            Vehicle
+        </div>
+        <h3>Vehicle history</h3>
+        <div>
+            history
+        </div>
+        <h3>Repair order</h3>
+        <div>
+            ro
+        </div>
+      </div>
+      {% if C.param('session').data('vehicle_id') %}
+      {% elseif C.param('session').data('customer_id') %}
+      {% else %}
+      {% endif %}
     </div>
   </div>
 {% include "sections/footer.twig" %}

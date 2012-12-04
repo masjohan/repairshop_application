@@ -152,3 +152,8 @@ ul.ui-menu li.ui-menu-item {
 .message.ui-dialog {
   padding: 0;
 }
+
+.suffix {
+  font-size: 75%;
+  vertical-align: top;
+}

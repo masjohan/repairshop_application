@@ -136,7 +136,7 @@
     <input type="button"
        {% if options.id %}id="{{options.id}}"{% endif -%}
        {% if options.name %}name="{{options.name}}"{% endif -%}
-       class="button btn small {{ options.class is defined ? options.class : 'primary'}}"
+       class="button btn{{ options.class ? ' '~options.class : ''}}{{ options.secondary ? '' : ' primary'}}"
        value="{{options.value|raw}}" />
     {{- _self._end(options) }}
 {% endmacro %}
@@ -218,7 +218,7 @@
     <input type="submit"
        {% if options.id %}id="{{options.id}}"{% endif -%}
        {% if options.name %}name="{{options.name}}"{% endif -%}
-       class="button btn small primary{{ options.class ? ' '~options.class : ''}}"
+       class="button btn primary{{ options.class ? ' '~options.class : ''}}"
        value="{{options.value|raw}}" />
     {{- _self._end(options) }}
 {% endmacro %}
@@ -228,7 +228,7 @@
     <input type="button"
        {% if options.id %}id="{{options.id}}"{% endif -%}
        {% if options.name %}name="{{options.name}}"{% endif -%}
-       class="button btn small {{ options.class ? ' '~options.class : ''}}"
+       class="button btn {{ options.class ? ' '~options.class : ''}}"
        value="{{options.value|raw}}" />
     {{- _self._end(options) }}
 {% endmacro %}

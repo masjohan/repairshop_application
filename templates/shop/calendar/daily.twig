@@ -1,70 +1,73 @@
 <script>
   $(function() {
-    $( ".selectable" ).each(function(){
-      $(this).selectable({
-        filter: 'li.ui-widget-content',
-        stop: function(evt) {
-          var i=-1;
-          $( ".ui-selected", this ).each(function() {
-            var index = $(this).parent().children().index( this );
-            if ( i<0 ) {
-              i = index
-            } else if (i !== index ) {
-              $(this).removeClass('ui-selected');
-            }
+    var jPop = RW.shopCal.jCalPop;
+
+    $('#calendar-daily-view').selectable({
+      filter: '.tdItem',
+      distance : 1, // http://forum.jquery.com/topic/selectable-dosn-t-fire-click-event
+      stop: function(evt) {
+        var i=-1, j=-1, error, jSelect = $(this).find(".ui-selected");
+        jSelect.each(function() {
+          var slot_id = $(this).parent().attr('data-slot');
+          var resource_id = $(this).parent().attr('data-resource');
+          if ( i<0 ) {
+            i = slot_id;
+            j = resource_id;
             i++;
-          });
-
-          RW.shopCal.jCalPop.popover('show', evt);
+          } else if (i == slot_id || resource_id == j) {
+            i++;
+          } else {
+            error = 1;
+          }
+        });
+        if (error) {
+          RW.notifyError("Select continous time slots and do NOT cross multiple resources");
+          jSelect.removeClass('ui-selected');
+        } else {
+          jPop.popover('show', evt);
         }
-      });
-    });
-
-    $('#calendar-daily-view').on('mousedown', function(evt){
-      if ($(evt.target).is('li.booked')) {
-        setTimeout(function(){
-          RW.shopCal.jCalPop.popover('show', evt);
-        }, 300)
       }
-    })
+    });
   });
 </script>
+<h2>
+  <span data-m="{{month}}" data-y="{{year}}" class="fake-link calendar-nav float-left">&laquo; Monthly view</span>
+  <div id="calendar-title-blk">
+    <span data-date="{{prevDay}}" class="phpc-date float-left fake-link">&laquo;</span>
+    <span data-date="{{nextDay}}" class="phpc-date float-right fake-link">&raquo;</span>
+    <span id="calendar-daily-date" class="phpc-date" data-date="{{day}}">{{dt.format("M j")}}<span class="suffix">{{dt.format("S")}}</span>, {{dt.format("Y D")}}</span>
+  </div>
+</h2>
+<div id="calendar-container">
 <table id="calendar-daily-view" class="phpc-calendar">
-  <caption class="phpc-date" id="date-{{day}}">
-    <span data-m="{{month}}" data-y="{{year}}" class="fake-link calendar-nav float-left">&laquo; Monlthly view</span>
-    <div id="calendar-title-blk">
-      <span data-d="{{prevDay}}" class="float-left fake-link calendar-nav">&laquo;</span>
-      Daily view <span id="calendar-daily-date">{{day}}</span>
-      <span data-d="{{nextDay}}" class="float-right fake-link calendar-nav">&raquo;</span>
-    </div>
-  </caption>
+  {% set cols = resource_ids|php('count') %}
+  {% set rows = fixSlots[0]|php('count') %}
   <tr>
-    {% for j in resource_names %}
-      <th>{{j}}</th>
+    <th class="time-col">Time</th>
+    {% for i, nm in resource_names %}
+      <th width="{{100 / cols}}%" class="resource">{{nm}}</th>
     {% endfor %}
   </tr>
+  {%- for i in 0..(rows-1) -%}
   <tr>
-    {% for i, id in resource_ids %}
-    <td>
-      <ol class="selectable" data-resource="{{id}}">
-          {%- for slot in slots[i] -%}
-          {% if not slot.IsFree %}
-            <li class="booked" data-event="{{slot.EventId}}" style="height:{{slot.NumSlots * 1.2}}em;border-width:{{slot.NumSlots*0.07}}em">
-                {{slot.Slot}}
-                {{slot.EventName}}
-                <br>{{slot.EventPhone}}
-                {{slot.EventNotes}}
-            </li>
-          {%- else -%}
-            <li class="ui-widget-content" data-slot="{{slot.SlotID}}">
-               {{- slot.Slot -}}
-            </li>
-          {%- endif -%}
-          {%- endfor -%}
-      </ol>
-    </td>
-    {% else %}
-    <td>No slots can be found!</td>
-    {% endfor %}
+    <td>{{fullTimes[i]}}</td>
+    {%- for j in 0..(cols-1) -%}
+    {% set slot = fixSlots[j][i] %}
+    {% if slot %}
+      {% if not slot.IsFree %}
+        <td class="booked {{ slot.FromNow < 0 ? 'slot-past' : slot.FromNow == 0 ? 'slot-now res-slot' : 'res-slot' }}" data-event="{{slot.EventId}}" data-resource="{{resource_ids[j]}}" rowspan="{{slot.NumSlots}}" width="{{100 / cols}}%" height="{{slot.NumSlots}}em">
+          {{slot.EventName}}
+          {{slot.EventPhone}}
+          {{slot.EventNotes}}
+        </td>
+      {%- else -%}
+        <td class="{{ slot.FromNow < 0 ? 'slot-past' : slot.FromNow == 0 ? 'slot-now res-slot' : 'res-slot' }}" data-slot="{{slot.SlotID}}" data-resource="{{resource_ids[j]}}" width="{{100 / cols}}%" height="1em">
+          {% if slot.FromNow > 0 %}<div class="tdItem">&nbsp;</div>{% else %}&nbsp;{% endif %}
+        </td>
+      {%- endif -%}
+    {% endif %}
+    {%- endfor -%}
   </tr>
+  {%- endfor -%}
 </table>
+</div>

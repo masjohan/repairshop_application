@@ -452,56 +452,6 @@ abstract class BaseCalendarPeer {
 	}
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related Calendarresource table
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
-	 */
-	public static function doCountJoinCalendarresource(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		// we're going to modify criteria, so copy it first
-		$criteria = clone $criteria;
-
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CalendarPeer::TABLE_NAME);
-
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
-		}
-
-		if (!$criteria->hasSelectClause()) {
-			CalendarPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
-
-		if ($con === null) {
-			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doCount($criteria, $con);
-
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
-		}
-		$stmt->closeCursor();
-		return $count;
-	}
-
-
-	/**
 	 * Returns the number of rows matching criteria, joining the related Calendarslot table
 	 *
 	 * @param      Criteria $criteria
@@ -602,68 +552,52 @@ abstract class BaseCalendarPeer {
 
 
 	/**
-	 * Selects a collection of Calendar objects pre-filled with their Calendarresource objects.
-	 * @param      Criteria  $criteria
+	 * Returns the number of rows matching criteria, joining the related Calendarresource table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of Calendar objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
+	 * @return     int Number of matching rows.
 	 */
-	public static function doSelectJoinCalendarresource(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinCalendarresource(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
+		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
 
-		// Set the correct dbName if it has not been overridden
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CalendarPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
 		}
 
-		CalendarPeer::addSelectColumns($criteria);
-		$startcol = CalendarPeer::NUM_HYDRATE_COLUMNS;
-		CalendarresourcePeer::addSelectColumns($criteria);
+		if (!$criteria->hasSelectClause()) {
+			CalendarPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
 
 		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
 
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
+		$stmt = BasePeer::doCount($criteria, $con);
 
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CalendarPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CalendarPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-
-				$cls = CalendarPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CalendarPeer::addInstanceToPool($obj1, $key1);
-			} // if $obj1 already loaded
-
-			$key2 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol);
-			if ($key2 !== null) {
-				$obj2 = CalendarresourcePeer::getInstanceFromPool($key2);
-				if (!$obj2) {
-
-					$cls = CalendarresourcePeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol);
-					CalendarresourcePeer::addInstanceToPool($obj2, $key2);
-				} // if obj2 already loaded
-
-				// Add the $obj1 (Calendar) to $obj2 (Calendarresource)
-				$obj2->addCalendar($obj1);
-
-			} // if joined row was not null
-
-			$results[] = $obj1;
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
 		}
 		$stmt->closeCursor();
-		return $results;
+		return $count;
 	}
 
 
@@ -800,6 +734,72 @@ abstract class BaseCalendarPeer {
 
 
 	/**
+	 * Selects a collection of Calendar objects pre-filled with their Calendarresource objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of Calendar objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCalendarresource(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CalendarPeer::addSelectColumns($criteria);
+		$startcol = CalendarPeer::NUM_HYDRATE_COLUMNS;
+		CalendarresourcePeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CalendarPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CalendarPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CalendarPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CalendarPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CalendarresourcePeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CalendarresourcePeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CalendarresourcePeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (Calendar) to $obj2 (Calendarresource)
+				$obj2->addCalendar($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
 	 * Returns the number of rows matching criteria, joining all related tables
 	 *
 	 * @param      Criteria $criteria
@@ -835,11 +835,11 @@ abstract class BaseCalendarPeer {
 			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
-
 		$criteria->addJoin(CalendarPeer::SLOT_ID, CalendarslotPeer::ID, $join_behavior);
 
 		$criteria->addJoin(CalendarPeer::EVENT_ID, CalendareventPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -874,20 +874,20 @@ abstract class BaseCalendarPeer {
 		CalendarPeer::addSelectColumns($criteria);
 		$startcol2 = CalendarPeer::NUM_HYDRATE_COLUMNS;
 
-		CalendarresourcePeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + CalendarresourcePeer::NUM_HYDRATE_COLUMNS;
-
 		CalendarslotPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + CalendarslotPeer::NUM_HYDRATE_COLUMNS;
+		$startcol3 = $startcol2 + CalendarslotPeer::NUM_HYDRATE_COLUMNS;
 
 		CalendareventPeer::addSelectColumns($criteria);
-		$startcol5 = $startcol4 + CalendareventPeer::NUM_HYDRATE_COLUMNS;
+		$startcol4 = $startcol3 + CalendareventPeer::NUM_HYDRATE_COLUMNS;
 
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
+		CalendarresourcePeer::addSelectColumns($criteria);
+		$startcol5 = $startcol4 + CalendarresourcePeer::NUM_HYDRATE_COLUMNS;
 
 		$criteria->addJoin(CalendarPeer::SLOT_ID, CalendarslotPeer::ID, $join_behavior);
 
 		$criteria->addJoin(CalendarPeer::EVENT_ID, CalendareventPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -906,57 +906,57 @@ abstract class BaseCalendarPeer {
 				CalendarPeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
 
-			// Add objects for joined Calendarresource rows
-
-			$key2 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol2);
-			if ($key2 !== null) {
-				$obj2 = CalendarresourcePeer::getInstanceFromPool($key2);
-				if (!$obj2) {
-
-					$cls = CalendarresourcePeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CalendarresourcePeer::addInstanceToPool($obj2, $key2);
-				} // if obj2 loaded
-
-				// Add the $obj1 (Calendar) to the collection in $obj2 (Calendarresource)
-				$obj2->addCalendar($obj1);
-			} // if joined row not null
-
 			// Add objects for joined Calendarslot rows
 
-			$key3 = CalendarslotPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-			if ($key3 !== null) {
-				$obj3 = CalendarslotPeer::getInstanceFromPool($key3);
-				if (!$obj3) {
+			$key2 = CalendarslotPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+			if ($key2 !== null) {
+				$obj2 = CalendarslotPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
 
 					$cls = CalendarslotPeer::getOMClass(false);
 
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CalendarslotPeer::addInstanceToPool($obj3, $key3);
-				} // if obj3 loaded
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CalendarslotPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 loaded
 
-				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarslot)
-				$obj3->addCalendar($obj1);
+				// Add the $obj1 (Calendar) to the collection in $obj2 (Calendarslot)
+				$obj2->addCalendar($obj1);
 			} // if joined row not null
 
 			// Add objects for joined Calendarevent rows
 
-			$key4 = CalendareventPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-			if ($key4 !== null) {
-				$obj4 = CalendareventPeer::getInstanceFromPool($key4);
-				if (!$obj4) {
+			$key3 = CalendareventPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+			if ($key3 !== null) {
+				$obj3 = CalendareventPeer::getInstanceFromPool($key3);
+				if (!$obj3) {
 
 					$cls = CalendareventPeer::getOMClass(false);
 
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CalendareventPeer::addInstanceToPool($obj3, $key3);
+				} // if obj3 loaded
+
+				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarevent)
+				$obj3->addCalendar($obj1);
+			} // if joined row not null
+
+			// Add objects for joined Calendarresource rows
+
+			$key4 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol4);
+			if ($key4 !== null) {
+				$obj4 = CalendarresourcePeer::getInstanceFromPool($key4);
+				if (!$obj4) {
+
+					$cls = CalendarresourcePeer::getOMClass(false);
+
 					$obj4 = new $cls();
 					$obj4->hydrate($row, $startcol4);
-					CalendareventPeer::addInstanceToPool($obj4, $key4);
+					CalendarresourcePeer::addInstanceToPool($obj4, $key4);
 				} // if obj4 loaded
 
-				// Add the $obj1 (Calendar) to the collection in $obj4 (Calendarevent)
+				// Add the $obj1 (Calendar) to the collection in $obj4 (Calendarresource)
 				$obj4->addCalendar($obj1);
 			} // if joined row not null
 
@@ -964,6 +964,110 @@ abstract class BaseCalendarPeer {
 		}
 		$stmt->closeCursor();
 		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related Calendarslot table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCalendarslot(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CalendarPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CalendarPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CalendarPeer::EVENT_ID, CalendareventPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related Calendarevent table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCalendarevent(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CalendarPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CalendarPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CalendarPeer::SLOT_ID, CalendarslotPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
 	}
 
 
@@ -1020,106 +1124,196 @@ abstract class BaseCalendarPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related Calendarslot table
+	 * Selects a collection of Calendar objects pre-filled with all related objects except Calendarslot.
 	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
+	 * @return     array Array of Calendar objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doCountJoinAllExceptCalendarslot(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinAllExceptCalendarslot(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
-		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
 
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CalendarPeer::TABLE_NAME);
-		
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		if (!$criteria->hasSelectClause()) {
-			CalendarPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
+		CalendarPeer::addSelectColumns($criteria);
+		$startcol2 = CalendarPeer::NUM_HYDRATE_COLUMNS;
 
-		if ($con === null) {
-			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-	
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
+		CalendareventPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + CalendareventPeer::NUM_HYDRATE_COLUMNS;
+
+		CalendarresourcePeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + CalendarresourcePeer::NUM_HYDRATE_COLUMNS;
 
 		$criteria->addJoin(CalendarPeer::EVENT_ID, CalendareventPeer::ID, $join_behavior);
 
-		$stmt = BasePeer::doCount($criteria, $con);
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
 
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CalendarPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CalendarPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CalendarPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CalendarPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined Calendarevent rows
+
+				$key2 = CalendareventPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CalendareventPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CalendareventPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CalendareventPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (Calendar) to the collection in $obj2 (Calendarevent)
+				$obj2->addCalendar($obj1);
+
+			} // if joined row is not null
+
+				// Add objects for joined Calendarresource rows
+
+				$key3 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+				if ($key3 !== null) {
+					$obj3 = CalendarresourcePeer::getInstanceFromPool($key3);
+					if (!$obj3) {
+	
+						$cls = CalendarresourcePeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CalendarresourcePeer::addInstanceToPool($obj3, $key3);
+				} // if $obj3 already loaded
+
+				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarresource)
+				$obj3->addCalendar($obj1);
+
+			} // if joined row is not null
+
+			$results[] = $obj1;
 		}
 		$stmt->closeCursor();
-		return $count;
+		return $results;
 	}
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related Calendarevent table
+	 * Selects a collection of Calendar objects pre-filled with all related objects except Calendarevent.
 	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
+	 * @return     array Array of Calendar objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doCountJoinAllExceptCalendarevent(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinAllExceptCalendarevent(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
-		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
 
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CalendarPeer::TABLE_NAME);
-		
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		if (!$criteria->hasSelectClause()) {
-			CalendarPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
+		CalendarPeer::addSelectColumns($criteria);
+		$startcol2 = CalendarPeer::NUM_HYDRATE_COLUMNS;
 
-		if ($con === null) {
-			$con = Propel::getConnection(CalendarPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-	
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
+		CalendarslotPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + CalendarslotPeer::NUM_HYDRATE_COLUMNS;
+
+		CalendarresourcePeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + CalendarresourcePeer::NUM_HYDRATE_COLUMNS;
 
 		$criteria->addJoin(CalendarPeer::SLOT_ID, CalendarslotPeer::ID, $join_behavior);
 
-		$stmt = BasePeer::doCount($criteria, $con);
+		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
 
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CalendarPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CalendarPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CalendarPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CalendarPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined Calendarslot rows
+
+				$key2 = CalendarslotPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CalendarslotPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CalendarslotPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CalendarslotPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (Calendar) to the collection in $obj2 (Calendarslot)
+				$obj2->addCalendar($obj1);
+
+			} // if joined row is not null
+
+				// Add objects for joined Calendarresource rows
+
+				$key3 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+				if ($key3 !== null) {
+					$obj3 = CalendarresourcePeer::getInstanceFromPool($key3);
+					if (!$obj3) {
+	
+						$cls = CalendarresourcePeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CalendarresourcePeer::addInstanceToPool($obj3, $key3);
+				} // if $obj3 already loaded
+
+				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarresource)
+				$obj3->addCalendar($obj1);
+
+			} // if joined row is not null
+
+			$results[] = $obj1;
 		}
 		$stmt->closeCursor();
-		return $count;
+		return $results;
 	}
 
 
@@ -1209,200 +1403,6 @@ abstract class BaseCalendarPeer {
 				} // if $obj3 already loaded
 
 				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarevent)
-				$obj3->addCalendar($obj1);
-
-			} // if joined row is not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
-	 * Selects a collection of Calendar objects pre-filled with all related objects except Calendarslot.
-	 *
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of Calendar objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinAllExceptCalendarslot(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		// $criteria->getDbName() will return the same object if not set to another value
-		// so == check is okay and faster
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CalendarPeer::addSelectColumns($criteria);
-		$startcol2 = CalendarPeer::NUM_HYDRATE_COLUMNS;
-
-		CalendarresourcePeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + CalendarresourcePeer::NUM_HYDRATE_COLUMNS;
-
-		CalendareventPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + CalendareventPeer::NUM_HYDRATE_COLUMNS;
-
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
-
-		$criteria->addJoin(CalendarPeer::EVENT_ID, CalendareventPeer::ID, $join_behavior);
-
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CalendarPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CalendarPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-				$cls = CalendarPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CalendarPeer::addInstanceToPool($obj1, $key1);
-			} // if obj1 already loaded
-
-				// Add objects for joined Calendarresource rows
-
-				$key2 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CalendarresourcePeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CalendarresourcePeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CalendarresourcePeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (Calendar) to the collection in $obj2 (Calendarresource)
-				$obj2->addCalendar($obj1);
-
-			} // if joined row is not null
-
-				// Add objects for joined Calendarevent rows
-
-				$key3 = CalendareventPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-				if ($key3 !== null) {
-					$obj3 = CalendareventPeer::getInstanceFromPool($key3);
-					if (!$obj3) {
-	
-						$cls = CalendareventPeer::getOMClass(false);
-
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CalendareventPeer::addInstanceToPool($obj3, $key3);
-				} // if $obj3 already loaded
-
-				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarevent)
-				$obj3->addCalendar($obj1);
-
-			} // if joined row is not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
-	 * Selects a collection of Calendar objects pre-filled with all related objects except Calendarevent.
-	 *
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of Calendar objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinAllExceptCalendarevent(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		// $criteria->getDbName() will return the same object if not set to another value
-		// so == check is okay and faster
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CalendarPeer::addSelectColumns($criteria);
-		$startcol2 = CalendarPeer::NUM_HYDRATE_COLUMNS;
-
-		CalendarresourcePeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + CalendarresourcePeer::NUM_HYDRATE_COLUMNS;
-
-		CalendarslotPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + CalendarslotPeer::NUM_HYDRATE_COLUMNS;
-
-		$criteria->addJoin(CalendarPeer::RESOURCE_ID, CalendarresourcePeer::ID, $join_behavior);
-
-		$criteria->addJoin(CalendarPeer::SLOT_ID, CalendarslotPeer::ID, $join_behavior);
-
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CalendarPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CalendarPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-				$cls = CalendarPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CalendarPeer::addInstanceToPool($obj1, $key1);
-			} // if obj1 already loaded
-
-				// Add objects for joined Calendarresource rows
-
-				$key2 = CalendarresourcePeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CalendarresourcePeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CalendarresourcePeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CalendarresourcePeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (Calendar) to the collection in $obj2 (Calendarresource)
-				$obj2->addCalendar($obj1);
-
-			} // if joined row is not null
-
-				// Add objects for joined Calendarslot rows
-
-				$key3 = CalendarslotPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-				if ($key3 !== null) {
-					$obj3 = CalendarslotPeer::getInstanceFromPool($key3);
-					if (!$obj3) {
-	
-						$cls = CalendarslotPeer::getOMClass(false);
-
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CalendarslotPeer::addInstanceToPool($obj3, $key3);
-				} // if $obj3 already loaded
-
-				// Add the $obj1 (Calendar) to the collection in $obj3 (Calendarslot)
 				$obj3->addCalendar($obj1);
 
 			} // if joined row is not null

@@ -175,6 +175,7 @@ SQL
     SELECT cr.id AS ResourceID,
       cr.name AS ResourceName,
       cs.id AS SlotID,
+      IF(cs.id > nowslot.id, 1, IF(cs.id < nowslot.id, -1, 0)) AS FromNow,
       CONCAT(DATE_FORMAT(cs.timeslot, '%l:%i%p')) AS Slot,
       IF(c.id IS NULL, 1, 0) AS IsFree,
       ce.id AS EventId,
@@ -185,7 +186,21 @@ SQL
     JOIN CalendarSlot cs ON
       cs.timeslot >= DATE_ADD(CAST(:day AS DATETIME), INTERVAL 7 HOUR) -- @todo
       AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 19 HOUR) -- @todo
-      AND cs.timeslot >= NOW()
+--      AND cs.timeslot >= NOW()
+    JOIN (
+      SELECT id
+      FROM CalendarSlot
+      WHERE timeslot=(
+        SELECT IF(t1.v1<3000, 0, 3000) + t1.v2 AS halfhour
+        FROM (
+          SELECT t0.v0 - FLOOR(t0.v0*0.0001)*10000 AS v1,
+            FLOOR(t0.v0*0.0001)*10000 AS v2
+          FROM (
+            SELECT NOW()+0 AS v0
+          ) t0
+        ) t1
+      )
+    ) nowslot
     LEFT JOIN Calendar c
       ON c.resource_id = cr.id
       AND c.slot_id = cs.id
@@ -196,24 +211,30 @@ SQL
 SQL
 ;
 
-  // monthly calendar overview
-  public static $day_calendar = <<<SQL
-    SELECT t0.StartSlot, t0.EndSlot, ce.first_name AS FirstName, ce.last_name AS LastName, ce.phone AS Phone, t0.NumSlots, ce.id AS Id
+  // monthly calendar overview, 4 section per day, sum up event#
+  public static $month_calendar = <<<SQL
+    SELECT t0.EachDay, t0.Section, COUNT(*) AS NumBooking
     FROM (
-      SELECT c.event_id, COUNT(*) AS NumSlots, MIN(c.slot_id) AS ord,
-        DATE_FORMAT(MIN(cs.timeslot), '%l:%i%p') AS StartSlot,
-        DATE_FORMAT(DATE_ADD(MAX(cs.timeslot), INTERVAL 30 MINUTE), '%l:%i %p') AS EndSlot
-      FROM CalendarSlot cs
+      SELECT c.event_id,
+        DATE_FORMAT(MIN(cs.timeslot), '%e') AS EachDay,
+        CASE
+          WHEN DATE_FORMAT(MIN(cs.timeslot), '%k') < 10 THEN 1
+          WHEN DATE_FORMAT(MIN(cs.timeslot), '%k') < 12 THEN 2
+          WHEN DATE_FORMAT(MIN(cs.timeslot), '%k') < 14 THEN 3
+          ELSE 4
+        END AS Section
+      FROM CalendarResource cr
+      JOIN CalendarSlot cs
       JOIN Calendar c
-        ON c.user_id = :login_user
+        ON c.resource_id = cr.id
         AND c.slot_id = cs.id
-      WHERE cs.timeslot >= CAST(:day AS DATETIME)
-          AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 1 DAY)
+      WHERE cr.shop_id = :shop_id
+        AND cs.timeslot >= CAST(:day AS DATETIME) -- begining of month
+        AND cs.timeslot < DATE_ADD(CAST(:day AS DATETIME), INTERVAL 1 MONTH)
       GROUP BY c.event_id
     ) t0
-    JOIN CalendarEvent ce
-      ON ce.id = t0.event_id
-    ORDER BY t0.ord
+    GROUP BY t0.EachDay, t0.Section
+    ORDER BY t0.EachDay, t0.Section
 SQL
 ;
 
@@ -271,6 +292,53 @@ SQL
         FROM CalendarResource
         WHERE shop_id = :shop_id
       )
+SQL
+;
+
+  // login user all overridable setting
+  public static $all_setting_override = <<<SQL
+    SELECT  s.id as Id,
+      s.memo AS Memo,
+      s.name AS Name,
+      s.value AS SysVal,
+      so.value AS UsrVal
+    FROM `User` u
+    JOIN `Role` r
+      ON r.`id` = u.`role_id`
+    JOIN Setting s
+      ON r.`type` = s.role_type
+    LEFT JOIN SettingOverride so
+      ON so.setting_id = s.id
+      AND so.role_type_id = u.role_type_id
+    WHERE u.`id` = :login_id
+      AND s.usr_override = 1
+      AND s.sys_override = 1
+    ORDER BY s.id
+SQL
+;
+
+  // login user all overridable setting
+  public static $pk_setting_override = <<<SQL
+    SELECT
+      s.name AS Name,
+      s.usr_validator AS UsrValidator,
+      s.id AS SettingId,
+      u.role_type_id AS RoleTypeId,
+      s.value AS SysVal,
+      so.id AS Id,
+      so.value AS UsrVal
+    FROM `User` u
+    JOIN `Role` r
+      ON r.`id` = u.`role_id`
+    JOIN Setting s
+      ON r.`type` = s.role_type
+    LEFT JOIN SettingOverride so
+      ON so.setting_id = s.id
+      AND so.role_type_id = u.role_type_id
+    WHERE u.`id` = :login_id
+      AND s.usr_override = 1
+      AND s.sys_override = 1
+      AND s.id = :setting_id
 SQL
 ;
 

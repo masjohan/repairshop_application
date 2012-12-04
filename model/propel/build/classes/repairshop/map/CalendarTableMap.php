@@ -49,9 +49,9 @@ class CalendarTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('Calendarresource', 'Calendarresource', RelationMap::MANY_TO_ONE, array('resource_id' => 'id', ), 'CASCADE', 'CASCADE');
     $this->addRelation('Calendarslot', 'Calendarslot', RelationMap::MANY_TO_ONE, array('slot_id' => 'id', ), null, null);
     $this->addRelation('Calendarevent', 'Calendarevent', RelationMap::MANY_TO_ONE, array('event_id' => 'id', ), 'CASCADE', 'CASCADE');
+    $this->addRelation('Calendarresource', 'Calendarresource', RelationMap::MANY_TO_ONE, array('resource_id' => 'id', ), 'CASCADE', 'CASCADE');
 	} // buildRelations()
 
 } // CalendarTableMap

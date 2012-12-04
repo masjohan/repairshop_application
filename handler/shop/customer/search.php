@@ -14,7 +14,7 @@
   }
 
   $stmt = $C->param('dbh')->prepare(Biz_Query::$all_shop_customer);
-  $shop_id = $sess->data('LoginUserShopId');
+  $shop_id = $sess->login_id('shop');
   $stmt->execute(array(":shop" => $shop_id));
 
   $C->cusUser= $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -1,14 +1,26 @@
 <?php
 
+$dtNow = new DateTime("now");
+$dtToday = new DateTime($dtNow->format("Y-m-d"));
 if (isset($_GET['d'] ) && preg_match('/\d{4}-\d+-\d+/', $_GET['d'], $match)) {
   $dt = new DateTime($match[0]);
 } else {
-  $dt = new DateTime("now");
+  $dt = $dtToday;
+}
+$C->dt = clone $dt;
+
+if ($dt < $dtToday) {
+  $C->isPast = 1;
+} else if ($dt == $dtToday) {
+  $C->isToday = 1;
+} else {
+  $C->isFuture = 1;
 }
 
 $C->day = $dt->format("Y-m-d");
 $C->month = $dt->format("m");
 $C->year = $dt->format("Y");
+
 
 $dt->add(DateInterval::createFromDateString ( '-1 day' ));
 $C->prevDay = $dt->format("Y-m-d");
@@ -24,15 +36,20 @@ $stmt->execute(array(
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // foreach resource
+$fullTimes = array();
 foreach($rows as $row) {
   $lnKey = $row['ResourceID'].":".$row['ResourceName'];
   $line[$lnKey][] = $row;
+  $fullTimes[$row['Slot']] = TRUE;
 }
+$C->fullTimes = array_keys($fullTimes);
 
 // sub for each event
 $slots = array();
+$fixSlots = array();
 foreach(array_values($line) as $raw_slot) {
   $slot = array();
+  $fixLen = array();
   foreach($raw_slot as $sl) {
     if ($sl['IsFree']) {
       $lnKey = $sl['SlotID'].":SlotID";
@@ -48,9 +65,19 @@ foreach(array_values($line) as $raw_slot) {
       }
     }
   }
-  $slots[] = $slot;
+
+  foreach($slot as $cell) {
+    $fixLen[] = $cell;
+    if (!$cell['IsFree']) for($i=1; $i<$cell['NumSlots']; $i++){
+      $fixLen[] = NULL;
+    }
+  }
+
+  $slots[] = array_values($slot);
+  $fixSlots[] = $fixLen;
 }
 $C->slots = $slots;
+$C->fixSlots = $fixSlots;
 
 foreach(array_keys($line) as $id_name) {
   list($id, $name) = explode(":", $id_name, 2);

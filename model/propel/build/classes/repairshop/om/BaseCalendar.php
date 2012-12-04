@@ -49,11 +49,6 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 	protected $event_id;
 
 	/**
-	 * @var        Calendarresource
-	 */
-	protected $aCalendarresource;
-
-	/**
 	 * @var        Calendarslot
 	 */
 	protected $aCalendarslot;
@@ -62,6 +57,11 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 	 * @var        Calendarevent
 	 */
 	protected $aCalendarevent;
+
+	/**
+	 * @var        Calendarresource
+	 */
+	protected $aCalendarresource;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -324,9 +324,9 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aCalendarresource = null;
 			$this->aCalendarslot = null;
 			$this->aCalendarevent = null;
+			$this->aCalendarresource = null;
 		} // if (deep)
 	}
 
@@ -442,13 +442,6 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCalendarresource !== null) {
-				if ($this->aCalendarresource->isModified() || $this->aCalendarresource->isNew()) {
-					$affectedRows += $this->aCalendarresource->save($con);
-				}
-				$this->setCalendarresource($this->aCalendarresource);
-			}
-
 			if ($this->aCalendarslot !== null) {
 				if ($this->aCalendarslot->isModified() || $this->aCalendarslot->isNew()) {
 					$affectedRows += $this->aCalendarslot->save($con);
@@ -461,6 +454,13 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 					$affectedRows += $this->aCalendarevent->save($con);
 				}
 				$this->setCalendarevent($this->aCalendarevent);
+			}
+
+			if ($this->aCalendarresource !== null) {
+				if ($this->aCalendarresource->isModified() || $this->aCalendarresource->isNew()) {
+					$affectedRows += $this->aCalendarresource->save($con);
+				}
+				$this->setCalendarresource($this->aCalendarresource);
 			}
 
 			if ($this->isNew() ) {
@@ -557,12 +557,6 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCalendarresource !== null) {
-				if (!$this->aCalendarresource->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aCalendarresource->getValidationFailures());
-				}
-			}
-
 			if ($this->aCalendarslot !== null) {
 				if (!$this->aCalendarslot->validate($columns)) {
 					$failureMap = array_merge($failureMap, $this->aCalendarslot->getValidationFailures());
@@ -572,6 +566,12 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 			if ($this->aCalendarevent !== null) {
 				if (!$this->aCalendarevent->validate($columns)) {
 					$failureMap = array_merge($failureMap, $this->aCalendarevent->getValidationFailures());
+				}
+			}
+
+			if ($this->aCalendarresource !== null) {
+				if (!$this->aCalendarresource->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCalendarresource->getValidationFailures());
 				}
 			}
 
@@ -661,14 +661,14 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 			$keys[3] => $this->getEventId(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aCalendarresource) {
-				$result['Calendarresource'] = $this->aCalendarresource->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-			}
 			if (null !== $this->aCalendarslot) {
 				$result['Calendarslot'] = $this->aCalendarslot->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
 			}
 			if (null !== $this->aCalendarevent) {
 				$result['Calendarevent'] = $this->aCalendarevent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+			}
+			if (null !== $this->aCalendarresource) {
+				$result['Calendarresource'] = $this->aCalendarresource->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
 			}
 		}
 		return $result;
@@ -866,55 +866,6 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Declares an association between this object and a Calendarresource object.
-	 *
-	 * @param      Calendarresource $v
-	 * @return     Calendar The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setCalendarresource(Calendarresource $v = null)
-	{
-		if ($v === null) {
-			$this->setResourceId(NULL);
-		} else {
-			$this->setResourceId($v->getId());
-		}
-
-		$this->aCalendarresource = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the Calendarresource object, it will not be re-added.
-		if ($v !== null) {
-			$v->addCalendar($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated Calendarresource object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     Calendarresource The associated Calendarresource object.
-	 * @throws     PropelException
-	 */
-	public function getCalendarresource(PropelPDO $con = null)
-	{
-		if ($this->aCalendarresource === null && ($this->resource_id !== null)) {
-			$this->aCalendarresource = CalendarresourceQuery::create()->findPk($this->resource_id, $con);
-			/* The following can be used additionally to
-				guarantee the related object contains a reference
-				to this object.  This level of coupling may, however, be
-				undesirable since it could result in an only partially populated collection
-				in the referenced object.
-				$this->aCalendarresource->addCalendars($this);
-			 */
-		}
-		return $this->aCalendarresource;
-	}
-
-	/**
 	 * Declares an association between this object and a Calendarslot object.
 	 *
 	 * @param      Calendarslot $v
@@ -1013,6 +964,55 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Declares an association between this object and a Calendarresource object.
+	 *
+	 * @param      Calendarresource $v
+	 * @return     Calendar The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCalendarresource(Calendarresource $v = null)
+	{
+		if ($v === null) {
+			$this->setResourceId(NULL);
+		} else {
+			$this->setResourceId($v->getId());
+		}
+
+		$this->aCalendarresource = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the Calendarresource object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCalendar($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated Calendarresource object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     Calendarresource The associated Calendarresource object.
+	 * @throws     PropelException
+	 */
+	public function getCalendarresource(PropelPDO $con = null)
+	{
+		if ($this->aCalendarresource === null && ($this->resource_id !== null)) {
+			$this->aCalendarresource = CalendarresourceQuery::create()->findPk($this->resource_id, $con);
+			/* The following can be used additionally to
+				guarantee the related object contains a reference
+				to this object.  This level of coupling may, however, be
+				undesirable since it could result in an only partially populated collection
+				in the referenced object.
+				$this->aCalendarresource->addCalendars($this);
+			 */
+		}
+		return $this->aCalendarresource;
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1043,9 +1043,9 @@ abstract class BaseCalendar extends BaseObject  implements Persistent
 		if ($deep) {
 		} // if ($deep)
 
-		$this->aCalendarresource = null;
 		$this->aCalendarslot = null;
 		$this->aCalendarevent = null;
+		$this->aCalendarresource = null;
 	}
 
 	/**

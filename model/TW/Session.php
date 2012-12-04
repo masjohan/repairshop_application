@@ -154,7 +154,7 @@ Class TW_Session {  //  implements SessionHandlerInterface
     $this->data('user_once', NULL, TRUE);
     return $next;
   }
-  public function messenger($msg, $type) {
+  public function messenger($msg, $type = NULL) {
     $this->putNext(array(
       'messager'=>array(
         'txt' => $msg,
