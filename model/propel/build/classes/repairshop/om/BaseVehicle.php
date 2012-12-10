@@ -128,6 +128,11 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 	protected $aCustomer;
 
 	/**
+	 * @var        array Repairorder[] Collection to store aggregation of Repairorder objects.
+	 */
+	protected $collRepairorders;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -777,6 +782,8 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCustomer = null;
+			$this->collRepairorders = null;
+
 		} // if (deep)
 	}
 
@@ -922,6 +929,14 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collRepairorders !== null) {
+				foreach ($this->collRepairorders as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -1004,6 +1019,14 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collRepairorders !== null) {
+					foreach ($this->collRepairorders as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -1135,6 +1158,9 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 		if ($includeForeignObjects) {
 			if (null !== $this->aCustomer) {
 				$result['Customer'] = $this->aCustomer->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+			}
+			if (null !== $this->collRepairorders) {
+				$result['Repairorders'] = $this->collRepairorders->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
 			}
 		}
 		return $result;
@@ -1359,6 +1385,20 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 		$copyObj->setLicensePlate($this->getLicensePlate());
 		$copyObj->setIniOdometer($this->getIniOdometer());
 		$copyObj->setNotes($this->getNotes());
+
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getRepairorders() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addRepairorder($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
+
 		if ($makeNew) {
 			$copyObj->setNew(true);
 			$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1453,6 +1493,146 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collRepairorders collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addRepairorders()
+	 */
+	public function clearRepairorders()
+	{
+		$this->collRepairorders = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collRepairorders collection.
+	 *
+	 * By default this just sets the collRepairorders collection to an empty array (like clearcollRepairorders());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @param      boolean $overrideExisting If set to true, the method call initializes
+	 *                                        the collection even if it is not empty
+	 *
+	 * @return     void
+	 */
+	public function initRepairorders($overrideExisting = true)
+	{
+		if (null !== $this->collRepairorders && !$overrideExisting) {
+			return;
+		}
+		$this->collRepairorders = new PropelObjectCollection();
+		$this->collRepairorders->setModel('Repairorder');
+	}
+
+	/**
+	 * Gets an array of Repairorder objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this Vehicle is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array Repairorder[] List of Repairorder objects
+	 * @throws     PropelException
+	 */
+	public function getRepairorders($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collRepairorders || null !== $criteria) {
+			if ($this->isNew() && null === $this->collRepairorders) {
+				// return empty collection
+				$this->initRepairorders();
+			} else {
+				$collRepairorders = RepairorderQuery::create(null, $criteria)
+					->filterByVehicle($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collRepairorders;
+				}
+				$this->collRepairorders = $collRepairorders;
+			}
+		}
+		return $this->collRepairorders;
+	}
+
+	/**
+	 * Returns the number of related Repairorder objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related Repairorder objects.
+	 * @throws     PropelException
+	 */
+	public function countRepairorders(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collRepairorders || null !== $criteria) {
+			if ($this->isNew() && null === $this->collRepairorders) {
+				return 0;
+			} else {
+				$query = RepairorderQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByVehicle($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collRepairorders);
+		}
+	}
+
+	/**
+	 * Method called to associate a Repairorder object to this object
+	 * through the Repairorder foreign key attribute.
+	 *
+	 * @param      Repairorder $l Repairorder
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addRepairorder(Repairorder $l)
+	{
+		if ($this->collRepairorders === null) {
+			$this->initRepairorders();
+		}
+		if (!$this->collRepairorders->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collRepairorders[]= $l;
+			$l->setVehicle($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this Vehicle is new, it will return
+	 * an empty collection; or if this Vehicle has previously
+	 * been saved, it will retrieve related Repairorders from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in Vehicle.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array Repairorder[] List of Repairorder objects
+	 */
+	public function getRepairordersJoinRepairorderstatus($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = RepairorderQuery::create(null, $criteria);
+		$query->joinWith('Repairorderstatus', $join_behavior);
+
+		return $this->getRepairorders($query, $con);
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1494,8 +1674,17 @@ abstract class BaseVehicle extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collRepairorders) {
+				foreach ($this->collRepairorders as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
+		if ($this->collRepairorders instanceof PropelCollection) {
+			$this->collRepairorders->clearIterator();
+		}
+		$this->collRepairorders = null;
 		$this->aCustomer = null;
 	}
 

@@ -18,8 +18,8 @@
 </ul>
 
 <script type="text/javascript">
-    $(function(){ $('#{{ options.id }}').rolltext() });
-  </script>
+  $(function(){ $('#{{ options.id }}').rolltext() });
+</script>
 {% endmacro %}
 
 {% macro success_msg(link, text) %}
@@ -51,4 +51,62 @@
       {{-user_ranas.IsActive ? "re-send" : "send" -}}
     </a>
   {% endif %}
+{% endmacro %}
+
+{# args id*, data [][], field [], width*, header*, canNew *true, canEdit *true, canDelete *true #}
+{% macro inline_edit(args) %}
+  {% set canNew = args.canNew is defined ? args.canNew : true %}
+  {% set canEdit = args.canEdit is defined ? args.canEdit : true %}
+  {% set canDelete = args.canDelete is defined ? args.canDelete : true %}
+
+  <table id="{{args.id | default('inline-edit')}}" class="inline-edit-table">
+    <tr>
+      {% for i, n in args.header %}
+        <th
+          {%- if args.input[i] %} data-input="{{args.input[i]}}"{% endif -%}
+          {%- if args.options[i] %} data-options="{{args.options[i]|php('json_encode')}}"{% endif -%}
+          {%- if args.field[i] %} data-field="{{args.field[i]}}"{% endif -%}
+          {%- if args.width[i] %} style="width:{{args.width[i]}}"{% endif -%}>{{n}}</th>
+      {% endfor %}
+      {% if canEdit or canNew or canDelete %}<th></th>{% endif %}
+    </tr>
+
+    {% for row in args.data %}
+    <tr valign="top">
+      {%- for i, cell in row %}
+        {%- if loop.last and (canEdit or canNew or canDelete) %}
+          <td style="white-space: nowrap;" data-id="{{cell}}" class="edit">
+            {% if canEdit %}<span class="fake-link edit">Edit</span>{% endif %}
+            {% if canDelete %}<span class="fake-link edit">Delete</span>{% endif %}
+            <span class="fake-link editing">Save</span>
+            <span class="fake-link editing">Cancel</span>
+          </td>
+        {%- elseif not args.field[i] %}
+          <td>{{cell}}</td>
+        {%- elseif args.options[i] -%}
+          <td data-value="{{cell}}">{{args.options[i][cell]}}</td>
+        {% else %}
+          <td data-value="{{cell}}">{{cell}}</td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+
+    {# lastly, new line #}
+    {% if canNew %}
+    <tr valign="top">
+      {% for i, name in args.header %}
+      <td{%- if args.width[i] %} style="width:{{args.width[i]}}"{% endif -%}
+          {%- if args.field[i] %} data-value=""{% endif -%}></td>
+      {% endfor %}
+      <td style="white-space: nowrap;" data-id="0" class="new">
+        <span class="fake-link new">New</span>
+        <span class="fake-link editing">Save</span>
+        <span class="fake-link editing">Cancel</span>
+        {% if canEdit %}<span class="fake-link edit">Edit</span>{% endif %}
+        {% if canDelete %}<span class="fake-link edit">Delete</span>{% endif %}
+      </td>
+    </tr>
+    {% endif %}
+  </table>
 {% endmacro %}

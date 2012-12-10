@@ -4,7 +4,10 @@
 
   if ($_POST['checkemail']) {
     $C->outputType("json");
-    $C->error = UserQuery::create('u')->where('u.Email=?', $_POST['checkemail'])->count();
+    $C->error = UserQuery::create('u')
+            ->where('u.Email=?', $_POST['checkemail'])
+            ->where('u.Id != ?', $_POST['user_id'] ? $_POST['user_id'] : 0)
+            ->count();
     $C->message = "The input email has been taken by other user";
     return;
   }

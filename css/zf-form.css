@@ -1,3 +1,15 @@
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+
 /*
   intend to work with Zend form
 */
@@ -11,6 +23,7 @@
   background-color: #666;
   color: #fff;
   padding: 0.3em 1em;
+  margin: 1em 0;
 }
 
 input, select, textarea {
@@ -56,9 +69,15 @@ input, select, textarea {
   width: 238px;
 }
 
+.def-form dd > input.button {
+  margin-left: 2em;
+}
+.def-form.columnar dd > input.button {
+  margin-left: 0;
+}
 
 .def-form dd input {
-  width:20em;
+  width:18em;
 }
 
 .def-form dd input.optional:focus {
@@ -105,11 +124,11 @@ input, select, textarea {
 
 .def-form dd textarea {
   background-color: white;
-  width:20em;
+  width:18em;
 }
 
 .def-form dd select {
-  width:20.5em;
+  width:18.5em;
 }
 
 
@@ -296,6 +315,7 @@ input:-moz-placeholder {
 }
 .def-form.columnar dd select {
   width: 99%;
+  margin: -1px 0 0 0;
 }
 
 .def-form.columnar dd input.btn,
@@ -305,7 +325,7 @@ input:-moz-placeholder {
 }
 
 .def-form.columnar .cleaner {
-  margin: 20px 0;
+  margin: 5px 0;
 }
 
 
@@ -415,4 +435,31 @@ input:-moz-placeholder {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+
+.inline-edit-table th,
+.inline-edit-table td {
+  padding: 0 0.5em;
+  border: none;
+}
+
+.inline-edit-table th {
+  text-align: left;
+}
+
+.inline-edit-table td textarea,
+.inline-edit-table td select,
+.inline-edit-table td input {
+  width: 100%;
+  margin: 0;
+}
+
+.inline-edit-table td .fake-link {
+  display: none;
+}
+
+.inline-edit-table td.editing .editing.fake-link,
+.inline-edit-table td.edit .edit.fake-link,
+.inline-edit-table td.new .new.fake-link {
+  display: inline;
 }

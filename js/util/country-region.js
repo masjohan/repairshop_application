@@ -35,6 +35,7 @@ $(function(){
     });
 });
 
+// value been pushed by zf-form select_country
 RW.CountryRegion.input = {
   "country" : [],
   "region"  : []

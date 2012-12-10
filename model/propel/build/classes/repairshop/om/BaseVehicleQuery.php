@@ -48,6 +48,10 @@
  * @method     VehicleQuery rightJoinCustomer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Customer relation
  * @method     VehicleQuery innerJoinCustomer($relationAlias = null) Adds a INNER JOIN clause to the query using the Customer relation
  *
+ * @method     VehicleQuery leftJoinRepairorder($relationAlias = null) Adds a LEFT JOIN clause to the query using the Repairorder relation
+ * @method     VehicleQuery rightJoinRepairorder($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Repairorder relation
+ * @method     VehicleQuery innerJoinRepairorder($relationAlias = null) Adds a INNER JOIN clause to the query using the Repairorder relation
+ *
  * @method     Vehicle findOne(PropelPDO $con = null) Return the first Vehicle matching the query
  * @method     Vehicle findOneOrCreate(PropelPDO $con = null) Return the first Vehicle matching the query, or a new Vehicle object populated from the query conditions when no match is found
  *
@@ -749,6 +753,79 @@ abstract class BaseVehicleQuery extends ModelCriteria
 		return $this
 			->joinCustomer($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'Customer', 'CustomerQuery');
+	}
+
+	/**
+	 * Filter the query by a related Repairorder object
+	 *
+	 * @param     Repairorder $repairorder  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    VehicleQuery The current query, for fluid interface
+	 */
+	public function filterByRepairorder($repairorder, $comparison = null)
+	{
+		if ($repairorder instanceof Repairorder) {
+			return $this
+				->addUsingAlias(VehiclePeer::ID, $repairorder->getVehicleId(), $comparison);
+		} elseif ($repairorder instanceof PropelCollection) {
+			return $this
+				->useRepairorderQuery()
+					->filterByPrimaryKeys($repairorder->getPrimaryKeys())
+				->endUse();
+		} else {
+			throw new PropelException('filterByRepairorder() only accepts arguments of type Repairorder or PropelCollection');
+		}
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the Repairorder relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    VehicleQuery The current query, for fluid interface
+	 */
+	public function joinRepairorder($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('Repairorder');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'Repairorder');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the Repairorder relation Repairorder object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    RepairorderQuery A secondary query class using the current class as primary query
+	 */
+	public function useRepairorderQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinRepairorder($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'Repairorder', 'RepairorderQuery');
 	}
 
 	/**

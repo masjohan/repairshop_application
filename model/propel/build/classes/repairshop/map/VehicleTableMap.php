@@ -62,6 +62,7 @@ class VehicleTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('Customer', 'Customer', RelationMap::MANY_TO_ONE, array('customer_id' => 'id', ), null, null);
+    $this->addRelation('Repairorder', 'Repairorder', RelationMap::ONE_TO_MANY, array('id' => 'vehicle_id', ), null, null);
 	} // buildRelations()
 
 } // VehicleTableMap

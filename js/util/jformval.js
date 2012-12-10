@@ -65,6 +65,9 @@
       "datepicker": {/*
                     input-name: true | options for datepaicker
       */},
+      "datetimepicker": {/*
+                    input-name: true | options for datepaicker
+      */},
       "autocomplete": {/*
                     input-name: true | options for autocomplete
       */},
@@ -78,6 +81,9 @@
     // init widget early, since they likely change the values
 	  $.each(options.datepicker || {}, function(name, ops){
 	    this._init_datepicker(name, ops);
+	  }.bind(this));
+	  $.each(options.datetimepicker || {}, function(name, ops){
+	    this._init_datetimepicker(name, ops);
 	  }.bind(this));
 	  $.each(options.autocomplete || {}, function(name, ops){
 	    this._init_autocomplete(name, ops);
@@ -171,7 +177,14 @@
     .each(function(){
       !options.keepBlank && $(this).datepicker('setDate', new Date())
     })
+		.attr('readonly', 'readonly');
 
+		return this;
+	}
+
+	FormVal.prototype._init_datetimepicker = function(name, options) {
+		this._jForm.find(':input[name='+name+']')
+		.datetimepicker()
 		.attr('readonly', 'readonly');
 
 		return this;

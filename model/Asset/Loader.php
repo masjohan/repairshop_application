@@ -23,6 +23,7 @@ class Asset_Loader {
     'jmetadata'   => 'plugins/jquery.metadata.js',
     'jtablesorter'  => 'plugins/jquery.tablesorter.js',
     'jtablesorterpager' => 'plugins/jquery.tablesorter.pager.js',
+    'timepicker' => 'plugins/jquery-ui-timepicker-addon.js',
   );
 
   static private $dependon = array(

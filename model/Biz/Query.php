@@ -4,6 +4,7 @@ class Biz_Query {
   const GUESS_ROLE_NAME = 'guest';
   const OWNER_ROLE_ID = 3;
   const CUSTOMER_ROLE_ID = 7;
+  const RO_CLOSE_STATUS_ID = 70;
 
   // check if a user has access to given path
   public static $ACL_check_login = <<<SQL
@@ -341,5 +342,9 @@ SQL
       AND s.id = :setting_id
 SQL
 ;
+  // found active RO for given vehicle
+  public static $active_vehicle_RO = <<<SQL
 
+SQL
+;
 }

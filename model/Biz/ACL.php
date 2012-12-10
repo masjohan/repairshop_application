@@ -57,12 +57,13 @@ class Biz_ACL {
     $customer_id = $sess->data('customer_id');
     if ($customer_id) {
       $C->param('serving_customer', array_merge(
-        CustomerQuery::create('c')->findPk($customer_id)->toArray(),
-        UserQuery::create('c')
+        $u = UserQuery::create('c')
           ->where('c.RoleId=?',  Biz_Query::CUSTOMER_ROLE_ID)
           ->where('c.RoleTypeId=?', $customer_id)
           ->findOne()
-          ->toArray()
+          ->toArray(),
+        array('Uid' => $u['Id']),
+        CustomerQuery::create('c')->findPk($customer_id)->toArray()
       ));
     }
     $vehicle_id = $sess->data('vehicle_id');
