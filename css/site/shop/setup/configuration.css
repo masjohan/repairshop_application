@@ -1,0 +1,7 @@
+#conf-inline-edit .conf-usr-val {
+  width: 10em;
+}
+
+#conf-inline-edit .conf-usr-val input {
+  width: 9em;
+}
